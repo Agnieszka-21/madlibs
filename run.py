@@ -20,3 +20,15 @@ if __name__ == "__main__":
     madlib_story = random.choice([madlib1, madlib2, madlib3, madlib4, madlib5, madlib6, madlib7, madlib8])
     madlib_story.madlib()
 
+
+# Would you like to play again (Y/N)? 
+play_again_question = input("\nWould you like to play again (Y/N)? ").upper()
+
+if play_again_question == "Y":
+    madlib_story = random.choice([madlib1, madlib2, madlib3, madlib4, madlib5, madlib6, madlib7, madlib8])
+    madlib_story.madlib()
+elif play_again_question == "N":
+    end_game = "Okay, thanks for playing!"
+    print(end_game)    
+else:
+    input("Type Y if you'd like to pla again, or N to finish: ")
