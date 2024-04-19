@@ -10,11 +10,11 @@ def madlib():
     verb = input("Verb: ")
 
     # Mad lib number 3
-    madlib = f"Space Adventure \nOnce upon a time, in a galaxy far, far away, \
-    there was an adventurous {noun1} named Anakin. One day, Anakin hopped \
-    aboard their {adj1} spaceship - his mission was to {verb} \
-    a new {noun2}. As the spaceship soared through the {adj2} galaxy, \
-    Anakin marvelled at the twinkling {noun_pl} he passed. {adv}, \
-    an asteroid appeared out of nowhere and shot across their path."
+    madlib = f"\nSpace Adventure \nOnce upon a time, in a galaxy far, far away, \
+there was an adventurous {noun1} named Anakin. One day, Anakin hopped \
+aboard their {adj1} spaceship - his mission was to {verb} \
+a new {noun2}. As the spaceship soared through the {adj2} galaxy, \
+Anakin marvelled at the twinkling {noun_pl} he passed. {adv}, \
+an asteroid appeared out of nowhere and shot across their path."
 
     print(madlib)

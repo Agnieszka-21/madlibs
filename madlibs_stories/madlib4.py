@@ -10,10 +10,10 @@ def madlib():
     verb = input("Verb: ")
 
     # Mad lib number 4
-    madlib = f"Are we alone? \nAfter many {adj1} days and nights, Buzz {adv} \
-    arrived at the mysterious planet. He stepped out of the {noun1} and \
-    was greeted by {adj2} {noun_pl} and other curious creatures. \
-    He wanted to {verb} the {noun2} and become friends with the locals. \
-    But his intuition was telling him that he couldn’t trust his hosts..."
+    madlib = f"\nAre we alone? \nAfter many {adj1} days and nights, Buzz {adv} \
+arrived at the mysterious planet. He stepped out of the {noun1} and \
+was greeted by {adj2} {noun_pl} and other curious creatures. \
+He wanted to {verb} the {noun2} and become friends with the locals. \
+But his intuition was telling him that he couldn’t trust his hosts..."
 
     print(madlib)
