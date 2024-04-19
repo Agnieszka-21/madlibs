@@ -2,6 +2,13 @@
 # You can delete these comments, but do not change the name of this file
 # Write your code to expect a terminal of 80 characters wide and 24 rows high
 
+# Welcome screen
+welcome = "Welcome to MAD LIBS! \n \nHow to play: \nYou will be asked to provide certain words \
+(a noun, an adjective etc.) that are then inserted into a randomly selected story. \
+To provide your words, simply type them as prompted and confirm the submission of \
+each word by pressing Enter. Afterwards, simply read the complete story. Have fun!\n"
+
+print(welcome)
 
 # Required user's inputs
 noun1 = input("Noun: ")
