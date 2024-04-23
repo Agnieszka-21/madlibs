@@ -47,16 +47,10 @@ class Story:
     """
     A mad lib story with blanks
     """
-    def __init__(self, title, story):
+    def __init__(self, title, text):
         self.title = title
-        self.story = story
-    def madlib_story(self):
-        """
-        Add a story
-        """
-        return (self.title)
-        #print(self.title)
-        #print(self.story)
+        self.text = text
+
 
 madlib1 = Story("\nStrange Science", f"\nScience is full of {adv} strange facts and stories. Did you know that \
 rats can laugh when they are being tickled? Another fun {noun1} about rats is that \
@@ -80,23 +74,47 @@ an asteroid appeared out of nowhere and shot across their path.")
 
 
 #print(madlib1.title, madlib1.story)
-
-all_stories = [madlib1, madlib2, madlib3]
+all_titles = [madlib1.title, madlib2.title, madlib3.title]
+all_texts = [madlib1.text, madlib2.text, madlib3.text]
 
 # Choose a random mad lib story to complete and print
 #if __name__ == "__main__":
     #madlib_story = random.choice([madlib1, madlib2, madlib3, madlib4, madlib5, madlib6, madlib7, madlib8])
     #madlib_story = madlib1
     #madlib_story.madlib_story()
-random_story = random.choice(all_stories)
-print(random_story)
+
+def choose_story_randomly():
+    # Get an index of each title from the available list
+    for title in all_titles:
+        title_indices = [all_titles.index(title)]
+    # Choose a random title index
+    randomly_chosen_title = random.choice(title_indices)
+    # Choose a text that matches the title
+    matching_text = all_texts[randomly_chosen_title]
+    # Print the full story (randomly chosen title with its text)
+    print(all_titles[randomly_chosen_title])
+    print(matching_text)
+
+choose_story_randomly()
+
+
 
 # Would you like to play again (Y/N)? 
 play_again_question = input("\nWould you like to play again (Y/N)? ").upper()
 
 if play_again_question == "Y":
     #madlib_story = random.choice([madlib1, madlib2, madlib3, madlib4, madlib5, madlib6, madlib7, madlib8])
-    madlib_story.madlib()
+    #madlib_story.madlib()
+    new_game_how = input("If you would like to re-use your words with a different story, type A and press Enter. \
+If you'd like to start a new game, type B and press Enter: ").upper()
+    if new_game_how == "A":
+        random_or_not = input("If you want to choose your next story from a list of titles, type A and press Enter. \
+If you'd rather use a random story, type B and press Enter: ").upper()
+        if random_or_not == "A":
+            print(all_titles)
+        elif random_or_not == "B":
+            choose_story_randomly() # needs to be adjusted so that the list of possible stories excludes the previously used story
+
 elif play_again_question == "N":
     end_game = "Okay, thanks for playing!"
     print(end_game)    
