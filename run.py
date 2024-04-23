@@ -72,10 +72,48 @@ a new {noun2}. As the spaceship soared through the {adj2} galaxy, \
 Anakin marvelled at the twinkling {noun_pl} he passed. {adv}, \
 an asteroid appeared out of nowhere and shot across their path.")
 
+madlib4 = Story("\nAre we alone?", f"\nAfter many {adj1} days and nights, Buzz {adv} \
+arrived at the mysterious planet. He stepped out of the {noun1} and \
+was greeted by {adj2} {noun_pl} and other curious creatures. \
+He wanted to {verb} the {noun2} and become friends with the locals. \
+But his intuition was telling him that he couldn’t trust his hosts...")
+
+madlib5 = Story("\nSummer Camp Mystery", f"\nIt was a(n) {adv} {adj1} summer day - the first day of camp! \
+The camp counsellor told us to {verb} for the {noun1} \
+- a local legend with sharp teeth, bushy {noun2}, and \
+a very {adj2} smell. That night as other campers and I were \
+going to sleep, we heard a noise. It sounded like someone \
+chewing on {noun_pl}...")
+
+madlib6 = Story("\nFirst Day at Wizard School", f"\nHermione jumped out of <noun> as she opened her eyes. \
+Today was her first day at wizard school! She dressed {adv}, \
+grabbing a pointy hat to {verb} on her head. Arriving at school, \
+she took her seat in class and prepared her first potion. The ingredients \
+included a(n) {adj1} bezoar and {adj2} {noun_pl}. \
+It would be worth it when she could turn a spider into a(n) {noun2}.")
+
+madlib7 = Story("\nAmazon Explorers", f"\nThe {adj1} explorer flew his plane over the Amazon jungle. \
+Below, he could {verb} tall trees growing along the edge of \
+a(n) {noun1}. Behind him, he could hear his co-pilot, Emma, muttering. \
+\“We're not going to make it. When the {adj2} eagle flew into the wing, \
+it damaged it too much. We need to find somewhere clear to land.\” \
+{adv}, Marcus spotted a clearing - a perfect landing spot. \
+They got out of the plane to check the damaged {noun2}. Suddenly, a loud roar made them jump. \
+From out of the jungle came a pair of {noun_pl}...")
+
+madlib8 = Story("Dino Danger", f"\nDinosaurs were a diverse group of {noun_pl} \
+that lived on Earth until about 66 million years ago. Some \
+dinosaurs were carnivores - they ate {noun1}. Other \
+dinosaurs were herbivores and ate {noun2}. One of the most {adj1} \
+dinosaurs had a(n) {adj2} armour along its back. It walked \
+{adv} due to its large size. Imagine how amazing it would \
+have been to see dinosaurs {verb} through cities \
+and fly in the sky…")
+
 
 #print(madlib1.title, madlib1.story)
-all_titles = [madlib1.title, madlib2.title, madlib3.title]
-all_texts = [madlib1.text, madlib2.text, madlib3.text]
+all_titles = [madlib1.title, madlib2.title, madlib3.title, madlib4.title, madlib5.title, madlib6.title, madlib7.title, madlib8.title]
+all_texts = [madlib1.text, madlib2.text, madlib3.text, madlib4.text, madlib5.text, madlib6.text, madlib7.text, madlib8.text]
 
 # Choose a random mad lib story to complete and print
 #if __name__ == "__main__":
