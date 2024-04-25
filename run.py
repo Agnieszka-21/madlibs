@@ -22,10 +22,9 @@ welcome()
 
 # Required user's inputs - words to fill any blanks in a mad lib
 def word_inputs():
-    global users_word
     global noun1
     noun1 = input("Noun: ").upper()
-    users_word = noun1
+    print(id(noun1)) 
     #noun2 = input("Another noun: ").upper()
     #noun_pl = input("Plural noun: ").upper()
     #adj1 = input("Adjective: ").upper()
@@ -37,6 +36,9 @@ word_inputs()
 
 # Access the dictionary API key
 def look_up_word():
+    global users_word
+    users_word = noun1
+
     app_key = dictionary_api.API_KEY_SERVICE
     # A variable to get the user's inputs (words) for the stories, one by one
     #users_word = noun1 or noun2 or noun_pl or adj1 or adj2 or adv or verb
@@ -46,21 +48,31 @@ def look_up_word():
     global word_checked
     word_checked = response.json()
     print(word_checked)
-    #word_checked[0]['fl']
-    if 'fl' in word_checked: # needs work: check if there's a dictionary within the list that is word_checked
-        print(word_checked[0]['fl'])
 look_up_word()
 
 
 # Validate input - check if the provided word was found in the dictionary and if it is a correct type (adj, adv etc)
 def validate_word():
-    if word_checked[0]['fl'] == "noun":
-        print("Validation successful. You word is a noun.")
-    #except TypeError:
-        #input("It looks like your word has a typo. Try again: ")
-    else: 
-        print("It looks like something is wrong.")
-        input("Please try again - enter a noun here: ")
+    # Check if the word can be found in the dictionary
+    try: 
+        word_checked[0]['fl']
+        print("Validation successful.")
+        print(word_checked[0]['fl'])
+        if (word_checked[0]['fl'] == "noun"):
+            print("Great, your word is a noun.")
+        # In case the given word is not a noun
+        else:
+            global noun1
+            print(id(noun1))
+            noun1 = input("It looks like your word is not a noun. Try again: ")
+            look_up_word()
+            validate_word()
+    # Word not found in the dictionary - likely misspelled
+    except TypeError: 
+        print("This is not a valid word.")
+        noun1 = input("Please check for typos and try again - enter a noun here: ").upper()
+        look_up_word()
+        validate_word()
 validate_word()
 
 
