@@ -20,24 +20,37 @@ each word by pressing Enter. Afterwards, simply read the complete story. Have fu
 welcome()
 
 
+noun1 = "noun"
+noun2 = "noun"
+print(id(noun1))
+words_needed = [noun1, noun2]
+words_accepted = []
+
 # Required user's inputs - words to fill any blanks in a mad lib
-def word_inputs():
-    global noun1
-    noun1 = input("Noun: ").upper()
-    print(id(noun1)) 
-    #noun2 = input("Another noun: ").upper()
+def word_input():
+    if len(words_accepted) == 0:
+        global noun1
+        noun1 = input("Noun: ").upper()
+        global current_word
+        current_word = noun1
+        print(id(noun1))
+        #print(id(noun1)) 
+    elif len(words_accepted) == 1:
+        global noun2
+        noun2 = input("Another noun: ").upper()
+        current_word = noun2
     #noun_pl = input("Plural noun: ").upper()
     #adj1 = input("Adjective: ").upper()
     #adj2 = input("Another adjective: ").upper()
     #adv = input("Adverb: ").upper()
     #verb = input("Verb: ").upper()
-word_inputs()
+#word_input()
 
 
 # Access the dictionary API key
 def look_up_word():
     global users_word
-    users_word = noun1
+    users_word = current_word
 
     app_key = dictionary_api.API_KEY_SERVICE
     # A variable to get the user's inputs (words) for the stories, one by one
@@ -48,7 +61,7 @@ def look_up_word():
     global word_checked
     word_checked = response.json()
     print(word_checked)
-look_up_word()
+#look_up_word()
 
 
 # Validate input - check if the provided word was found in the dictionary and if it is a correct type (adj, adv etc)
@@ -60,9 +73,10 @@ def validate_word():
         print(word_checked[0]['fl'])
         if (word_checked[0]['fl'] == "noun"):
             print("Great, your word is a noun.")
+            words_accepted.append(users_word)
+            print(words_accepted)
         # In case the given word is not a noun
         else:
-            global noun1
             print(id(noun1))
             noun1 = input("It looks like your word is not a noun. Try again: ")
             look_up_word()
@@ -73,7 +87,13 @@ def validate_word():
         noun1 = input("Please check for typos and try again - enter a noun here: ").upper()
         look_up_word()
         validate_word()
-validate_word()
+#validate_word()
+
+
+for word in words_needed:
+    word_input()
+    look_up_word()
+    validate_word()
 
 
 """ Trying something
