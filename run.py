@@ -22,10 +22,11 @@ welcome()
 
 noun1 = "noun"
 noun2 = "noun"
-nouns = noun1 or noun2
+noun_pl = "noun"
+nouns = noun1 or noun2 or noun_pl
 word_type = nouns
 
-words_needed = [noun1, noun2] # A list of all required word inputs
+words_needed = [noun1, noun2, noun_pl] # A list of all required word inputs
 words_accepted = []
 
 # Required user's inputs - words to fill any blanks in a mad lib
@@ -39,7 +40,10 @@ def word_input():
         global noun2
         noun2 = input("Another noun: ").upper()
         current_word = noun2
-    #noun_pl = input("Plural noun: ").upper()
+    elif len(words_accepted) == 2:
+        global noun_pl
+        noun_pl = input("Plural noun: ").upper()
+        current_word = noun_pl
     #adj1 = input("Adjective: ").upper()
     #adj2 = input("Another adjective: ").upper()
     #adv = input("Adverb: ").upper()
@@ -70,6 +74,7 @@ def validate_word():
         print("Validation successful.")
         print(word_checked[0]['fl'])
         #global current_word
+        global nouns
         global word_type
         match word_type:
             case nouns:
@@ -79,9 +84,8 @@ def validate_word():
                     print(words_accepted)
                 # In case the given word is not a noun
                 else:
-                    noun1 = input("It looks like your word is not a noun. Try again: ").upper()
                     global current_word
-                    current_word = noun1
+                    current_word = input("It looks like your word is not a noun. Try again: ").upper()
                     look_up_word()
                     validate_word()
 
