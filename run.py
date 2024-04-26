@@ -22,8 +22,10 @@ welcome()
 
 noun1 = "noun"
 noun2 = "noun"
-print(id(noun1))
-words_needed = [noun1, noun2]
+nouns = noun1 or noun2
+word_type = nouns
+
+words_needed = [noun1, noun2] # A list of all required word inputs
 words_accepted = []
 
 # Required user's inputs - words to fill any blanks in a mad lib
@@ -33,8 +35,6 @@ def word_input():
         noun1 = input("Noun: ").upper()
         global current_word
         current_word = noun1
-        print(id(noun1))
-        #print(id(noun1)) 
     elif len(words_accepted) == 1:
         global noun2
         noun2 = input("Another noun: ").upper()
@@ -51,10 +51,8 @@ def word_input():
 def look_up_word():
     global users_word
     users_word = current_word
-
     app_key = dictionary_api.API_KEY_SERVICE
-    # A variable to get the user's inputs (words) for the stories, one by one
-    #users_word = noun1 or noun2 or noun_pl or adj1 or adj2 or adv or verb
+    
     # Code figured out based on the following tutorial: https://www.youtube.com/watch?v=hpc5jyVpUpw
     # Aiming to access 'fl', functional label of the given word (e.g. adjective, verb, etc.)
     response = requests.get(f"https://www.dictionaryapi.com/api/v3/references/collegiate/json/{users_word}?key={app_key}")
@@ -71,22 +69,30 @@ def validate_word():
         word_checked[0]['fl']
         print("Validation successful.")
         print(word_checked[0]['fl'])
-        if (word_checked[0]['fl'] == "noun"):
-            print("Great, your word is a noun.")
-            words_accepted.append(users_word)
-            print(words_accepted)
-        # In case the given word is not a noun
-        else:
-            print(id(noun1))
-            noun1 = input("It looks like your word is not a noun. Try again: ")
-            look_up_word()
-            validate_word()
+        #global current_word
+        global word_type
+        match word_type:
+            case nouns:
+                if (word_checked[0]['fl'] == "noun"):
+                    print("Great, your word is a noun.")
+                    words_accepted.append(users_word)
+                    print(words_accepted)
+                # In case the given word is not a noun
+                else:
+                    noun1 = input("It looks like your word is not a noun. Try again: ").upper()
+                    global current_word
+                    current_word = noun1
+                    look_up_word()
+                    validate_word()
+
     # Word not found in the dictionary - likely misspelled
     except TypeError: 
         print("This is not a valid word.")
         noun1 = input("Please check for typos and try again - enter a noun here: ").upper()
+        current_word = noun1
         look_up_word()
         validate_word()
+    #except ConnectionError (can't connect to API)
 #validate_word()
 
 
