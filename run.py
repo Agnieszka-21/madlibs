@@ -19,6 +19,7 @@ each word by pressing Enter. Afterwards, simply read the complete story. Have fu
     print(welcome)
 welcome()
 
+
 # Variables needed to fill the blanks in mad libs
 noun1 = "noun"
 noun2 = "noun"
@@ -47,24 +48,24 @@ words_accepted = []
 def word_input():
     if len(words_accepted) == 0:
         global noun1
-        noun1 = input("Noun: ").upper()
+        noun1 = input("Noun: ")
         global current_word
         current_word = noun1
     elif len(words_accepted) == 1:
         global noun2
-        noun2 = input("Another noun: ").upper()
+        noun2 = input("Another noun: ")
         current_word = noun2
     elif len(words_accepted) == 2:
         global noun_pl
-        noun_pl = input("Plural noun: ").upper()
+        noun_pl = input("Plural noun: ")
         current_word = noun_pl
     elif len(words_accepted) == 3:
         global adj1
-        adj1 = input("Adjective: ").upper()
+        adj1 = input("Adjective: ")
         current_word = adj1
     elif len(words_accepted) == 4:
         global adj2
-        adj2 = input("Another adjective: ").upper()
+        adj2 = input("Another adjective: ")
         current_word = adj2
     #adv = input("Adverb: ").upper()
     #verb = input("Verb: ").upper()
@@ -83,6 +84,21 @@ def look_up_word():
     global word_checked
     word_checked = response.json()
     print(word_checked)
+    print(word_checked[0]['meta']['id'])
+    print(word_checked[0]['fl'])
+    
+    # trying something - for homographs where a word has multiple meanings/grammatic functions etc.
+    if 'hom' in word_checked[0]:
+        print("This word has multiple meanings and functions")
+    if word_checked[0]['meta']['id'] == (users_word + ":1"):
+        print(word_checked[1]['meta']['id'])
+        print(word_checked[1]['fl'])
+    if word_checked[0]['meta']['id'] == (users_word + ":2"):
+        print(word_checked[2]['meta']['id'])
+        print(word_checked[2]['fl'])
+    if word_checked[0]['meta']['id'] == (users_word + ":3"):
+        print(word_checked[3]['meta']['id'])
+        print(word_checked[3]['fl'])
     global valid_word
     valid_word = False
 #look_up_word()
@@ -192,9 +208,9 @@ def valid_words_type():
 for word in words_needed:
     word_input()
     look_up_word()
-    validate_word()
-    if valid_word:
-        valid_words_type()
+    #validate_word()
+    #if valid_word:
+        #valid_words_type()
 
 
 
