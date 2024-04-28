@@ -86,19 +86,25 @@ def look_up_word():
     print(word_checked)
     print(word_checked[0]['meta']['id'])
     print(word_checked[0]['fl'])
-    
+
     # trying something - for homographs where a word has multiple meanings/grammatic functions etc.
     if 'hom' in word_checked[0]:
         print("This word has multiple meanings and functions")
+        global homomgraph_fl
+        homomgraph_fl = [word_checked[0]['fl']]
     if word_checked[0]['meta']['id'] == (users_word + ":1"):
         print(word_checked[1]['meta']['id'])
         print(word_checked[1]['fl'])
-    if word_checked[0]['meta']['id'] == (users_word + ":2"):
+        homomgraph_fl.append(word_checked[1]['fl'])
+    if word_checked[1]['meta']['id'] == (users_word + ":2"):
         print(word_checked[2]['meta']['id'])
         print(word_checked[2]['fl'])
-    if word_checked[0]['meta']['id'] == (users_word + ":3"):
+        homomgraph_fl.append(word_checked[2]['fl'])
+    if word_checked[2]['meta']['id'] == (users_word + ":3"):
         print(word_checked[3]['meta']['id'])
         print(word_checked[3]['fl'])
+        homomgraph_fl.append(word_checked[3]['fl'])
+    print(homomgraph_fl)
     global valid_word
     valid_word = False
 #look_up_word()
