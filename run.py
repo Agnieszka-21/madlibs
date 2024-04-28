@@ -19,14 +19,28 @@ each word by pressing Enter. Afterwards, simply read the complete story. Have fu
     print(welcome)
 welcome()
 
-
+# Variables needed to fill the blanks in mad libs
 noun1 = "noun"
 noun2 = "noun"
 noun_pl = "noun"
-nouns = noun1 or noun2 or noun_pl
-word_type = nouns
+adj1 = "adjective"
+adj2 = "adjective"
+adv = "adverb"
+verb = "verb"
 
-words_needed = [noun1, noun2, noun_pl] # A list of all required word inputs
+# Variables that can be checked in groups (similar words)
+#nouns = noun1 or noun2 or noun_pl
+#adjectives = adj1 or adj2
+# All word types
+class Word_Variables:
+    nouns = noun1 or noun2 or noun_pl
+    adjectives = adj1 or adj2
+    word_type = nouns or adjectives #or adv or verb
+
+# A list of all required word inputs
+words_needed = [noun1, noun2, noun_pl, adj1, adj2]
+
+# A list that grows with each word input from user once it is accepted
 words_accepted = []
 
 # Required user's inputs - words to fill any blanks in a mad lib
@@ -44,8 +58,14 @@ def word_input():
         global noun_pl
         noun_pl = input("Plural noun: ").upper()
         current_word = noun_pl
-    #adj1 = input("Adjective: ").upper()
-    #adj2 = input("Another adjective: ").upper()
+    elif len(words_accepted) == 3:
+        global adj1
+        adj1 = input("Adjective: ").upper()
+        current_word = adj1
+    elif len(words_accepted) == 4:
+        global adj2
+        adj2 = input("Another adjective: ").upper()
+        current_word = adj2
     #adv = input("Adverb: ").upper()
     #verb = input("Verb: ").upper()
 #word_input()
@@ -63,6 +83,8 @@ def look_up_word():
     global word_checked
     word_checked = response.json()
     print(word_checked)
+    global valid_word
+    valid_word = False
 #look_up_word()
 
 
@@ -73,9 +95,48 @@ def validate_word():
         word_checked[0]['fl']
         print("Validation successful.")
         print(word_checked[0]['fl'])
-        #global current_word
-        global nouns
-        global word_type
+        global valid_word
+        valid_word = True
+    # Word not found in the dictionary - likely misspelled
+    except TypeError: 
+        print("There is a problem with your word.")
+        noun1 = input("Please check for typos and try again - enter a noun here: ").upper()
+        global current_word
+        current_word = noun1
+        look_up_word()
+        validate_word()
+    #except ConnectionError (can't connect to API)
+#validate_word()
+
+
+
+def valid_words_type():
+    match Word_Variables.word_type:
+        case Word_Variables.nouns:
+            if (word_checked[0]['fl'] == "noun"):
+                print("Great, your word is a noun.")
+                words_accepted.append(noun1)   #users_word
+                print(words_accepted)
+            # In case the given word is not a noun
+            else:
+                global current_word
+                current_word = input("It looks like your word is not a noun. Try again: ").upper()
+                look_up_word()
+                validate_word()
+        case Word_Variables.adjectives: # ISSUE TO FIX: adj1 and adj2 are recognized as nouns for some reason...
+            if (word_checked[0]['fl'] == "adjective"):
+                print("Great, your word is an adjective.")
+                words_accepted.append(users_word)
+                print(words_accepted)
+            # In case the given word is not an adjective
+            else:
+                current_word = input("It looks like your word is not an adjective. Try again: ").upper()
+                look_up_word()
+                validate_word()  
+
+
+
+    """
         match word_type:
             case nouns:
                 if (word_checked[0]['fl'] == "noun"):
@@ -88,22 +149,53 @@ def validate_word():
                     current_word = input("It looks like your word is not a noun. Try again: ").upper()
                     look_up_word()
                     validate_word()
+            case adjectives:
+                if (word_checked[0]['fl'] == "adjective"):
+                    print("Great, your word is an adjective.")
+                    words_accepted.append(users_word)
+                    print(words_accepted)
+                # In case the given word is not a noun
+                else:
+                    global current_word
+                    current_word = input("It looks like your word is not an adjective. Try again: ").upper()
+                    look_up_word()
+                    validate_word()
+        """
 
-    # Word not found in the dictionary - likely misspelled
-    except TypeError: 
-        print("This is not a valid word.")
-        noun1 = input("Please check for typos and try again - enter a noun here: ").upper()
-        current_word = noun1
-        look_up_word()
-        validate_word()
-    #except ConnectionError (can't connect to API)
-#validate_word()
+
+""" fixed?
+        match Word_Variables.word_type:
+            case Word_Variables.nouns:
+                if (word_checked[0]['fl'] == "noun"):
+                    print("Great, your word is a noun.")
+                    words_accepted.append(users_word)
+                    print(words_accepted)
+                # In case the given word is not a noun
+                else:
+                    global current_word
+                    current_word = input("It looks like your word is not a noun. Try again: ").upper()
+                    look_up_word()
+                    validate_word()
+            case Word_Variables.adjectives:
+                if (word_checked[0]['fl'] == "adjective"):
+                    print("Great, your word is an adjective.")
+                    words_accepted.append(users_word)
+                    print(words_accepted)
+                # In case the given word is not an adjective
+                else:
+                    current_word = input("It looks like your word is not an adjective. Try again: ").upper()
+                    look_up_word()
+                    validate_word() 
+"""
 
 
 for word in words_needed:
     word_input()
     look_up_word()
     validate_word()
+    if valid_word:
+        valid_words_type()
+
 
 
 """ Trying something
