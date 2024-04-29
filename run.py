@@ -36,7 +36,9 @@ verb = "verb"
 class Word_Variables:
     nouns = noun1 or noun2 or noun_pl
     adjectives = adj1 or adj2
-    word_type = nouns or adjectives #or adv or verb
+    word_type = nouns or adjectives # SOURCE of the problem with word type recognition
+    # HOW to automatically change word_type from nouns to adjectives etc. at a suitable time? Or how to make them all 
+    # equally important so that the code isn't checked only against the first option?
 
 # A list of all required word inputs
 words_needed = [noun1, noun2, noun_pl, adj1, adj2]
@@ -60,6 +62,7 @@ def word_input():
         noun_pl = input("Plural noun: ")
         current_word = noun_pl
     elif len(words_accepted) == 3:
+        #Word_Variables.word_type
         global adj1
         adj1 = input("Adjective: ")
         current_word = adj1
@@ -129,7 +132,7 @@ def valid_words_type():
         case Word_Variables.nouns:
             if "noun" in fl_available:
                 print("Great, your word is a noun.")
-                words_accepted.append(noun1)   #users_word
+                words_accepted.append(users_word)
                 print(words_accepted)
             # In case the given word is not a noun
             else:
@@ -138,7 +141,7 @@ def valid_words_type():
                 look_up_word()
                 validate_word()
         case Word_Variables.adjectives: # ISSUE TO FIX: adj1 and adj2 are recognized as nouns for some reason...
-            if (word_checked[0]['fl'] == "adjective"):
+            if "adjective" in fl_available:
                 print("Great, your word is an adjective.")
                 words_accepted.append(users_word)
                 print(words_accepted)
@@ -207,8 +210,8 @@ for word in words_needed:
     word_input()
     look_up_word()
     validate_word()
-    #if valid_word:
-        #valid_words_type()
+    if valid_word:
+        valid_words_type()
 
 
 
