@@ -77,34 +77,12 @@ def look_up_word():
     global users_word
     users_word = current_word
     app_key = dictionary_api.API_KEY_SERVICE
-    
     # Code figured out based on the following tutorial: https://www.youtube.com/watch?v=hpc5jyVpUpw
     # Aiming to access 'fl', functional label of the given word (e.g. adjective, verb, etc.)
     response = requests.get(f"https://www.dictionaryapi.com/api/v3/references/collegiate/json/{users_word}?key={app_key}")
     global word_checked
     word_checked = response.json()
-    print(word_checked)
-    print(word_checked[0]['meta']['id'])
-    print(word_checked[0]['fl'])
-
-    # trying something - for homographs where a word has multiple meanings/grammatic functions etc.
-    if 'hom' in word_checked[0]:
-        print("This word has multiple meanings and functions")
-        global homomgraph_fl
-        homomgraph_fl = [word_checked[0]['fl']]
-    if word_checked[0]['meta']['id'] == (users_word + ":1"):
-        print(word_checked[1]['meta']['id'])
-        print(word_checked[1]['fl'])
-        homomgraph_fl.append(word_checked[1]['fl'])
-    if word_checked[1]['meta']['id'] == (users_word + ":2"):
-        print(word_checked[2]['meta']['id'])
-        print(word_checked[2]['fl'])
-        homomgraph_fl.append(word_checked[2]['fl'])
-    if word_checked[2]['meta']['id'] == (users_word + ":3"):
-        print(word_checked[3]['meta']['id'])
-        print(word_checked[3]['fl'])
-        homomgraph_fl.append(word_checked[3]['fl'])
-    print(homomgraph_fl)
+    print(word_checked)   
     global valid_word
     valid_word = False
 #look_up_word()
@@ -119,7 +97,21 @@ def validate_word():
         print(word_checked[0]['fl'])
         global valid_word
         valid_word = True
-    # Word not found in the dictionary - likely misspelled
+        global fl_available
+        fl_available = [word_checked[0]['fl']]
+
+        # Check for homographs - a word has multiple meanings/grammatic functions etc.
+        if 'hom' in word_checked[0]:
+            print("This word has multiple meanings and functions")
+            print(word_checked[1]['fl'])
+            fl_available.append(word_checked[1]['fl'])
+            
+            if 'hom' in word_checked[2]:
+                print(word_checked[2]['fl'])
+                fl_available.append(word_checked[2]['fl'])
+        print(fl_available)
+
+    # Word not found in the dictionary - likely misspelled, a typo, or not a word
     except TypeError: 
         print("There is a problem with your word.")
         noun1 = input("Please check for typos and try again - enter a noun here: ").upper()
@@ -135,7 +127,7 @@ def validate_word():
 def valid_words_type():
     match Word_Variables.word_type:
         case Word_Variables.nouns:
-            if (word_checked[0]['fl'] == "noun"):
+            if "noun" in fl_available:
                 print("Great, your word is a noun.")
                 words_accepted.append(noun1)   #users_word
                 print(words_accepted)
@@ -214,7 +206,7 @@ def valid_words_type():
 for word in words_needed:
     word_input()
     look_up_word()
-    #validate_word()
+    validate_word()
     #if valid_word:
         #valid_words_type()
 
