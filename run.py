@@ -122,7 +122,7 @@ def validate_word():
     # Word not found in the dictionary - likely misspelled, a typo, or not a word
     except TypeError: 
         print("There is a problem with your word.")
-        noun1 = input("Please check for typos and try again - enter a noun here: ").upper()
+        noun1 = input("Please check for typos and try again - enter a noun here: ")
         global current_word
         current_word = noun1
         look_up_word()
@@ -153,7 +153,7 @@ def valid_words_type():
             look_up_word()
             validate_word()
     elif word_type == adv:
-        if "adverb" in fl_available: # FIX - often sees an adjective, just ending with -ly
+        if "adverb" or "adverb or adjective" in fl_available: # FIX - often sees an adjective, just ending with -ly
             print("Great, your word is an adverb.")
             words_accepted.append(users_word)
             print(words_accepted)  
