@@ -30,15 +30,8 @@ adv = "adverb"
 verb = "verb"
 
 # Variables that can be checked in groups (similar words)
-#nouns = noun1 or noun2 or noun_pl
-#adjectives = adj1 or adj2
-# All word types
-class Word_Variables:
-    nouns = noun1 or noun2 or noun_pl
-    adjectives = adj1 or adj2
-    word_type = nouns or adjectives # SOURCE of the problem with word type recognition
-    # HOW to automatically change word_type from nouns to adjectives etc. at a suitable time? Or how to make them all 
-    # equally important so that the code isn't checked only against the first option?
+nouns = noun1 or noun2 or noun_pl
+adjectives = adj1 or adj2
 
 # A list of all required word inputs
 words_needed = [noun1, noun2, noun_pl, adj1, adj2]
@@ -53,6 +46,8 @@ def word_input():
         noun1 = input("Noun: ")
         global current_word
         current_word = noun1
+        global word_type
+        word_type = nouns
     elif len(words_accepted) == 1:
         global noun2
         noun2 = input("Another noun: ")
@@ -66,6 +61,7 @@ def word_input():
         global adj1
         adj1 = input("Adjective: ")
         current_word = adj1
+        word_type = adjectives
     elif len(words_accepted) == 4:
         global adj2
         adj2 = input("Another adjective: ")
@@ -128,6 +124,30 @@ def validate_word():
 
 
 def valid_words_type():
+    if word_type == nouns: 
+        if "noun" in fl_available:
+            print("Great, your word is a noun.")
+            words_accepted.append(users_word)
+            print(words_accepted)
+        else:
+            global current_word
+            current_word = input("It looks like your word is not a noun. Try again: ").upper()
+            look_up_word()
+            validate_word()
+    elif word_type == adjectives:
+        if "adjective" in fl_available:
+            print("Great, your word is an adjective.")
+            words_accepted.append(users_word)
+            print(words_accepted)
+        # In case the given word is not an adjective
+        else:
+            current_word = input("It looks like your word is not an adjective. Try again: ").upper()
+            look_up_word()
+            validate_word()
+
+
+
+    """
     match Word_Variables.word_type:
         case Word_Variables.nouns:
             if "noun" in fl_available:
@@ -150,60 +170,8 @@ def valid_words_type():
                 current_word = input("It looks like your word is not an adjective. Try again: ").upper()
                 look_up_word()
                 validate_word()  
-
-
-
     """
-        match word_type:
-            case nouns:
-                if (word_checked[0]['fl'] == "noun"):
-                    print("Great, your word is a noun.")
-                    words_accepted.append(users_word)
-                    print(words_accepted)
-                # In case the given word is not a noun
-                else:
-                    global current_word
-                    current_word = input("It looks like your word is not a noun. Try again: ").upper()
-                    look_up_word()
-                    validate_word()
-            case adjectives:
-                if (word_checked[0]['fl'] == "adjective"):
-                    print("Great, your word is an adjective.")
-                    words_accepted.append(users_word)
-                    print(words_accepted)
-                # In case the given word is not a noun
-                else:
-                    global current_word
-                    current_word = input("It looks like your word is not an adjective. Try again: ").upper()
-                    look_up_word()
-                    validate_word()
-        """
 
-
-""" fixed?
-        match Word_Variables.word_type:
-            case Word_Variables.nouns:
-                if (word_checked[0]['fl'] == "noun"):
-                    print("Great, your word is a noun.")
-                    words_accepted.append(users_word)
-                    print(words_accepted)
-                # In case the given word is not a noun
-                else:
-                    global current_word
-                    current_word = input("It looks like your word is not a noun. Try again: ").upper()
-                    look_up_word()
-                    validate_word()
-            case Word_Variables.adjectives:
-                if (word_checked[0]['fl'] == "adjective"):
-                    print("Great, your word is an adjective.")
-                    words_accepted.append(users_word)
-                    print(words_accepted)
-                # In case the given word is not an adjective
-                else:
-                    current_word = input("It looks like your word is not an adjective. Try again: ").upper()
-                    look_up_word()
-                    validate_word() 
-"""
 
 
 for word in words_needed:
