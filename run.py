@@ -34,7 +34,7 @@ nouns = noun1 or noun2 or noun_pl
 adjectives = adj1 or adj2
 
 # A list of all required word inputs
-words_needed = [noun1, noun2, noun_pl, adj1, adj2]
+words_needed = [noun1, noun2, noun_pl, adj1, adj2, adv, verb]
 
 # A list that grows with each word input from user once it is accepted
 words_accepted = []
@@ -113,10 +113,11 @@ def validate_word():
             print(word_checked[1]['fl'])
             fl_available.append(word_checked[1]['fl'])
             
-            if 'hom' in word_checked[2]:
-                print(word_checked[2]['fl'])
-                fl_available.append(word_checked[2]['fl'])
-        print(fl_available)
+            if len(word_checked) > 2: #double check if working correctly
+                if 'hom' in word_checked[2]:
+                    print(word_checked[2]['fl'])
+                    fl_available.append(word_checked[2]['fl'])
+            print(fl_available)
 
     # Word not found in the dictionary - likely misspelled, a typo, or not a word
     except TypeError: 
@@ -152,7 +153,7 @@ def valid_words_type():
             look_up_word()
             validate_word()
     elif word_type == adv:
-        if "adverb" in fl_available:
+        if "adverb" in fl_available: # FIX - often sees an adjective, just ending with -ly
             print("Great, your word is an adverb.")
             words_accepted.append(users_word)
             print(words_accepted)  
@@ -206,6 +207,12 @@ for word in words_needed:
     validate_word()
     if valid_word:
         valid_words_type()
+
+#def check_word_input_again():
+    #look_up_word()
+    #validate_word()
+    #if valid_word:
+        #valid_words_type()
 
 
 
