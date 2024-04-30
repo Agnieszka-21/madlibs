@@ -95,7 +95,7 @@ def look_up_word():
 #look_up_word()
 
 
-# Validate input - check if the provided word was found in the dictionary and if it is a correct type (adj, adv etc)
+# Validate input - check if the provided word has been found in the dictionary
 def validate_word():
     # Check if the word can be found in the dictionary
     try: 
@@ -131,6 +131,7 @@ def validate_word():
 #validate_word()
 
 
+# Check if the valid word has the correct grammatical type (function label)
 def valid_words_type():
     if word_type == nouns: 
         if "noun" in fl_available:
@@ -172,35 +173,6 @@ def valid_words_type():
             validate_word()   
 
 
-
-
-    """
-    match Word_Variables.word_type:
-        case Word_Variables.nouns:
-            if "noun" in fl_available:
-                print("Great, your word is a noun.")
-                words_accepted.append(users_word)
-                print(words_accepted)
-            # In case the given word is not a noun
-            else:
-                global current_word
-                current_word = input("It looks like your word is not a noun. Try again: ").upper()
-                look_up_word()
-                validate_word()
-        case Word_Variables.adjectives: # ISSUE TO FIX: adj1 and adj2 are recognized as nouns for some reason...
-            if "adjective" in fl_available:
-                print("Great, your word is an adjective.")
-                words_accepted.append(users_word)
-                print(words_accepted)
-            # In case the given word is not an adjective
-            else:
-                current_word = input("It looks like your word is not an adjective. Try again: ").upper()
-                look_up_word()
-                validate_word()  
-    """
-
-
-
 for word in words_needed:
     word_input()
     look_up_word()
@@ -216,13 +188,11 @@ for word in words_needed:
 
 
 
-""" Trying something
-
 #Class Story for all available mad libs
 class Story:
     """
-    #A mad lib story with blanks
-"""
+    A mad lib story with blanks
+    """
     def __init__(self, title, text):
         self.title = title
         self.text = text
@@ -286,27 +256,25 @@ have been to see dinosaurs {verb} through cities \
 and fly in the sky…")
 
 
-# Lists of titles and texts for all available stories
-all_titles = [madlib1.title, madlib2.title, madlib3.title, madlib4.title, madlib5.title, madlib6.title, madlib7.title, madlib8.title]
-all_texts = [madlib1.text, madlib2.text, madlib3.text, madlib4.text, madlib5.text, madlib6.text, madlib7.text, madlib8.text]
-
-# Choose a random mad lib story to complete and print
-#if __name__ == "__main__":
-    #madlib_story = random.choice([madlib1, madlib2, madlib3, madlib4, madlib5, madlib6, madlib7, madlib8])
-    #madlib_story = madlib1
-    #madlib_story.madlib_story()
-
 def choose_story_randomly():
+    # Lists of titles and texts for all available stories
+    all_titles = [madlib1.title, madlib2.title, madlib3.title, madlib4.title, madlib5.title, madlib6.title, madlib7.title, madlib8.title]
+    all_texts = [madlib1.text, madlib2.text, madlib3.text, madlib4.text, madlib5.text, madlib6.text, madlib7.text, madlib8.text]
     # Get an index of each title from the available list
     for title in all_titles:
         title_indices = [all_titles.index(title)]
     # Choose a random title index
-    randomly_chosen_title = random.choice(title_indices)
+    randomly_chosen_titles_index = random.choice(title_indices)
     # Choose a text that matches the title (same index)
-    matching_text = all_texts[randomly_chosen_title]
+    matching_text = all_texts[randomly_chosen_titles_index]
     # Print the full story (randomly chosen title with its text)
-    print(all_titles[randomly_chosen_title])
+    print(all_titles[randomly_chosen_titles_index])
     print(matching_text)
+
+    # Update the list of available titles and texts (useful in case user wants to play again)
+    all_titles.remove(all_titles[randomly_chosen_titles_index])
+    all_texts.remove(all_texts[randomly_chosen_titles_index])
+    print(all_titles)
 
 choose_story_randomly()
 
@@ -318,18 +286,16 @@ play_again_question = input("\nWould you like to play again (Y/N)? ").upper()
 if play_again_question == "Y":
     new_game_how = input("If you would like to re-use your words with a different story, type A and press Enter. \
 If you'd like to start a new game, type B and press Enter: ").upper()
-    if new_game_how == "A":
-        random_or_not = input("If you want to choose your next story from a list of titles, type A and press Enter. \
-If you'd rather use a random story, type B and press Enter: ").upper()
-        if random_or_not == "A":
-            print(all_titles)
-        elif random_or_not == "B":
-            choose_story_randomly() #needs to be adjusted so that the list of possible stories excludes the previously used story
+    #if new_game_how == "A":
+        #random_or_not = input("If you want to choose your next story from a list of titles, type A and press Enter. \
+#If you'd rather use a random story, type B and press Enter: ").upper()
+        #if random_or_not == "A":
+            #print(all_titles)
+        #elif random_or_not == "B":
+            #choose_story_randomly()
 
 elif play_again_question == "N":
     end_game = "Okay, thanks for playing!"
     print(end_game)    
 else:
     input("Type Y if you'd like to play again or N to finish your game, then press Enter: ")
-
-"""
