@@ -66,8 +66,16 @@ def word_input():
         global adj2
         adj2 = input("Another adjective: ")
         current_word = adj2
-    #adv = input("Adverb: ").upper()
-    #verb = input("Verb: ").upper()
+    elif len(words_accepted) == 5:
+        global adv
+        adv = input("Adverb: ")
+        current_word = adv
+        word_type = adv
+    elif len(words_accepted) == 6:
+        global verb
+        verb = input("Verb: ")
+        current_word = verb
+        word_type = verb
 #word_input()
 
 
@@ -122,7 +130,6 @@ def validate_word():
 #validate_word()
 
 
-
 def valid_words_type():
     if word_type == nouns: 
         if "noun" in fl_available:
@@ -131,7 +138,7 @@ def valid_words_type():
             print(words_accepted)
         else:
             global current_word
-            current_word = input("It looks like your word is not a noun. Try again: ").upper()
+            current_word = input("It looks like your word is not a noun. Try again: ")
             look_up_word()
             validate_word()
     elif word_type == adjectives:
@@ -141,9 +148,28 @@ def valid_words_type():
             print(words_accepted)
         # In case the given word is not an adjective
         else:
-            current_word = input("It looks like your word is not an adjective. Try again: ").upper()
+            current_word = input("It looks like your word is not an adjective. Try again: ")
             look_up_word()
             validate_word()
+    elif word_type == adv:
+        if "adverb" in fl_available:
+            print("Great, your word is an adverb.")
+            words_accepted.append(users_word)
+            print(words_accepted)  
+        else: 
+            current_word = input("It looks like your word is not an adverb. Try again: ")
+            look_up_word()
+            validate_word()   
+    elif word_type == verb:
+        if "verb" in fl_available:
+            print("Great, your word is a verb.")
+            words_accepted.append(users_word)
+            print(words_accepted)  
+        else: 
+            current_word = input("It looks like your word is not a verb. Try again: ")
+            look_up_word()
+            validate_word()   
+
 
 
 
