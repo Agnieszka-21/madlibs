@@ -101,7 +101,7 @@ def validate_word():
     try: 
         word_checked[0]['fl']
         print("Validation successful.")
-        print(word_checked[0]['fl'])
+        #print(word_checked[0]['fl'])
         global valid_word
         valid_word = True
         global fl_available
@@ -110,14 +110,14 @@ def validate_word():
         # Check for homographs - a word has multiple meanings/grammatic functions etc.
         if 'hom' in word_checked[0]:
             print("This word has multiple meanings and functions")
-            print(word_checked[1]['fl'])
+            #print(word_checked[1]['fl'])
             fl_available.append(word_checked[1]['fl'])
             
             if len(word_checked) > 2: #double check if working correctly
                 if 'hom' in word_checked[2]:
                     print(word_checked[2]['fl'])
                     fl_available.append(word_checked[2]['fl'])
-            print(fl_available)
+        print(fl_available)
 
     # Word not found in the dictionary - likely misspelled, a typo, or not a word
     except TypeError: 
@@ -172,13 +172,15 @@ def valid_words_type():
             look_up_word()
             validate_word()   
 
-
+"""
 for word in words_needed:
     word_input()
     look_up_word()
     validate_word()
     if valid_word:
         valid_words_type()
+
+"""
 
 #def check_word_input_again():
     #look_up_word()
@@ -246,7 +248,7 @@ it damaged it too much. We need to find somewhere clear to land.\” \
 They got out of the plane to check the damaged {noun2}. Suddenly, a loud roar made them jump. \
 From out of the jungle came a pair of {noun_pl}...")
 
-madlib8 = Story("Dino Danger", f"\nDinosaurs were a diverse group of {noun_pl} \
+madlib8 = Story("\nDino Danger", f"\nDinosaurs were a diverse group of {noun_pl} \
 that lived on Earth until about 66 million years ago. Some \
 dinosaurs were carnivores - they ate {noun1}. Other \
 dinosaurs were herbivores and ate {noun2}. One of the most {adj1} \
@@ -265,37 +267,40 @@ def choose_story_randomly():
         title_indices = [all_titles.index(title)]
     # Choose a random title index
     randomly_chosen_titles_index = random.choice(title_indices)
+    print(randomly_chosen_titles_index)
+    randomly_chosen_titles_index = random.choice(title_indices)
+    print(randomly_chosen_titles_index)
+    randomly_chosen_titles_index = random.choice(title_indices)
+    print(randomly_chosen_titles_index)
     # Choose a text that matches the title (same index)
-    matching_text = all_texts[randomly_chosen_titles_index]
+    #matching_text = all_texts[randomly_chosen_titles_index]
     # Print the full story (randomly chosen title with its text)
     print(all_titles[randomly_chosen_titles_index])
-    print(matching_text)
+    #print(matching_text)
 
     # Update the list of available titles and texts (useful in case user wants to play again)
-    all_titles.remove(all_titles[randomly_chosen_titles_index])
-    all_texts.remove(all_texts[randomly_chosen_titles_index])
-    print(all_titles)
+    #all_titles.remove(all_titles[randomly_chosen_titles_index])
+    #all_texts.remove(all_texts[randomly_chosen_titles_index])
+    #print(all_titles)
 
 choose_story_randomly()
 
 
 
-# Would you like to play again (Y/N)? 
-play_again_question = input("\nWould you like to play again (Y/N)? ").upper()
-
-if play_again_question == "Y":
-    new_game_how = input("If you would like to re-use your words with a different story, type A and press Enter. \
+def play_again_or_not():
+    play_again_question = input("\nWould you like to play again (Y/N)? ").upper()
+    if play_again_question == "Y":
+        new_game_how = input("If you would like to re-use your words with a different story, type A and press Enter. \
 If you'd like to start a new game, type B and press Enter: ").upper()
-    #if new_game_how == "A":
-        #random_or_not = input("If you want to choose your next story from a list of titles, type A and press Enter. \
-#If you'd rather use a random story, type B and press Enter: ").upper()
-        #if random_or_not == "A":
-            #print(all_titles)
-        #elif random_or_not == "B":
-            #choose_story_randomly()
-
-elif play_again_question == "N":
-    end_game = "Okay, thanks for playing!"
-    print(end_game)    
-else:
-    input("Type Y if you'd like to play again or N to finish your game, then press Enter: ")
+        if new_game_how == "A":
+            choose_story_randomly()
+        elif new_game_how == "B":
+            pass # UPDATE neededed: clear the terminal, print Welcome and a first required input
+        else:
+            input("Please choose A or B and press Enter: ")
+    elif play_again_question == "N":
+        end_game = "Okay, thanks for playing!"
+        print(end_game)    
+    else:
+        input("Type Y if you'd like to play again or N to finish your game, then press Enter: ")
+play_again_or_not()
