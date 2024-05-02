@@ -208,8 +208,8 @@ than adults. When babies are born, they have the ability to {verb}. Newborn rats
 madlib2 = Story("\nFall Fun", f"\nThe weather is starting to turn crisp. \
 The wind is blowing through the {noun_pl}. I am excited to go \
 {noun1} picking this weekend. Each autumn, my family drives out to my \
-uncle’s orchard. We pick as many apples as our {noun2} can hold. \
-This year we are also going to {verb} a scarecrow contest. I can’t decide \
+uncle's orchard. We pick as many apples as our {noun2} can hold. \
+This year we are also going to {verb} a scarecrow contest. I can't decide \
 if I want the face to be {adj1} or {adv} {adj2}.")
 
 madlib3 = Story("\nSpace Adventure", f"\nOnce upon a time, in a galaxy far, far away, \
@@ -223,7 +223,7 @@ madlib4 = Story("\nAre we alone?", f"\nAfter many {adj1} days and nights, Buzz {
 arrived at the mysterious planet. He stepped out of the {noun1} and \
 was greeted by {adj2} {noun_pl} and other curious creatures. \
 He wanted to {verb} the {noun2} and become friends with the locals. \
-But his intuition was telling him that he couldn’t trust his hosts...")
+But his intuition was telling him that he couldn't trust his hosts...")
 
 madlib5 = Story("\nSummer Camp Mystery", f"\nIt was a(n) {adv} {adj1} summer day - the first day of camp! \
 The camp counsellor told us to {verb} for the {noun1} \
@@ -232,7 +232,7 @@ a very {adj2} smell. That night as other campers and I were \
 going to sleep, we heard a noise. It sounded like someone \
 chewing on {noun_pl}...")
 
-madlib6 = Story("\nFirst Day at Wizard School", f"\nHermione jumped out of <noun> as she opened her eyes. \
+madlib6 = Story("\nFirst Day at Wizard School", f"\nHermione jumped out of noun as she opened her eyes. \
 Today was her first day at wizard school! She dressed {adv}, \
 grabbing a pointy hat to {verb} on her head. Arriving at school, \
 she took her seat in class and prepared her first potion. The ingredients \
@@ -258,32 +258,30 @@ have been to see dinosaurs {verb} through cities \
 and fly in the sky…")
 
 
+
+
 def choose_story_randomly():
     # Lists of titles and texts for all available stories
     all_titles = [madlib1.title, madlib2.title, madlib3.title, madlib4.title, madlib5.title, madlib6.title, madlib7.title, madlib8.title]
     all_texts = [madlib1.text, madlib2.text, madlib3.text, madlib4.text, madlib5.text, madlib6.text, madlib7.text, madlib8.text]
-    # Get an index of each title from the available list
-    for title in all_titles:
-        title_indices = [all_titles.index(title)]
-    # Choose a random title index
-    randomly_chosen_titles_index = random.choice(title_indices)
-    print(randomly_chosen_titles_index)
-    randomly_chosen_titles_index = random.choice(title_indices)
-    print(randomly_chosen_titles_index)
-    randomly_chosen_titles_index = random.choice(title_indices)
-    print(randomly_chosen_titles_index)
-    # Choose a text that matches the title (same index)
-    #matching_text = all_texts[randomly_chosen_titles_index]
-    # Print the full story (randomly chosen title with its text)
-    print(all_titles[randomly_chosen_titles_index])
-    #print(matching_text)
-
-    # Update the list of available titles and texts (useful in case user wants to play again)
-    #all_titles.remove(all_titles[randomly_chosen_titles_index])
-    #all_texts.remove(all_texts[randomly_chosen_titles_index])
-    #print(all_titles)
+    # Choose a title randomly
+    randomly_chosen_title = random.choice(all_titles)
+    get_index_of_randomly_chosen_title = all_titles.index(randomly_chosen_title)
+    # Get matching text (same index as the randomly chosen title's)
+    matching_text = all_texts[get_index_of_randomly_chosen_title]
+    print(randomly_chosen_title, matching_text)
 
 choose_story_randomly()
+
+
+def choose_another_story_randomly():
+    # Update the list of available titles and texts (in case user wants to play again using the same words with a different story)
+    #all_titles = all_titles.remove(all_titles[get_index_of_randomly_chosen_title])
+    #all_texts = all_texts.remove(all_texts[get_index_of_randomly_chosen_title])
+    #print(all_titles)
+    pass
+
+
 
 
 
