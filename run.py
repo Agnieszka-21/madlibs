@@ -80,29 +80,30 @@ def look_up_word():
     response = requests.get(f"https://www.dictionaryapi.com/api/v3/references/collegiate/json/{current_word.word_required}?key={app_key}")
     global word_checked
     word_checked = response.json()
-    print(word_checked)   
+    #print(word_checked)   
 #look_up_word()
 
 
 # Validate input - check if the provided word has been found in the dictionary
 def validate_word():
-    # Check if the word can be found in the dictionary
-    # Aiming to access 'fl', functional label of the given word (e.g. adjective, verb, etc.)
     try: 
+        # Check if the word can be found in the dictionary
         global current_word
         current_word.word_required in word_checked[0]['meta']['id']
-        print("Validation successful.")
-        print(word_checked[0]['meta']['id'])
-        print(current_word.word_required)
+        #print("Validation successful.")
+        #print(word_checked[0]['meta']['id'])
+        #print(current_word.word_required)
 
+        # Aiming to access 'fl', functional label of the given word (e.g. adjective, verb, etc.)
         if 'fl' in word_checked[0]:
             fl_available = [word_checked[0]['fl']]
+        # If such a label is not found (usually for plural nouns)
         elif 'plural of' in word_checked[0]['cxs'][0]['cxl']:
             fl_available = ["noun"]
 
-        # Check for homographs - a word has multiple meanings/grammatic functions etc.
-        if len(word_checked) > 1 and 'hom' in word_checked[0] and 'fl' in word_checked[1]:
-            print("This word has multiple meanings and functions")
+        # Check for homographs - a word has multiple meanings/grammatic functions
+        if len(word_checked) > 1 and 'hom' in word_checked[1] and 'fl' in word_checked[1]:
+            #print("This word has multiple meanings and functions")
             fl_available.append(word_checked[1]['fl'])
             
             if len(word_checked) > 2 and 'hom' in word_checked[2] and 'fl' in word_checked[2]: #double check if working correctly
@@ -123,17 +124,16 @@ def validate_word():
                     look_up_word()
                     validate_word()
             elif current_word.word_type == "adjectives":
-                if "adjective" in fl_available:
+                if "adjective" or "adverb or adjective" in fl_available:
                     print("Great, your word is an adjective.")
                     words_accepted.append(current_word.word_required)
                     print(words_accepted)
-                # In case the given word is not an adjective
                 else:
                     current_word.word_required = input("It looks like your word is not an adjective. Try again: ")
                     look_up_word()
                     validate_word()
             elif current_word.word_type == "adverb":
-                if "adverb" or ("adjective" and current_word.word_required[-2:] == ['ly']) in fl_available: # FIX - often sees an adjective, just ending with -ly
+                if "adverb" or ("adjective" and current_word.word_required[-2:] == ['ly']) in fl_available:
                     print("Great, your word is an adverb.")
                     print(current_word.word_required[-2:])
                     words_accepted.append(current_word.word_required)
@@ -142,7 +142,7 @@ def validate_word():
                     current_word.word_required = input("It looks like your word is not an adverb. Try again: ")
                     look_up_word()
                     validate_word()   
-            elif current_word.word_type == "verb": #word_type == verb
+            elif current_word.word_type == "verb":
                 if "verb" in fl_available:
                     print("Great, your word is a verb.")
                     words_accepted.append(current_word.word_required)
@@ -152,6 +152,7 @@ def validate_word():
                     look_up_word()
                     validate_word()
         valid_words_type()  
+
     # Word not found in the dictionary - likely misspelled, a typo, or not a word
     except TypeError: 
         print("There is a problem with your word.")
@@ -160,7 +161,10 @@ def validate_word():
         #current_word = noun1
         look_up_word()
         validate_word()
-    #except ConnectionError (can't connect to API)
+
+    # Cannot connect to the dictionary
+    except ConnectionError:
+        print("Sorry, there was an issue with checking your word.")
 #validate_word()
 
 
