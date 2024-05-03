@@ -27,11 +27,11 @@ class Words:
         self.word_required = word_required
         self.word_type = word_type
 
-noun1 = Words("noun", "nouns")
-noun2 = Words("noun", "nouns")
-noun_pl = Words("noun", "nouns")
-adj1 = Words("adjective", "adjectives")
-adj2 = Words("adjective", "adjectives")
+noun1 = Words("noun", "noun")
+noun2 = Words("noun", "noun")
+noun_pl = Words("noun", "noun")
+adj1 = Words("adjective", "adjective")
+adj2 = Words("adjective", "adjective")
 adv = Words("adverb", "adverb")
 verb = Words("verb", "verb")
 
@@ -113,7 +113,7 @@ def validate_word():
         # Check if the valid word has the correct grammatical type (function label)
         def valid_words_type():
             global current_word
-            if current_word.word_type == "nouns": 
+            if current_word.word_type == "noun": 
                 if "noun" in fl_available:
                     print("Great, your word is a noun.")
                     #global current_word
@@ -123,7 +123,7 @@ def validate_word():
                     current_word.word_required = input("It looks like your word is not a noun. Try again: ")
                     look_up_word()
                     validate_word()
-            elif current_word.word_type == "adjectives":
+            elif current_word.word_type == "adjective":
                 if "adjective" or "adverb or adjective" in fl_available:
                     print("Great, your word is an adjective.")
                     words_accepted.append(current_word.word_required)
@@ -155,10 +155,8 @@ def validate_word():
 
     # Word not found in the dictionary - likely misspelled, a typo, or not a word
     except TypeError: 
-        print("There is a problem with your word.")
-        current_word = input("Please check for typos and try again - enter a noun here: ")
-        #global current_word
-        #current_word = noun1
+        #print("There is a problem with your word.")
+        current_word.word_required = input(f"Please check for typos and try again. Enter your {current_word.word_type} here: ")
         look_up_word()
         validate_word()
 
