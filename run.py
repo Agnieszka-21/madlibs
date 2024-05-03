@@ -34,7 +34,7 @@ adj1 = Words("adjective", "adjectives")
 adj2 = Words("adjective", "adjectives")
 adv = Words("adverb", "adverb")
 verb = Words("verb", "verb")
-#current_word = Words("current word", "current type")
+
 
 # A list of all required word inputs
 WORDS_NEEDED = (noun1, noun2, noun_pl, adj1, adj2, adv, verb)
@@ -42,9 +42,8 @@ WORDS_NEEDED = (noun1, noun2, noun_pl, adj1, adj2, adv, verb)
 # A list that grows with each valid word input from user
 words_accepted = []
 
-# Variables that can be checked in groups (similar words)
-#nouns = noun1 or noun2 or noun_pl
-#adjectives = adj1 or adj2
+# Current word input being looked up and validated
+current_word = None
 
 
 # Required user's inputs - words to fill any blanks in a mad lib
@@ -90,18 +89,24 @@ def validate_word():
     # Check if the word can be found in the dictionary
     # Aiming to access 'fl', functional label of the given word (e.g. adjective, verb, etc.)
     try: 
-        word_checked[0]['fl']
+        global current_word
+        current_word.word_required in word_checked[0]['meta']['id']
         print("Validation successful.")
-        fl_available = [word_checked[0]['fl']]
+        print(word_checked[0]['meta']['id'])
+        print(current_word.word_required)
+
+        if 'fl' in word_checked[0]:
+            fl_available = [word_checked[0]['fl']]
+        elif 'plural of' in word_checked[0]['cxs'][0]['cxl']:
+            fl_available = ["noun"]
 
         # Check for homographs - a word has multiple meanings/grammatic functions etc.
-        if 'hom' in word_checked[0]:
+        if len(word_checked) > 1 and 'hom' in word_checked[0] and 'fl' in word_checked[1]:
             print("This word has multiple meanings and functions")
             fl_available.append(word_checked[1]['fl'])
             
-            if len(word_checked) > 2: #double check if working correctly
-                if 'hom' in word_checked[2]:
-                    fl_available.append(word_checked[2]['fl'])
+            if len(word_checked) > 2 and 'hom' in word_checked[2] and 'fl' in word_checked[2]: #double check if working correctly
+                fl_available.append(word_checked[2]['fl'])
         print(fl_available)
 
         # Check if the valid word has the correct grammatical type (function label)
@@ -128,8 +133,9 @@ def validate_word():
                     look_up_word()
                     validate_word()
             elif current_word.word_type == "adverb":
-                if "adverb" or "adverb or adjective" in fl_available: # FIX - often sees an adjective, just ending with -ly
+                if "adverb" or ("adjective" and current_word.word_required[-2:] == ['ly']) in fl_available: # FIX - often sees an adjective, just ending with -ly
                     print("Great, your word is an adverb.")
+                    print(current_word.word_required[-2:])
                     words_accepted.append(current_word.word_required)
                     print(words_accepted)  
                 else: 
