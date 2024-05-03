@@ -20,7 +20,6 @@ each word by pressing Enter. Afterwards, simply read the complete story. Have fu
 welcome()
 
 
-# Variables needed to fill the blanks in mad libs
 noun1 = "noun"
 noun2 = "noun"
 noun_pl = "noun"
@@ -29,25 +28,26 @@ adj2 = "adjective"
 adv = "adverb"
 verb = "verb"
 
-# Variables that can be checked in groups (similar words)
-nouns = noun1 or noun2 or noun_pl
-adjectives = adj1 or adj2
-
 # A list of all required word inputs
-words_needed = [noun1, noun2, noun_pl, adj1, adj2, adv, verb]
+WORDS_NEEDED = (noun1, noun2, noun_pl, adj1, adj2, adv, verb)
 
-# A list that grows with each word input from user once it is accepted
+# A list that grows with each valid word input from user
 words_accepted = []
 
+# Variables that can be checked in groups (similar words)
+#nouns = noun1 or noun2 or noun_pl
+#adjectives = adj1 or adj2
+
+
 # Required user's inputs - words to fill any blanks in a mad lib
-def word_input():
+def get_word_input():
     if len(words_accepted) == 0:
         global noun1
         noun1 = input("Noun: ")
         global current_word
         current_word = noun1
         global word_type
-        word_type = nouns
+        word_type = "nouns"
     elif len(words_accepted) == 1:
         global noun2
         noun2 = input("Another noun: ")
@@ -57,11 +57,10 @@ def word_input():
         noun_pl = input("Plural noun: ")
         current_word = noun_pl
     elif len(words_accepted) == 3:
-        #Word_Variables.word_type
         global adj1
         adj1 = input("Adjective: ")
         current_word = adj1
-        word_type = adjectives
+        word_type = "adjectives"
     elif len(words_accepted) == 4:
         global adj2
         adj2 = input("Another adjective: ")
@@ -70,125 +69,105 @@ def word_input():
         global adv
         adv = input("Adverb: ")
         current_word = adv
-        word_type = adv
+        word_type = "adverb"
     elif len(words_accepted) == 6:
         global verb
         verb = input("Verb: ")
         current_word = verb
-        word_type = verb
+        word_type = "verb"
 #word_input()
 
 
 # Access the dictionary API key
 def look_up_word():
-    global users_word
-    users_word = current_word
     app_key = dictionary_api.API_KEY_SERVICE
     # Code figured out based on the following tutorial: https://www.youtube.com/watch?v=hpc5jyVpUpw
-    # Aiming to access 'fl', functional label of the given word (e.g. adjective, verb, etc.)
-    response = requests.get(f"https://www.dictionaryapi.com/api/v3/references/collegiate/json/{users_word}?key={app_key}")
+    response = requests.get(f"https://www.dictionaryapi.com/api/v3/references/collegiate/json/{current_word}?key={app_key}")
     global word_checked
     word_checked = response.json()
     print(word_checked)   
-    global valid_word
-    valid_word = False
 #look_up_word()
 
 
 # Validate input - check if the provided word has been found in the dictionary
 def validate_word():
     # Check if the word can be found in the dictionary
+    # Aiming to access 'fl', functional label of the given word (e.g. adjective, verb, etc.)
     try: 
         word_checked[0]['fl']
         print("Validation successful.")
-        #print(word_checked[0]['fl'])
-        global valid_word
-        valid_word = True
-        global fl_available
         fl_available = [word_checked[0]['fl']]
 
         # Check for homographs - a word has multiple meanings/grammatic functions etc.
         if 'hom' in word_checked[0]:
             print("This word has multiple meanings and functions")
-            #print(word_checked[1]['fl'])
             fl_available.append(word_checked[1]['fl'])
             
             if len(word_checked) > 2: #double check if working correctly
                 if 'hom' in word_checked[2]:
-                    print(word_checked[2]['fl'])
                     fl_available.append(word_checked[2]['fl'])
         print(fl_available)
 
+        # Check if the valid word has the correct grammatical type (function label)
+        def valid_words_type():
+            if word_type == "nouns": 
+                if "noun" in fl_available:
+                    print("Great, your word is a noun.")
+                    global current_word
+                    words_accepted.append(current_word)
+                    print(words_accepted)
+                else:
+                    current_word = input("It looks like your word is not a noun. Try again: ")
+                    look_up_word()
+                    validate_word()
+            elif word_type == "adjectives":
+                if "adjective" in fl_available:
+                    print("Great, your word is an adjective.")
+                    words_accepted.append(current_word)
+                    print(words_accepted)
+                # In case the given word is not an adjective
+                else:
+                    current_word = input("It looks like your word is not an adjective. Try again: ")
+                    look_up_word()
+                    validate_word()
+            elif word_type == "adverb":
+                if "adverb" or "adverb or adjective" in fl_available: # FIX - often sees an adjective, just ending with -ly
+                    print("Great, your word is an adverb.")
+                    words_accepted.append(current_word)
+                    print(words_accepted)  
+                else: 
+                    current_word = input("It looks like your word is not an adverb. Try again: ")
+                    look_up_word()
+                    validate_word()   
+            elif word_type == "verb": #word_type == verb
+                if "verb" in fl_available:
+                    print("Great, your word is a verb.")
+                    words_accepted.append(current_word)
+                    print(words_accepted)  
+                else: 
+                    current_word = input("It looks like your word is not a verb. Try again: ")
+                    look_up_word()
+                    validate_word()
+        valid_words_type()  
     # Word not found in the dictionary - likely misspelled, a typo, or not a word
     except TypeError: 
         print("There is a problem with your word.")
-        noun1 = input("Please check for typos and try again - enter a noun here: ")
-        global current_word
-        current_word = noun1
+        current_word = input("Please check for typos and try again - enter a noun here: ")
+        #global current_word
+        #current_word = noun1
         look_up_word()
         validate_word()
     #except ConnectionError (can't connect to API)
 #validate_word()
 
 
-# Check if the valid word has the correct grammatical type (function label)
-def valid_words_type():
-    if word_type == nouns: 
-        if "noun" in fl_available:
-            print("Great, your word is a noun.")
-            words_accepted.append(users_word)
-            print(words_accepted)
-        else:
-            global current_word
-            current_word = input("It looks like your word is not a noun. Try again: ")
-            look_up_word()
-            validate_word()
-    elif word_type == adjectives:
-        if "adjective" in fl_available:
-            print("Great, your word is an adjective.")
-            words_accepted.append(users_word)
-            print(words_accepted)
-        # In case the given word is not an adjective
-        else:
-            current_word = input("It looks like your word is not an adjective. Try again: ")
-            look_up_word()
-            validate_word()
-    elif word_type == adv:
-        if "adverb" or "adverb or adjective" in fl_available: # FIX - often sees an adjective, just ending with -ly
-            print("Great, your word is an adverb.")
-            words_accepted.append(users_word)
-            print(words_accepted)  
-        else: 
-            current_word = input("It looks like your word is not an adverb. Try again: ")
-            look_up_word()
-            validate_word()   
-    elif word_type == verb:
-        if "verb" in fl_available:
-            print("Great, your word is a verb.")
-            words_accepted.append(users_word)
-            print(words_accepted)  
-        else: 
-            current_word = input("It looks like your word is not a verb. Try again: ")
-            look_up_word()
-            validate_word()   
-
-"""
-for word in words_needed:
-    word_input()
+ 
+for word in WORDS_NEEDED:
+    get_word_input()
     look_up_word()
     validate_word()
-    if valid_word:
-        valid_words_type()
 
-"""
-
-#def check_word_input_again():
-    #look_up_word()
-    #validate_word()
-    #if valid_word:
-        #valid_words_type()
-
-
+        
 
 #Class Story for all available mad libs
 class Story:
@@ -232,7 +211,7 @@ a very {adj2} smell. That night as other campers and I were \
 going to sleep, we heard a noise. It sounded like someone \
 chewing on {noun_pl}...")
 
-madlib6 = Story("\nFirst Day at Wizard School", f"\nHermione jumped out of noun as she opened her eyes. \
+madlib6 = Story("\nFirst Day at Wizard School", f"\nHermione jumped out of {noun1} as she opened her eyes. \
 Today was her first day at wizard school! She dressed {adv}, \
 grabbing a pointy hat to {verb} on her head. Arriving at school, \
 she took her seat in class and prepared her first potion. The ingredients \
@@ -256,8 +235,6 @@ dinosaurs had a(n) {adj2} armour along its back. It walked \
 {adv} due to its large size. Imagine how amazing it would \
 have been to see dinosaurs {verb} through cities \
 and fly in the sky…")
-
-
 
 
 def choose_story_randomly():
