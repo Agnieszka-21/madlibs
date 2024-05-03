@@ -19,14 +19,22 @@ each word by pressing Enter. Afterwards, simply read the complete story. Have fu
     print(welcome)
 welcome()
 
+class Words:
+    """
+    Required word inputs and their types
+    """
+    def __init__(self, word_required, word_type):
+        self.word_required = word_required
+        self.word_type = word_type
 
-noun1 = "noun"
-noun2 = "noun"
-noun_pl = "noun"
-adj1 = "adjective"
-adj2 = "adjective"
-adv = "adverb"
-verb = "verb"
+noun1 = Words("noun", "nouns")
+noun2 = Words("noun", "nouns")
+noun_pl = Words("noun", "nouns")
+adj1 = Words("adjective", "adjectives")
+adj2 = Words("adjective", "adjectives")
+adv = Words("adverb", "adverb")
+verb = Words("verb", "verb")
+#current_word = Words("current word", "current type")
 
 # A list of all required word inputs
 WORDS_NEEDED = (noun1, noun2, noun_pl, adj1, adj2, adv, verb)
@@ -42,39 +50,27 @@ words_accepted = []
 # Required user's inputs - words to fill any blanks in a mad lib
 def get_word_input():
     if len(words_accepted) == 0:
-        global noun1
-        noun1 = input("Noun: ")
+        noun1.word_required = input("Noun: ")
         global current_word
         current_word = noun1
-        global word_type
-        word_type = "nouns"
     elif len(words_accepted) == 1:
-        global noun2
-        noun2 = input("Another noun: ")
+        noun2.word_required = input("Another noun: ")
         current_word = noun2
     elif len(words_accepted) == 2:
-        global noun_pl
-        noun_pl = input("Plural noun: ")
+        noun_pl.word_required = input("Plural noun: ")
         current_word = noun_pl
     elif len(words_accepted) == 3:
-        global adj1
-        adj1 = input("Adjective: ")
+        adj1.word_required = input("Adjective: ")
         current_word = adj1
-        word_type = "adjectives"
     elif len(words_accepted) == 4:
-        global adj2
-        adj2 = input("Another adjective: ")
+        adj2.word_required = input("Another adjective: ")
         current_word = adj2
     elif len(words_accepted) == 5:
-        global adv
-        adv = input("Adverb: ")
+        adv.word_required = input("Adverb: ")
         current_word = adv
-        word_type = "adverb"
     elif len(words_accepted) == 6:
-        global verb
-        verb = input("Verb: ")
+        verb.word_required = input("Verb: ")
         current_word = verb
-        word_type = "verb"
 #word_input()
 
 
@@ -82,7 +78,7 @@ def get_word_input():
 def look_up_word():
     app_key = dictionary_api.API_KEY_SERVICE
     # Code figured out based on the following tutorial: https://www.youtube.com/watch?v=hpc5jyVpUpw
-    response = requests.get(f"https://www.dictionaryapi.com/api/v3/references/collegiate/json/{current_word}?key={app_key}")
+    response = requests.get(f"https://www.dictionaryapi.com/api/v3/references/collegiate/json/{current_word.word_required}?key={app_key}")
     global word_checked
     word_checked = response.json()
     print(word_checked)   
@@ -110,42 +106,43 @@ def validate_word():
 
         # Check if the valid word has the correct grammatical type (function label)
         def valid_words_type():
-            if word_type == "nouns": 
+            global current_word
+            if current_word.word_type == "nouns": 
                 if "noun" in fl_available:
                     print("Great, your word is a noun.")
-                    global current_word
-                    words_accepted.append(current_word)
+                    #global current_word
+                    words_accepted.append(current_word.word_required)
                     print(words_accepted)
                 else:
-                    current_word = input("It looks like your word is not a noun. Try again: ")
+                    current_word.word_required = input("It looks like your word is not a noun. Try again: ")
                     look_up_word()
                     validate_word()
-            elif word_type == "adjectives":
+            elif current_word.word_type == "adjectives":
                 if "adjective" in fl_available:
                     print("Great, your word is an adjective.")
-                    words_accepted.append(current_word)
+                    words_accepted.append(current_word.word_required)
                     print(words_accepted)
                 # In case the given word is not an adjective
                 else:
-                    current_word = input("It looks like your word is not an adjective. Try again: ")
+                    current_word.word_required = input("It looks like your word is not an adjective. Try again: ")
                     look_up_word()
                     validate_word()
-            elif word_type == "adverb":
+            elif current_word.word_type == "adverb":
                 if "adverb" or "adverb or adjective" in fl_available: # FIX - often sees an adjective, just ending with -ly
                     print("Great, your word is an adverb.")
-                    words_accepted.append(current_word)
+                    words_accepted.append(current_word.word_required)
                     print(words_accepted)  
                 else: 
-                    current_word = input("It looks like your word is not an adverb. Try again: ")
+                    current_word.word_required = input("It looks like your word is not an adverb. Try again: ")
                     look_up_word()
                     validate_word()   
-            elif word_type == "verb": #word_type == verb
+            elif current_word.word_type == "verb": #word_type == verb
                 if "verb" in fl_available:
                     print("Great, your word is a verb.")
-                    words_accepted.append(current_word)
+                    words_accepted.append(current_word.word_required)
                     print(words_accepted)  
                 else: 
-                    current_word = input("It looks like your word is not a verb. Try again: ")
+                    current_word.word_required = input("It looks like your word is not a verb. Try again: ")
                     look_up_word()
                     validate_word()
         valid_words_type()  
@@ -178,62 +175,62 @@ class Story:
         self.title = title
         self.text = text
 
-madlib1 = Story("\nStrange Science", f"\nScience is full of {adv} strange facts and stories. Did you know that \
-rats can laugh when they are being tickled? Another fun {noun1} about rats is that \
-their teeth never stop growing. Babies may be {adj1} but they have 100 more {noun_pl} \
-than adults. When babies are born, they have the ability to {verb}. Newborn rats have \
-{adj2} stomachs. They are approximately the size of a(n) {noun2}.")
+madlib1 = Story("\nStrange Science", f"\nScience is full of {adv.word_required} strange facts and stories. Did you know that \
+rats can laugh when they are being tickled? Another fun {noun1.word_required} about rats is that \
+their teeth never stop growing. Babies may be {adj1.word_required} but they have 100 more {noun_pl.word_required} \
+than adults. When babies are born, they have the ability to {verb.word_required}. Newborn rats have \
+{adj2.word_required} stomachs. They are approximately the size of a(n) {noun2.word_required}.")
 
 madlib2 = Story("\nFall Fun", f"\nThe weather is starting to turn crisp. \
-The wind is blowing through the {noun_pl}. I am excited to go \
-{noun1} picking this weekend. Each autumn, my family drives out to my \
-uncle's orchard. We pick as many apples as our {noun2} can hold. \
-This year we are also going to {verb} a scarecrow contest. I can't decide \
-if I want the face to be {adj1} or {adv} {adj2}.")
+The wind is blowing through the {noun_pl.word_required}. I am excited to go \
+{noun1.word_required} picking this weekend. Each autumn, my family drives out to my \
+uncle's orchard. We pick as many apples as our {noun2.word_required} can hold. \
+This year we are also going to {verb.word_required} a scarecrow contest. I can't decide \
+if I want the face to be {adj1.word_required} or {adv.word_required} {adj2.word_required}.")
 
 madlib3 = Story("\nSpace Adventure", f"\nOnce upon a time, in a galaxy far, far away, \
-there was an adventurous {noun1} named Anakin. One day, Anakin hopped \
-aboard their {adj1} spaceship - his mission was to {verb} \
-a new {noun2}. As the spaceship soared through the {adj2} galaxy, \
-Anakin marvelled at the twinkling {noun_pl} he passed. {adv}, \
+there was an adventurous {noun1.word_required} named Anakin. One day, Anakin hopped \
+aboard their {adj1.word_required} spaceship - his mission was to {verb.word_required} \
+a new {noun2.word_required}. As the spaceship soared through the {adj2.word_required} galaxy, \
+Anakin marvelled at the twinkling {noun_pl.word_required} he passed. {adv.word_required}, \
 an asteroid appeared out of nowhere and shot across their path.")
 
-madlib4 = Story("\nAre we alone?", f"\nAfter many {adj1} days and nights, Buzz {adv} \
-arrived at the mysterious planet. He stepped out of the {noun1} and \
-was greeted by {adj2} {noun_pl} and other curious creatures. \
-He wanted to {verb} the {noun2} and become friends with the locals. \
+madlib4 = Story("\nAre we alone?", f"\nAfter many {adj1.word_required} days and nights, Buzz {adv.word_required} \
+arrived at the mysterious planet. He stepped out of the {noun1.word_required} and \
+was greeted by {adj2.word_required} {noun_pl.word_required} and other curious creatures. \
+He wanted to {verb.word_required} the {noun2.word_required} and become friends with the locals. \
 But his intuition was telling him that he couldn't trust his hosts...")
 
-madlib5 = Story("\nSummer Camp Mystery", f"\nIt was a(n) {adv} {adj1} summer day - the first day of camp! \
-The camp counsellor told us to {verb} for the {noun1} \
-- a local legend with sharp teeth, bushy {noun2}, and \
-a very {adj2} smell. That night as other campers and I were \
+madlib5 = Story("\nSummer Camp Mystery", f"\nIt was a(n) {adv.word_required} {adj1.word_required} summer day - the first day of camp! \
+The camp counsellor told us to {verb.word_required} for the {noun1.word_required} \
+- a local legend with sharp teeth, bushy {noun2.word_required}, and \
+a very {adj2.word_required} smell. That night as other campers and I were \
 going to sleep, we heard a noise. It sounded like someone \
-chewing on {noun_pl}...")
+chewing on {noun_pl.word_required}...")
 
-madlib6 = Story("\nFirst Day at Wizard School", f"\nHermione jumped out of {noun1} as she opened her eyes. \
-Today was her first day at wizard school! She dressed {adv}, \
-grabbing a pointy hat to {verb} on her head. Arriving at school, \
+madlib6 = Story("\nFirst Day at Wizard School", f"\nHermione jumped out of {noun1.word_required} as she opened her eyes. \
+Today was her first day at wizard school! She dressed {adv.word_required}, \
+grabbing a pointy hat to {verb.word_required} on her head. Arriving at school, \
 she took her seat in class and prepared her first potion. The ingredients \
-included a(n) {adj1} bezoar and {adj2} {noun_pl}. \
-It would be worth it when she could turn a spider into a(n) {noun2}.")
+included a(n) {adj1.word_required} bezoar and {adj2.word_required} {noun_pl.word_required}. \
+It would be worth it when she could turn a spider into a(n) {noun2.word_required}.")
 
-madlib7 = Story("\nAmazon Explorers", f"\nThe {adj1} explorer flew his plane over the Amazon jungle. \
-Below, he could {verb} tall trees growing along the edge of \
-a(n) {noun1}. Behind him, he could hear his co-pilot, Emma, muttering. \
-\“We're not going to make it. When the {adj2} eagle flew into the wing, \
+madlib7 = Story("\nAmazon Explorers", f"\nThe {adj1.word_required} explorer flew his plane over the Amazon jungle. \
+Below, he could {verb.word_required} tall trees growing along the edge of \
+a(n) {noun1.word_required}. Behind him, he could hear his co-pilot, Emma, muttering. \
+\“We're not going to make it. When the {adj2.word_required} eagle flew into the wing, \
 it damaged it too much. We need to find somewhere clear to land.\” \
-{adv}, Marcus spotted a clearing - a perfect landing spot. \
-They got out of the plane to check the damaged {noun2}. Suddenly, a loud roar made them jump. \
-From out of the jungle came a pair of {noun_pl}...")
+{adv.word_required}, Marcus spotted a clearing - a perfect landing spot. \
+They got out of the plane to check the damaged {noun2.word_required}. Suddenly, a loud roar made them jump. \
+From out of the jungle came a pair of {noun_pl.word_required}...")
 
-madlib8 = Story("\nDino Danger", f"\nDinosaurs were a diverse group of {noun_pl} \
+madlib8 = Story("\nDino Danger", f"\nDinosaurs were a diverse group of {noun_pl.word_required} \
 that lived on Earth until about 66 million years ago. Some \
-dinosaurs were carnivores - they ate {noun1}. Other \
-dinosaurs were herbivores and ate {noun2}. One of the most {adj1} \
-dinosaurs had a(n) {adj2} armour along its back. It walked \
-{adv} due to its large size. Imagine how amazing it would \
-have been to see dinosaurs {verb} through cities \
+dinosaurs were carnivores - they ate {noun1.word_required}. Other \
+dinosaurs were herbivores and ate {noun2.word_required}. One of the most {adj1.word_required} \
+dinosaurs had a(n) {adj2.word_required} armour along its back. It walked \
+{adv.word_required} due to its large size. Imagine how amazing it would \
+have been to see dinosaurs {verb.word_required} through cities \
 and fly in the sky…")
 
 
