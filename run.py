@@ -76,14 +76,108 @@ def get_word_input():
 # Access the dictionary API key
 def look_up_word():
     app_key = dictionary_api.API_KEY_SERVICE
-    # Code figured out based on the following tutorial: https://www.youtube.com/watch?v=hpc5jyVpUpw
-    response = requests.get(f"https://www.dictionaryapi.com/api/v3/references/collegiate/json/{current_word.word_required}?key={app_key}")
-    global word_checked
-    word_checked = response.json()
-    #print(word_checked)   
+    try:
+        # Code figured out based on the following tutorial: https://www.youtube.com/watch?v=hpc5jyVpUpw
+        response = requests.get(f"https://www.dictionaryapi.com/api/v3/references/collegiate/json/{current_word.word_required}?key={app_key}")
+        #global word_checked
+        word_checked = response.json()
+        #print(word_checked)
+
+        def validate_word():
+            try: 
+                # Check if the word can be found in the dictionary
+                #global current_word
+                current_word.word_required in word_checked[0]['meta']['id']
+                #print("Validation successful.")
+                #print(word_checked[0]['meta']['id'])
+                #print(current_word.word_required)
+
+                # Aiming to access 'fl', functional label of the given word (e.g. adjective, verb, etc.)
+                if 'fl' in word_checked[0]:
+                    fl_available = [word_checked[0]['fl']]
+                # If such a label is not found (usually for plural nouns)
+                elif 'plural of' in word_checked[0]['cxs'][0]['cxl']:
+                    fl_available = ["noun"]
+
+                # Check for homographs - a word has multiple meanings/grammatic functions
+                if len(word_checked) > 1 and 'hom' in word_checked[1] and 'fl' in word_checked[1]:
+                    #print("This word has multiple meanings and functions")
+                    fl_available.append(word_checked[1]['fl'])
+                    
+                    if len(word_checked) > 2 and 'hom' in word_checked[2] and 'fl' in word_checked[2]: #double check if working correctly
+                        fl_available.append(word_checked[2]['fl'])
+                print(fl_available)
+
+                # Check if the valid word has the correct grammatical type (function label)
+                def valid_words_type():
+                    global current_word
+                    if current_word.word_type == "noun": 
+                        if "noun" in fl_available:
+                            print("Great, your word is a noun.")
+                            #global current_word
+                            words_accepted.append(current_word.word_required)
+                            print(words_accepted)
+                        else:
+                            current_word.word_required = input("It looks like your word is not a noun. Try again: ")
+                            look_up_word()
+                            validate_word()
+                    elif current_word.word_type == "adjective":
+                        if "adjective" or "adverb or adjective" in fl_available:
+                            print("Great, your word is an adjective.")
+                            words_accepted.append(current_word.word_required)
+                            print(words_accepted)
+                        else:
+                            current_word.word_required = input("It looks like your word is not an adjective. Try again: ")
+                            look_up_word()
+                            validate_word()
+                    elif current_word.word_type == "adverb":
+                        if "adverb" or ("adjective" and current_word.word_required[-2:] == ['ly']) in fl_available:
+                            print("Great, your word is an adverb.")
+                            print(current_word.word_required[-2:])
+                            words_accepted.append(current_word.word_required)
+                            print(words_accepted)  
+                        else: 
+                            current_word.word_required = input("It looks like your word is not an adverb. Try again: ")
+                            look_up_word()
+                            validate_word()   
+                    elif current_word.word_type == "verb":
+                        if "verb" in fl_available:
+                            print("Great, your word is a verb.")
+                            words_accepted.append(current_word.word_required)
+                            print(words_accepted)  
+                        else: 
+                            current_word.word_required = input("It looks like your word is not a verb. Try again: ")
+                            look_up_word()
+                            validate_word()
+                valid_words_type() 
+                 
+
+            # Word not found in the dictionary - likely misspelled, a typo, or not a word
+            except TypeError: 
+                #print("There is a problem with your word.")
+                current_word.word_required = input(f"Please check for typos and try again. Enter your {current_word.word_type} here: ")
+                look_up_word()
+                validate_word()
+
+            # Cannot connect to the dictionary
+            except ConnectionError:
+                print("Sorry, there was an issue with checking your word.")
+        validate_word()
+
+    except ConnectionError:
+        print("Sorry, there was a connection issue.")
+        restart = input("Type R and press Enter to restart the game: ")  
+        if restart == "R":
+            pass #clear terminal, print welcome and ask for the first input
+        else:
+            restart_ask_again = input("Invalid input. Please type R and press Enter to restart the game")
+            if restart_ask_again == "R":
+                pass  #clear terminal, print welcome and ask for the first input   
+            else:
+                print("Thanks for playing MAD LIBS!")
 #look_up_word()
 
-
+"""Trying something
 # Validate input - check if the provided word has been found in the dictionary
 def validate_word():
     try: 
@@ -164,13 +258,14 @@ def validate_word():
     except ConnectionError:
         print("Sorry, there was an issue with checking your word.")
 #validate_word()
+"""
 
 
- 
+
 for word in WORDS_NEEDED:
     get_word_input()
     look_up_word()
-    validate_word()
+    #validate_word()
 
         
 
