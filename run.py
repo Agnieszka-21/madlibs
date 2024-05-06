@@ -26,7 +26,7 @@ def welcome():
 To provide your words, simply type them as prompted and confirm the submission of \
 each word by pressing Enter. Afterwards, simply read the complete story. Have fun!\n"
     print(welcome)
-welcome()
+#welcome()
 
 class Words:
     """
@@ -168,8 +168,7 @@ def look_up_word():
         restart = input("Type R and press Enter to restart the game: ")  
         if restart == "R":
             clear_terminal()
-            # welcome()
-            # also: ask for the first input!!!
+            start_game(WORDS_NEEDED)
         else:
             restart_ask_again = input("Invalid input. Please type R and press Enter to restart the game")
             if restart_ask_again == "R":
@@ -180,12 +179,14 @@ def look_up_word():
 
 
 
-for word in WORDS_NEEDED:
-    get_word_input()
-    look_up_word()
-    #validate_word()
+def start_game(WORDS_NEEDED):
+    welcome()
+    for word in WORDS_NEEDED:
+        get_word_input()
+        look_up_word()
+start_game(WORDS_NEEDED)
 
-        
+      
 #Class Story for all available mad libs
 class Story:
     """
@@ -293,11 +294,12 @@ If you'd like to start a new game, type B and press Enter: ").upper()
                 all_stories_used = input("You have seen all available stories. If you would like to start a new game, type B and press Enter: ")
                 if all_stories_used == "B":
                     clear_terminal()
+                    start_game(WORDS_NEEDED)
                 else:
                     print("Invalid input. Thanks for playing MAD LIBS!")
         elif new_game_how == "B":
             clear_terminal()
-            # UPDATE neededed: print Welcome and a first required input
+            start_game(WORDS_NEEDED)
         else:
             input("Please choose A or B and press Enter: ")
     elif play_again_question == "N":
