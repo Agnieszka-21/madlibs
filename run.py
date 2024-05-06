@@ -153,12 +153,15 @@ def look_up_word():
                             current_word.word_required = input("It looks like your word is not a verb. Try again: ")
                             look_up_word()
                 valid_words_type() 
-                 
+                
 
             # Word not found in the dictionary - likely misspelled, a typo, or not a word
             except TypeError: 
-                #print("There is a problem with your word.")
                 current_word.word_required = input(f"Please check for typos and try again. Enter your {current_word.word_type} here: ")
+                look_up_word()
+
+            except IndexError: 
+                current_word.word_required = input(f"Your word could not be validated. Please try again - enter your {current_word.word_type} here: ")
                 look_up_word()
 
         validate_word()
@@ -169,18 +172,27 @@ def look_up_word():
         if restart == "R":
             clear_terminal()
             start_game(WORDS_NEEDED)
+            choose_story_randomly(available_titles, available_texts)
+            play_again_or_not()
         else:
             restart_ask_again = input("Invalid input. Please type R and press Enter to restart the game")
             if restart_ask_again == "R":
-                pass  #clear terminal, print welcome and ask for the first input   
+                clear_terminal()
+                start_game(WORDS_NEEDED)
+                choose_story_randomly(available_titles, available_texts)
+                play_again_or_not()  
             else:
                 print("Thanks for playing MAD LIBS!")
-#look_up_word()
 
 
 
+# Start or restart game by printing the welcome message and asking for word inputs
 def start_game(WORDS_NEEDED):
     welcome()
+    global words_accepted
+    words_accepted = []
+    global current_word
+    current_word = None
     for word in WORDS_NEEDED:
         get_word_input()
         look_up_word()
@@ -295,11 +307,15 @@ If you'd like to start a new game, type B and press Enter: ").upper()
                 if all_stories_used == "B":
                     clear_terminal()
                     start_game(WORDS_NEEDED)
+                    choose_story_randomly(available_titles, available_texts)
+                    play_again_or_not()
                 else:
                     print("Invalid input. Thanks for playing MAD LIBS!")
         elif new_game_how == "B":
             clear_terminal()
             start_game(WORDS_NEEDED)
+            choose_story_randomly(available_titles, available_texts)
+            play_again_or_not()
         else:
             input("Please choose A or B and press Enter: ")
     elif play_again_question == "N":
