@@ -55,7 +55,7 @@ words_accepted = []
 current_word = None
 
 
-# Required user's inputs - words to fill any blanks in a mad lib
+# Required user's inputs - ask for words that will be used to fill any blanks in a mad lib
 def get_word_input():
     if len(words_accepted) == 0:
         noun1.word_required = input("Noun: ")
@@ -254,38 +254,47 @@ have been to see dinosaurs {verb.word_required} through cities \
 and fly in the sky…")
 
 
-def choose_story_randomly():
-    # Lists of titles and texts for all available stories
-    all_titles = [madlib1.title, madlib2.title, madlib3.title, madlib4.title, madlib5.title, madlib6.title, madlib7.title, madlib8.title]
-    all_texts = [madlib1.text, madlib2.text, madlib3.text, madlib4.text, madlib5.text, madlib6.text, madlib7.text, madlib8.text]
+# Lists of titles and texts for all available stories
+ALL_TITLES = [madlib1.title, madlib2.title, madlib3.title, madlib4.title, madlib5.title, madlib6.title, madlib7.title, madlib8.title]
+ALL_TEXTS = [madlib1.text, madlib2.text, madlib3.text, madlib4.text, madlib5.text, madlib6.text, madlib7.text, madlib8.text]
+available_titles = ALL_TITLES
+available_texts = ALL_TEXTS
+
+# Randomly choose a title and a matching text from currently available titles and texts
+def choose_story_randomly(list_of_titles, list_of_texts):
+
     # Choose a title randomly
-    randomly_chosen_title = random.choice(all_titles)
-    get_index_of_randomly_chosen_title = all_titles.index(randomly_chosen_title)
+    randomly_chosen_title = random.choice(list_of_titles)
+    get_index_of_randomly_chosen_title = list_of_titles.index(randomly_chosen_title)
+
     # Get matching text (same index as the randomly chosen title's)
-    matching_text = all_texts[get_index_of_randomly_chosen_title]
+    matching_text = list_of_texts[get_index_of_randomly_chosen_title]
     print(randomly_chosen_title, matching_text)
 
-choose_story_randomly()
-
-
-def choose_another_story_randomly():
     # Update the list of available titles and texts (in case user wants to play again using the same words with a different story)
-    #all_titles = all_titles.remove(all_titles[get_index_of_randomly_chosen_title])
-    #all_texts = all_texts.remove(all_texts[get_index_of_randomly_chosen_title])
-    #print(all_titles)
-    pass
+    available_titles = list_of_titles.remove(randomly_chosen_title)
+    available_texts = list_of_texts.remove(matching_text)
+
+choose_story_randomly(available_titles, available_texts)
 
 
 
-
-
+# Ask the user whether they would like to play again and give them options
 def play_again_or_not():
     play_again_question = input("\nWould you like to play again (Y/N)? ").upper()
     if play_again_question == "Y":
         new_game_how = input("If you would like to re-use your words with a different story, type A and press Enter. \
 If you'd like to start a new game, type B and press Enter: ").upper()
         if new_game_how == "A":
-            choose_story_randomly()
+            try:
+                choose_story_randomly(available_titles, available_texts)
+                play_again_or_not()
+            except IndexError:
+                all_stories_used = input("You have seen all available stories. If you would like to start a new game, type B and press Enter: ")
+                if all_stories_used == "B":
+                    clear_terminal()
+                else:
+                    print("Invalid input. Thanks for playing MAD LIBS!")
         elif new_game_how == "B":
             clear_terminal()
             # UPDATE neededed: print Welcome and a first required input
@@ -295,5 +304,5 @@ If you'd like to start a new game, type B and press Enter: ").upper()
         end_game = "Okay, thanks for playing!"
         print(end_game)    
     else:
-        input("Type Y if you'd like to play again or N to finish your game, then press Enter: ")
+        print("Invalid input. Thanks for playing MAD LIBS!")
 play_again_or_not()
