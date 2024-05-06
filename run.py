@@ -21,7 +21,7 @@ welcome()
 
 class Words:
     """
-    Required word inputs and their types
+    Required word inputs from the user and their types
     """
     def __init__(self, word_required, word_type):
         self.word_required = word_required
@@ -73,6 +73,7 @@ def get_word_input():
 #word_input()
 
 
+
 # Access the dictionary API key
 def look_up_word():
     app_key = dictionary_api.API_KEY_SERVICE
@@ -120,7 +121,6 @@ def look_up_word():
                         else:
                             current_word.word_required = input("It looks like your word is not a noun. Try again: ")
                             look_up_word()
-                            validate_word()
                     elif current_word.word_type == "adjective":
                         if "adjective" or "adverb or adjective" in fl_available:
                             print("Great, your word is an adjective.")
@@ -129,9 +129,8 @@ def look_up_word():
                         else:
                             current_word.word_required = input("It looks like your word is not an adjective. Try again: ")
                             look_up_word()
-                            validate_word()
                     elif current_word.word_type == "adverb":
-                        if "adverb" or ("adjective" and current_word.word_required[-2:] == ['ly']) in fl_available:
+                        if "adverb" in fl_available or ("adjective" in fl_available and current_word.word_required[-2:] == 'ly'):
                             print("Great, your word is an adverb.")
                             print(current_word.word_required[-2:])
                             words_accepted.append(current_word.word_required)
@@ -139,7 +138,6 @@ def look_up_word():
                         else: 
                             current_word.word_required = input("It looks like your word is not an adverb. Try again: ")
                             look_up_word()
-                            validate_word()   
                     elif current_word.word_type == "verb":
                         if "verb" in fl_available:
                             print("Great, your word is a verb.")
@@ -148,7 +146,6 @@ def look_up_word():
                         else: 
                             current_word.word_required = input("It looks like your word is not a verb. Try again: ")
                             look_up_word()
-                            validate_word()
                 valid_words_type() 
                  
 
@@ -159,9 +156,6 @@ def look_up_word():
                 look_up_word()
                 validate_word()
 
-            # Cannot connect to the dictionary
-            except ConnectionError:
-                print("Sorry, there was an issue with checking your word.")
         validate_word()
 
     except ConnectionError:
