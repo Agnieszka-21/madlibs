@@ -62,26 +62,26 @@ current_word = None
 # Required user's inputs - ask for words that will be used to fill any blanks in a mad lib
 def get_word_input():
     if len(words_accepted) == 0:
-        noun1.word_required = input("Noun: ")
+        noun1.word_required = input("Noun:\n").upper()
         global current_word
         current_word = noun1
     elif len(words_accepted) == 1:
-        noun2.word_required = input("Another noun: ")
+        noun2.word_required = input("Another noun:\n").upper()
         current_word = noun2
     elif len(words_accepted) == 2:
-        noun_pl.word_required = input("Plural noun: ")
+        noun_pl.word_required = input("Plural noun:\n").upper()
         current_word = noun_pl
     elif len(words_accepted) == 3:
-        adj1.word_required = input("Adjective: ")
+        adj1.word_required = input("Adjective:\n").upper()
         current_word = adj1
     elif len(words_accepted) == 4:
-        adj2.word_required = input("Another adjective: ")
+        adj2.word_required = input("Another adjective:\n").upper()
         current_word = adj2
     elif len(words_accepted) == 5:
-        adv.word_required = input("Adverb: ")
+        adv.word_required = input("Adverb:\n").upper()
         current_word = adv
     elif len(words_accepted) == 6:
-        verb.word_required = input("Verb: ")
+        verb.word_required = input("Verb:\n").upper()
         current_word = verb
 #word_input()
 
@@ -129,7 +129,7 @@ def look_up_word():
                             words_accepted.append(current_word.word_required)
                             print(words_accepted)
                         else:
-                            current_word.word_required = input("It looks like your word is not a noun. Try again: ")
+                            current_word.word_required = input("It looks like your word is not a noun. Try again:\n")
                             look_up_word()
                     elif current_word.word_type == "adjective":
                         if "adjective" or "adverb or adjective" in fl_available:
@@ -137,7 +137,7 @@ def look_up_word():
                             words_accepted.append(current_word.word_required)
                             print(words_accepted)
                         else:
-                            current_word.word_required = input("It looks like your word is not an adjective. Try again: ")
+                            current_word.word_required = input("It looks like your word is not an adjective. Try again:\n")
                             look_up_word()
                     elif current_word.word_type == "adverb":
                         if "adverb" in fl_available or ("adjective" in fl_available and current_word.word_required[-2:] == 'ly'):
@@ -146,7 +146,7 @@ def look_up_word():
                             words_accepted.append(current_word.word_required)
                             print(words_accepted)  
                         else: 
-                            current_word.word_required = input("It looks like your word is not an adverb. Try again: ")
+                            current_word.word_required = input("It looks like your word is not an adverb. Try again:\n")
                             look_up_word()
                     elif current_word.word_type == "verb":
                         if "verb" in fl_available:
@@ -154,32 +154,32 @@ def look_up_word():
                             words_accepted.append(current_word.word_required)
                             print(words_accepted)  
                         else: 
-                            current_word.word_required = input("It looks like your word is not a verb. Try again: ")
+                            current_word.word_required = input("It looks like your word is not a verb. Try again:\n")
                             look_up_word()
                     else:
-                        input(f"It looks like your word is not a {current_word.word_type}. Please try again: ")
+                        input(f"It looks like your word is not a {current_word.word_type}. Please try again:\n")
                 valid_words_type() 
                 
 
             # Word not found in the dictionary - likely misspelled, a typo, or not a word
             except TypeError: 
-                current_word.word_required = input(f"Please check for typos and try again. Enter your {current_word.word_type} here: ")
+                current_word.word_required = input(f"Please check for typos and try again. Enter your {current_word.word_type} here:\n")
                 look_up_word()
 
             except IndexError: 
-                current_word.word_required = input(f"Your word could not be validated. Please try again - enter your {current_word.word_type} here: ")
+                current_word.word_required = input(f"Your word could not be validated. Please try again - enter your {current_word.word_type} here:\n")
                 look_up_word()
 
         validate_word()
 
     except ConnectionError:
         print("Sorry, there was a connection issue.")
-        restart = input("Type R and press Enter to restart the game: ")  
+        restart = input("Type R and press Enter to restart the game:\n")  
         if restart == "R":
             clear_terminal()
             restart_program()
         else:
-            restart_ask_again = input("Invalid input. Please type R and press Enter to restart the game")
+            restart_ask_again = input("Invalid input. Please type R and press Enter to restart the game:\n")
             if restart_ask_again == "R":
                 clear_terminal()
                 restart_program()
@@ -281,6 +281,8 @@ def choose_story_randomly(list_of_titles, list_of_texts):
 
     # Get matching text (same index as the randomly chosen title's)
     matching_text = list_of_texts[get_index_of_randomly_chosen_title]
+
+    # Print the randomly chosen mad lib to the terminal
     print(randomly_chosen_title, matching_text)
 
     # Update the list of available titles and texts (in case user wants to play again using the same words with a different story)
@@ -293,16 +295,16 @@ choose_story_randomly(available_titles, available_texts)
 
 # Ask the user whether they would like to play again and give them options
 def play_again_or_not():
-    play_again_question = input("\nWould you like to play again (Y/N)? ").upper()
+    play_again_question = input("\nWould you like to play again (Y/N)?\n").upper()
     if play_again_question == "Y":
         new_game_how = input("If you would like to re-use your words with a different story, type A and press Enter. \
-If you'd like to start a new game, type B and press Enter: ").upper()
+If you'd like to start a new game, type B and press Enter:\n").upper()
         if new_game_how == "A":
             try:
                 choose_story_randomly(available_titles, available_texts)
                 play_again_or_not()
             except IndexError:
-                all_stories_used = input("You have seen all available stories. If you would like to start a new game, type B and press Enter: ")
+                all_stories_used = input("You have seen all available stories. If you would like to start a new game, type B and press Enter:\n").upper()
                 if all_stories_used == "B":
                     clear_terminal()
                     restart_program()
@@ -312,7 +314,7 @@ If you'd like to start a new game, type B and press Enter: ").upper()
             clear_terminal()
             restart_program()
         else:
-            input("Please choose A or B and press Enter: ")
+            input("Please choose A or B and press Enter:\n").upper()
     elif play_again_question == "N":
         end_game = "Okay, thanks for playing!"
         print(end_game)    
