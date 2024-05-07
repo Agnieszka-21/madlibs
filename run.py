@@ -94,7 +94,7 @@ def look_up_word():
         # Code figured out based on the following tutorial: https://www.youtube.com/watch?v=hpc5jyVpUpw
         response = requests.get(f"https://www.dictionaryapi.com/api/v3/references/collegiate/json/{current_word.word_required}?key={app_key}")
         word_checked = response.json()
-        #print(word_checked)
+        print(word_checked)
 
         def validate_word():
             try: 
@@ -106,10 +106,23 @@ def look_up_word():
 
                 # Aiming to access 'fl', functional label of the given word (e.g. adjective, verb, etc.)
                 if 'fl' in word_checked[0]:
+                    print(word_checked[0]['fl'])
                     fl_available = [word_checked[0]['fl']]
                 # If such a label is not found (usually for plural nouns)
                 elif 'plural of' in word_checked[0]['cxs'][0]['cxl']:
                     fl_available = ["noun"]
+                elif 'chiefly British spelling of' in word_checked[0]['cxs'][0]['cxl']:
+                    amer_spelling = word_checked[0]['cxs'][0]['cxtis'][0]['cxt'].upper()
+                    switch_to_amer = input(f"We weren't able to check your word but there seems to be a similar word with US spelling. Would you like to try {amer_spelling} instead? (Y/N)\n").upper()
+                    if switch_to_amer == 'Y':
+                        current_word.word_required = amer_spelling
+                        look_up_word()
+                    elif switch_to_amer == 'N':
+                        current_word.word_required = input("Okay, please try a different word:\n").upper()
+                        look_up_word()  
+                    else:
+                        current_word.word_required = input("Your input was invalid. Please submit a different word:\n").upper()
+                        look_up_word()                                               
 
                 # Check for homographs - a word has multiple meanings/grammatic functions
                 if len(word_checked) > 1 and 'hom' in word_checked[1] and 'fl' in word_checked[1]:
@@ -129,7 +142,7 @@ def look_up_word():
                             words_accepted.append(current_word.word_required)
                             print(words_accepted)
                         else:
-                            current_word.word_required = input("It looks like your word is not a noun. Try again:\n")
+                            current_word.word_required = input("It looks like your word is not a noun. Try again:\n").upper()
                             look_up_word()
                     elif current_word.word_type == "adjective":
                         if "adjective" or "adverb or adjective" in fl_available:
@@ -137,16 +150,16 @@ def look_up_word():
                             words_accepted.append(current_word.word_required)
                             print(words_accepted)
                         else:
-                            current_word.word_required = input("It looks like your word is not an adjective. Try again:\n")
+                            current_word.word_required = input("It looks like your word is not an adjective. Try again:\n").upper()
                             look_up_word()
                     elif current_word.word_type == "adverb":
-                        if "adverb" in fl_available or ("adjective" in fl_available and current_word.word_required[-2:] == 'ly'):
+                        if "adverb" in fl_available or ("adjective" in fl_available and current_word.word_required[-2:] == 'LY'):
                             print("Great, your word is an adverb.")
                             print(current_word.word_required[-2:])
                             words_accepted.append(current_word.word_required)
                             print(words_accepted)  
                         else: 
-                            current_word.word_required = input("It looks like your word is not an adverb. Try again:\n")
+                            current_word.word_required = input("It looks like your word is not an adverb. Try again:\n").upper()
                             look_up_word()
                     elif current_word.word_type == "verb":
                         if "verb" in fl_available:
@@ -154,7 +167,7 @@ def look_up_word():
                             words_accepted.append(current_word.word_required)
                             print(words_accepted)  
                         else: 
-                            current_word.word_required = input("It looks like your word is not a verb. Try again:\n")
+                            current_word.word_required = input("It looks like your word is not a verb. Try again:\n").upper()
                             look_up_word()
                     else:
                         input(f"It looks like your word is not a {current_word.word_type}. Please try again:\n")
@@ -195,8 +208,7 @@ def start_game(WORDS_NEEDED):
         get_word_input()
         look_up_word()
 start_game(WORDS_NEEDED)
-
-
+      
       
 #Class Story for all available mad libs
 class Story:
@@ -293,6 +305,7 @@ choose_story_randomly(available_titles, available_texts)
 
 
 
+
 # Ask the user whether they would like to play again and give them options
 def play_again_or_not():
     play_again_question = input("\nWould you like to play again (Y/N)?\n").upper()
@@ -320,4 +333,8 @@ If you'd like to start a new game, type B and press Enter:\n").upper()
         print(end_game)    
     else:
         print("Invalid input. Thanks for playing MAD LIBS!")
+
 play_again_or_not()
+
+
+
