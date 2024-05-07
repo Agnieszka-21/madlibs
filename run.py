@@ -6,17 +6,21 @@ import os
 # Python library to choose a random story from the provided ones
 import random 
 
-# Two Python libraries used to access dictionary API & the file with the api key
+# Two Python libraries used to access dictionary API & the file containing the API key
 import json
 import requests
 import dictionary_api
 
 
+
+# Clears the terminal window prior to new content. For Windows and macOS/Linux
 def clear_terminal():
-    """
-    Clears the terminal window prior to new content. For Windows and macOS/Linux
-    """
     os.system('cls' if os.name == 'nt' else 'clear')
+
+def restart_program(): # Does it work for macOS/Linux?
+    os.system('cls' if os.name == 'nt' else 'clear')
+    script_name = os.path.basename(__file__)
+    os.system(script_name)
 
 
 # Welcome screen - prints a welcome message and a short description of how to play the game
@@ -26,11 +30,11 @@ def welcome():
 To provide your words, simply type them as prompted and confirm the submission of \
 each word by pressing Enter. Afterwards, simply read the complete story. Have fun!\n"
     print(welcome)
-#welcome()
+
 
 class Words:
     """
-    Required word inputs from the user and their types
+    Required word inputs from the user and their grammatical types
     """
     def __init__(self, word_required, word_type):
         self.word_required = word_required
@@ -152,6 +156,8 @@ def look_up_word():
                         else: 
                             current_word.word_required = input("It looks like your word is not a verb. Try again: ")
                             look_up_word()
+                    else:
+                        input(f"It looks like your word is not a {current_word.word_type}. Please try again: ")
                 valid_words_type() 
                 
 
@@ -171,32 +177,25 @@ def look_up_word():
         restart = input("Type R and press Enter to restart the game: ")  
         if restart == "R":
             clear_terminal()
-            start_game(WORDS_NEEDED)
-            choose_story_randomly(available_titles, available_texts)
-            play_again_or_not()
+            restart_program()
         else:
             restart_ask_again = input("Invalid input. Please type R and press Enter to restart the game")
             if restart_ask_again == "R":
                 clear_terminal()
-                start_game(WORDS_NEEDED)
-                choose_story_randomly(available_titles, available_texts)
-                play_again_or_not()  
+                restart_program()
             else:
                 print("Thanks for playing MAD LIBS!")
 
 
 
-# Start or restart game by printing the welcome message and asking for word inputs
+# Start game by printing the welcome message and asking for word inputs
 def start_game(WORDS_NEEDED):
     welcome()
-    global words_accepted
-    words_accepted = []
-    global current_word
-    current_word = None
     for word in WORDS_NEEDED:
         get_word_input()
         look_up_word()
 start_game(WORDS_NEEDED)
+
 
       
 #Class Story for all available mad libs
@@ -306,16 +305,12 @@ If you'd like to start a new game, type B and press Enter: ").upper()
                 all_stories_used = input("You have seen all available stories. If you would like to start a new game, type B and press Enter: ")
                 if all_stories_used == "B":
                     clear_terminal()
-                    start_game(WORDS_NEEDED)
-                    choose_story_randomly(available_titles, available_texts)
-                    play_again_or_not()
+                    restart_program()
                 else:
                     print("Invalid input. Thanks for playing MAD LIBS!")
         elif new_game_how == "B":
             clear_terminal()
-            start_game(WORDS_NEEDED)
-            choose_story_randomly(available_titles, available_texts)
-            play_again_or_not()
+            restart_program()
         else:
             input("Please choose A or B and press Enter: ")
     elif play_again_question == "N":
