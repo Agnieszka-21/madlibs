@@ -83,12 +83,10 @@ def get_word_input():
     elif len(words_accepted) == 6:
         verb.word_required = input("Verb:\n").upper()
         current_word = verb
-#word_input()
 
 
-
-# Access the dictionary API key
 def look_up_word():
+    # Access the dictionary API key
     app_key = dictionary_api.API_KEY_SERVICE
     try:
         # Code figured out based on the following tutorial: https://www.youtube.com/watch?v=hpc5jyVpUpw
@@ -106,8 +104,8 @@ def look_up_word():
 
                 # Aiming to access 'fl', functional label of the given word (e.g. adjective, verb, etc.)
                 if 'fl' in word_checked[0]:
-                    print(word_checked[0]['fl'])
                     fl_available = [word_checked[0]['fl']]
+                    #print(fl_available)
                 # If such a label is not found (usually for plural nouns)
                 elif 'plural of' in word_checked[0]['cxs'][0]['cxl']:
                     fl_available = ["noun"]
@@ -122,7 +120,9 @@ def look_up_word():
                         look_up_word()  
                     else:
                         current_word.word_required = input("Your input was invalid. Please submit a different word:\n").upper()
-                        look_up_word()                                               
+                        look_up_word()
+                else:
+                    current_word.word_required = input("Something went wrong. Please submit a different word:\n").upper()                                               
 
                 # Check for homographs - a word has multiple meanings/grammatic functions
                 if len(word_checked) > 1 and 'hom' in word_checked[1] and 'fl' in word_checked[1]:
@@ -131,7 +131,9 @@ def look_up_word():
                     
                     if len(word_checked) > 2 and 'hom' in word_checked[2] and 'fl' in word_checked[2]: #double check if working correctly
                         fl_available.append(word_checked[2]['fl'])
-                print(fl_available)
+                    #print(fl_available)
+                else:
+                    pass
 
                 # Check if the valid word has the correct grammatical type (function label)
                 def valid_words_type():
@@ -170,17 +172,17 @@ def look_up_word():
                             current_word.word_required = input("It looks like your word is not a verb. Try again:\n").upper()
                             look_up_word()
                     else:
-                        input(f"It looks like your word is not a {current_word.word_type}. Please try again:\n")
+                        input(f"It looks like your word is not a {current_word.word_type}. Please try again:\n").upper()
                 valid_words_type() 
                 
 
             # Word not found in the dictionary - likely misspelled, a typo, or not a word
             except TypeError: 
-                current_word.word_required = input(f"Please check for typos and try again. Enter your {current_word.word_type} here:\n")
+                current_word.word_required = input(f"Please check for typos and try again. Enter your {current_word.word_type} here:\n").upper()
                 look_up_word()
 
             except IndexError: 
-                current_word.word_required = input(f"Your word could not be validated. Please try again - enter your {current_word.word_type} here:\n")
+                current_word.word_required = input(f"Your word could not be validated. Please try again - enter your {current_word.word_type} here:\n").upper()
                 look_up_word()
 
         validate_word()
@@ -207,8 +209,7 @@ def start_game(WORDS_NEEDED):
     for word in WORDS_NEEDED:
         get_word_input()
         look_up_word()
-start_game(WORDS_NEEDED)
-      
+start_game(WORDS_NEEDED)      
       
 #Class Story for all available mad libs
 class Story:
@@ -262,8 +263,8 @@ It would be worth it when she could turn a spider into a(n) {noun2.word_required
 madlib7 = Story("\nAmazon Explorers", f"\nThe {adj1.word_required} explorer flew his plane over the Amazon jungle. \
 Below, he could {verb.word_required} tall trees growing along the edge of \
 a(n) {noun1.word_required}. Behind him, he could hear his co-pilot, Emma, muttering. \
-\“We're not going to make it. When the {adj2.word_required} eagle flew into the wing, \
-it damaged it too much. We need to find somewhere clear to land.\” \
+“We're not going to make it. When the {adj2.word_required} eagle flew into the wing, \
+it damaged it too much. We need to find somewhere clear to land.” \
 {adv.word_required}, Marcus spotted a clearing - a perfect landing spot. \
 They got out of the plane to check the damaged {noun2.word_required}. Suddenly, a loud roar made them jump. \
 From out of the jungle came a pair of {noun_pl.word_required}...")
