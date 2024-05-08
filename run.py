@@ -11,7 +11,8 @@ import json
 import requests
 import dictionary_api
 
-
+# Rich library
+import rich 
 
 # Clears the terminal window prior to new content. For Windows and macOS/Linux
 def clear_terminal():
