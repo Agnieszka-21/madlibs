@@ -35,9 +35,9 @@ def welcome():
     """
     Welcome screen - prints a welcome message and a short description of how to play the game
     """
-    welcome = "Welcome to MAD LIBS!\n \nHow to play: \nYou will be asked to provide certain words" \
-              "(a noun, an adjective etc.) that are then inserted into a randomly selected story." \
-              "To provide your words, simply type them as prompted and confirm the submission of" \
+    welcome = "Welcome to MAD LIBS!\n \nHow to play: \nYou will be asked to provide certain words " \
+              "(a noun, an adjective etc.) that are then inserted into a randomly selected story. " \
+              "To provide your words, simply type them as prompted and confirm the submission of " \
               "each word by pressing Enter. Afterwards, simply read the complete story. Have fun!\n"
     print(welcome)
 
@@ -245,63 +245,71 @@ class Story:
         self.title = title
         self.text = text
 
-madlib1 = Story("\nStrange Science", f"\nScience is full of {adv.word_required} strange facts and stories. Did you know that \
-rats can laugh when they are being tickled? Another fun {noun1.word_required} about rats is that \
-their teeth never stop growing. Babies may be {adj1.word_required} but they have 100 more {noun_pl.word_required} \
-than adults. When babies are born, they have the ability to {verb.word_required}. Newborn rats have \
-{adj2.word_required} stomachs. They are approximately the size of a(n) {noun2.word_required}.")
+madlib1 = Story("\nStrange Science", \
+          f"\nScience is full of {adv.word_required} strange facts and stories. Did you know that " \
+          f"rats can laugh when they are being tickled? Another fun {noun1.word_required} about rats is that " \
+          f"their teeth never stop growing. Babies may be {adj1.word_required} but they have 100 more {noun_pl.word_required} " \
+          f"than adults. When babies are born, they have the ability to {verb.word_required}. Newborn rats have " \
+          f"{adj2.word_required} stomachs. They are approximately the size of a(n) {noun2.word_required}.")
 
-madlib2 = Story("\nFall Fun", f"\nThe weather is starting to turn crisp. \
-The wind is blowing through the {noun_pl.word_required}. I am excited to go \
-{noun1.word_required} picking this weekend. Each autumn, my family drives out to my \
-uncle's orchard. We pick as many apples as our {noun2.word_required} can hold. \
-This year we are also going to {verb.word_required} a scarecrow contest. I can't decide \
-if I want the face to be {adj1.word_required} or {adv.word_required} {adj2.word_required}.")
+madlib2 = Story("\nFall Fun", \
+          "\nThe weather is starting to turn crisp. " \
+          f"The wind is blowing through the {noun_pl.word_required}. I am excited to go " \
+          f"{noun1.word_required} picking this weekend. Each autumn, my family drives out to my " \
+          f"uncle's orchard. We pick as many apples as our {noun2.word_required} can hold. " \
+          f"This year we are also going to {verb.word_required} a scarecrow contest. I can't decide " \
+          f"if I want the face to be {adj1.word_required} or {adv.word_required} {adj2.word_required}.")
 
-madlib3 = Story("\nSpace Adventure", f"\nOnce upon a time, in a galaxy far, far away, \
-there was an adventurous {noun1.word_required} named Anakin. One day, Anakin hopped \
-aboard their {adj1.word_required} spaceship - his mission was to {verb.word_required} \
-a new {noun2.word_required}. As the spaceship soared through the {adj2.word_required} galaxy, \
-Anakin marvelled at the twinkling {noun_pl.word_required} he passed. {adv.word_required}, \
-an asteroid appeared out of nowhere and shot across their path.")
+madlib3 = Story("\nSpace Adventure", \
+          "\nOnce upon a time, in a galaxy far, far away, " \
+          f"there was an adventurous {noun1.word_required} named Anakin. One day, Anakin hopped " \
+          f"aboard their {adj1.word_required} spaceship - his mission was to {verb.word_required} " \
+          f"a new {noun2.word_required}. As the spaceship soared through the {adj2.word_required} galaxy, " \
+          f"Anakin marvelled at the twinkling {noun_pl.word_required} he passed. {adv.word_required}, " \
+          "an asteroid appeared out of nowhere and shot across their path.")
 
-madlib4 = Story("\nAre we alone?", f"\nAfter many {adj1.word_required} days and nights, Buzz {adv.word_required} \
-arrived at the mysterious planet. He stepped out of the {noun1.word_required} and \
-was greeted by {adj2.word_required} {noun_pl.word_required} and other curious creatures. \
-He wanted to {verb.word_required} the {noun2.word_required} and become friends with the locals. \
-But his intuition was telling him that he couldn't trust his hosts...")
+madlib4 = Story("\nAre we alone?", \
+          f"\nAfter many {adj1.word_required} days and nights, Buzz {adv.word_required} " \
+          f"arrived at the mysterious planet. He stepped out of the {noun1.word_required} and " \
+          f"was greeted by {adj2.word_required} {noun_pl.word_required} and other curious creatures. " \
+          f"He wanted to {verb.word_required} the {noun2.word_required} and become friends with the locals. " \
+          "But his intuition was telling him that he couldn't trust his hosts...")
 
-madlib5 = Story("\nSummer Camp Mystery", f"\nIt was a(n) {adv.word_required} {adj1.word_required} summer day - the first day of camp! \
-The camp counsellor told us to {verb.word_required} for the {noun1.word_required} \
-- a local legend with sharp teeth, bushy {noun2.word_required}, and \
-a very {adj2.word_required} smell. That night as other campers and I were \
-going to sleep, we heard a noise. It sounded like someone \
-chewing on {noun_pl.word_required}...")
+madlib5 = Story("\nSummer Camp Mystery", \
+          f"\nIt was a(n) {adv.word_required} {adj1.word_required} summer day - the first day of camp! " \
+          f"The camp counsellor told us to {verb.word_required} for the {noun1.word_required} " \
+          f"- a local legend with sharp teeth, bushy {noun2.word_required}, and " \
+          f"a very {adj2.word_required} smell. That night as other campers and I were " \
+          "going to sleep, we heard a noise. It sounded like someone " \
+          f"chewing on {noun_pl.word_required}...")
 
-madlib6 = Story("\nFirst Day at Wizard School", f"\nHermione jumped out of {noun1.word_required} as she opened her eyes. \
-Today was her first day at wizard school! She dressed {adv.word_required}, \
-grabbing a pointy hat to {verb.word_required} on her head. Arriving at school, \
-she took her seat in class and prepared her first potion. The ingredients \
-included a(n) {adj1.word_required} bezoar and {adj2.word_required} {noun_pl.word_required}. \
-It would be worth it when she could turn a spider into a(n) {noun2.word_required}.")
+madlib6 = Story("\nFirst Day at Wizard School", \
+          f"\nHermione jumped out of {noun1.word_required} as she opened her eyes. " \
+          f"Today was her first day at wizard school! She dressed {adv.word_required}, " \
+          f"grabbing a pointy hat to {verb.word_required} on her head. Arriving at school, " \
+          "she took her seat in class and prepared her first potion. The ingredients " \
+          f"included a(n) {adj1.word_required} bezoar and {adj2.word_required} {noun_pl.word_required}. " \
+          f"It would be worth it when she could turn a spider into a(n) {noun2.word_required}.")
 
-madlib7 = Story("\nAmazon Explorers", f"\nThe {adj1.word_required} explorer flew his plane over the Amazon jungle. \
-Below, he could {verb.word_required} tall trees growing along the edge of \
-a(n) {noun1.word_required}. Behind him, he could hear his co-pilot, Emma, muttering. \
-“We're not going to make it. When the {adj2.word_required} eagle flew into the wing, \
-it damaged it too much. We need to find somewhere clear to land.” \
-{adv.word_required}, Marcus spotted a clearing - a perfect landing spot. \
-They got out of the plane to check the damaged {noun2.word_required}. Suddenly, a loud roar made them jump. \
-From out of the jungle came a pair of {noun_pl.word_required}...")
+madlib7 = Story("\nAmazon Explorers", \
+          f"\nThe {adj1.word_required} explorer flew his plane over the Amazon jungle. " \
+          f"Below, he could {verb.word_required} tall trees growing along the edge of  " \
+          f"a(n) {noun1.word_required}. Behind him, he could hear his co-pilot, Emma, muttering. " \
+          f"'We are not going to make it. When the {adj2.word_required} eagle flew into the wing, " \
+          "it damaged it too much. We need to find somewhere clear to land.' " \
+          f"{adv.word_required}, Marcus noticed a clearing - a perfect landing spot. " \
+          f"They got out of the plane to check the damaged {noun2.word_required}. Suddenly, a loud roar made them jump. " \
+          f"From out of the jungle came a pair of {noun_pl.word_required}...")
 
-madlib8 = Story("\nDino Danger", f"\nDinosaurs were a diverse group of {noun_pl.word_required} \
-that lived on Earth until about 66 million years ago. Some \
-dinosaurs were carnivores - they ate {noun1.word_required}. Other \
-dinosaurs were herbivores and ate {noun2.word_required}. One of the most {adj1.word_required} \
-dinosaurs had a(n) {adj2.word_required} armour along its back. It walked \
-{adv.word_required} due to its large size. Imagine how amazing it would \
-have been to see dinosaurs {verb.word_required} through cities \
-and fly in the sky…")
+madlib8 = Story("\nDino Danger", \
+          f"\nDinosaurs were a diverse group of {noun_pl.word_required} " \
+          "that lived on Earth until about 66 million years ago. Some " \
+          f"dinosaurs were carnivores - they ate {noun1.word_required}. Other " \
+          f"dinosaurs were herbivores and ate {noun2.word_required}. One of the most {adj1.word_required} " \
+          f"dinosaurs had a(n) {adj2.word_required} armour along its back. It walked " \
+          f"{adv.word_required} due to its large size. Imagine how amazing it would " \
+          f"have been to see dinosaurs {verb.word_required} through cities " \
+          "and fly in the sky…")
 
 
 # Lists of titles and texts for all available stories
