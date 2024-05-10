@@ -10,6 +10,7 @@ import requests
 from dotenv import load_dotenv
 
 # Rich library
+from rich.style import Style
 from rich.text import Text
 
 
@@ -34,13 +35,17 @@ def welcome():
     """
     Prints a welcome message and a short description of how to play the game
     """
-    welcome_text = "Welcome to MAD LIBS!\n \nHow to play:" \
-        "\nYou will be asked to provide certain words " \
-        "(a noun, adjective etc.) that are then inserted into "\
-        "a randomly selected story. To provide your words, "\
-        "simply type them as prompted and confirm the submission of " \
-        "each word by pressing Enter. Afterwards, simply read the "\
-        "complete story. Have fun!\n"
+    game_title = "Welcome to MAD LIBS!"
+    welcome_text = Text(justify="left")
+    welcome_text.append("\nHow to play: \nYou will be asked "
+                        "to provide certain words (a noun, adjective "
+                        "etc.) that are then inserted into a randomly "
+                        "selected story. To provide your words, "
+                        "simply type them as prompted and confirm "
+                        "the submission of each word by pressing "
+                        "Enter. Afterwards, simply read the "
+                        "complete story. Have fun!\n")
+    print(game_title)
     print(welcome_text)
 
 
@@ -139,10 +144,9 @@ def look_up_word():
                 elif 'British spelling' in word_checked[0]['cxs'][0]['cxl']:
                     amer = word_checked[0]['cxs'][0]['cxtis'][0]['cxt'].upper()
                     switch_to_amer = input(
-                        "We weren't able to check "
-                        "your word but there seems to be a similar word "
-                        "with US spelling. Would you like to try "
-                        f"{amer} instead? (Y/N)\n").upper()
+                        "We weren't able to check your word but there seems "
+                        "to be a similar word with US spelling. Would you "
+                        f"like to try {amer} instead? (Y/N)\n").upper()
                     if switch_to_amer == 'Y':
                         current_word.word_required = amer
                         look_up_word()
