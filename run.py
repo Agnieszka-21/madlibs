@@ -83,26 +83,26 @@ def get_word_input():
     to fill any blanks in a mad lib
     """
     if len(words_accepted) == 0:
-        noun1.word_required = input("Noun:\n").upper()
+        noun1.word_required = input("Noun:").upper()
         global current_word
         current_word = noun1
     elif len(words_accepted) == 1:
-        noun2.word_required = input("Another noun:\n").upper()
+        noun2.word_required = input("Another noun:").upper()
         current_word = noun2
     elif len(words_accepted) == 2:
-        noun_pl.word_required = input("Plural noun:\n").upper()
+        noun_pl.word_required = input("Plural noun:").upper()
         current_word = noun_pl
     elif len(words_accepted) == 3:
-        adj1.word_required = input("Adjective:\n").upper()
+        adj1.word_required = input("Adjective:").upper()
         current_word = adj1
     elif len(words_accepted) == 4:
-        adj2.word_required = input("Another adjective:\n").upper()
+        adj2.word_required = input("Another adjective:").upper()
         current_word = adj2
     elif len(words_accepted) == 5:
-        adv.word_required = input("Adverb:\n").upper()
+        adv.word_required = input("Adverb:").upper()
         current_word = adv
     elif len(words_accepted) == 6:
-        verb.word_required = input("Verb:\n").upper()
+        verb.word_required = input("Verb:").upper()
         current_word = verb
 
 
