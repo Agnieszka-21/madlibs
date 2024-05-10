@@ -15,22 +15,30 @@ from dotenv import load_dotenv
 from rich.text import Text
 
 
-# Clears the terminal window prior to new content. For Windows and macOS/Linux
 def clear_terminal():
+    """
+    Clears the terminal window prior to new content. For Windows and macOS/Linux
+    """
     os.system('cls' if os.name == 'nt' else 'clear')
 
+
 def restart_program(): # Does it work for macOS/Linux?
+    """
+    Restarts the program - used when user wants to play again, submitting new words
+    """
     os.system('cls' if os.name == 'nt' else 'clear')
     script_name = os.path.basename(__file__)
     os.system(script_name)
 
 
-# Welcome screen - prints a welcome message and a short description of how to play the game
 def welcome():
-    welcome = "Welcome to MAD LIBS! \n \nHow to play: \nYou will be asked to provide certain words \
-(a noun, an adjective etc.) that are then inserted into a randomly selected story. \
-To provide your words, simply type them as prompted and confirm the submission of \
-each word by pressing Enter. Afterwards, simply read the complete story. Have fun!\n"
+    """
+    Welcome screen - prints a welcome message and a short description of how to play the game
+    """
+    welcome = "Welcome to MAD LIBS!\n \nHow to play: \nYou will be asked to provide certain words" \
+              "(a noun, an adjective etc.) that are then inserted into a randomly selected story." \
+              "To provide your words, simply type them as prompted and confirm the submission of" \
+              "each word by pressing Enter. Afterwards, simply read the complete story. Have fun!\n"
     print(welcome)
 
 
@@ -61,8 +69,10 @@ words_accepted = []
 current_word = None
 
 
-# Required user's inputs - ask for words that will be used to fill any blanks in a mad lib
 def get_word_input():
+    """
+    Asks for required user's inputs - words that will be used to fill any blanks in a mad lib
+    """
     if len(words_accepted) == 0:
         noun1.word_required = input("Noun:\n").upper()
         global current_word
@@ -88,17 +98,23 @@ def get_word_input():
 
 
 def look_up_word():
+    """
+    Looks up each word input in the dictionary
+    """
     # Access the dictionary API key
     load_dotenv()
     APP_KEY = os.getenv('API_KEY_SERVICE')
     try:
-        # Look up word in the dictionary
         # Code figured out based on the following tutorial: https://www.youtube.com/watch?v=hpc5jyVpUpw
         response = requests.get(f"https://www.dictionaryapi.com/api/v3/references/collegiate/json/{current_word.word_required}?key={APP_KEY}")
         word_checked = response.json()
-        print(word_checked)
+        #print(word_checked)
+
 
         def validate_word():
+            """
+            Makes sure the user input is a valid word and add the word's 'fl' (functional labels) to the list fl_available
+            """
             try: 
                 # Check if the exact word can be found in the dictionary
                 current_word.word_required in word_checked[0]['meta']['id']
@@ -140,14 +156,17 @@ def look_up_word():
                 else:
                     pass
 
-                # Check if the valid word has the correct grammatical type (function label)
+
                 def valid_words_type():
+                    """
+                    Checks if the valid word has the correct grammatical type (function label)
+                    """
                     global current_word
                     if current_word.word_type == "noun": 
                         if "noun" in fl_available:
                             print("Great, your word is a noun.")
                             words_accepted.append(current_word.word_required)
-                            print(words_accepted)
+                            #print(words_accepted)
                         else:
                             current_word.word_required = input("It looks like your word is not a noun. Try again:\n").upper()
                             look_up_word()
@@ -155,16 +174,16 @@ def look_up_word():
                         if "adjective" or "adverb or adjective" in fl_available:
                             print("Great, your word is an adjective.")
                             words_accepted.append(current_word.word_required)
-                            print(words_accepted)
+                            #print(words_accepted)
                         else:
                             current_word.word_required = input("It looks like your word is not an adjective. Try again:\n").upper()
                             look_up_word()
                     elif current_word.word_type == "adverb":
                         if "adverb" in fl_available or ("adjective" in fl_available and current_word.word_required[-2:] == 'LY'):
                             print("Great, your word is an adverb.")
-                            print(current_word.word_required[-2:])
+                            #print(current_word.word_required[-2:])
                             words_accepted.append(current_word.word_required)
-                            print(words_accepted)  
+                            #print(words_accepted)  
                         else: 
                             current_word.word_required = input("It looks like your word is not an adverb. Try again:\n").upper()
                             look_up_word()
@@ -172,7 +191,7 @@ def look_up_word():
                         if "verb" in fl_available:
                             print("Great, your word is a verb.")
                             words_accepted.append(current_word.word_required)
-                            print(words_accepted)  
+                            #print(words_accepted)  
                         else: 
                             current_word.word_required = input("It looks like your word is not a verb. Try again:\n").upper()
                             look_up_word()
@@ -180,18 +199,18 @@ def look_up_word():
                         input(f"It looks like your word is not a {current_word.word_type}. Please try again:\n").upper()
                 valid_words_type() 
                 
-
             # Word not found in the dictionary - likely misspelled, a typo, or not a word
             except TypeError: 
                 current_word.word_required = input(f"Please check for typos and try again. Enter your {current_word.word_type} here:\n").upper()
                 look_up_word()
 
+            # Word could not be validated (none of the required details regarding its 'fl' could be accessed)
             except IndexError: 
                 current_word.word_required = input(f"Your word could not be validated. Please try again - enter your {current_word.word_type} here:\n").upper()
                 look_up_word()
-
         validate_word()
 
+    # Problem with connecting to the dictionary API
     except ConnectionError:
         print("Sorry, there was a connection issue.")
         restart = input("Type R and press Enter to restart the game:\n")  
@@ -207,16 +226,17 @@ def look_up_word():
                 print("Thanks for playing MAD LIBS!")
 
 
-
-# Start game by printing the welcome message and asking for word inputs
 def start_game(WORDS_NEEDED):
+    """
+    Starts a game by printing the welcome message and asking for word inputs
+    """
     welcome()
     for word in WORDS_NEEDED:
         get_word_input()
         look_up_word()
 start_game(WORDS_NEEDED)      
       
-#Class Story for all available mad libs
+
 class Story:
     """
     A mad lib story with blanks
@@ -290,9 +310,11 @@ ALL_TEXTS = [madlib1.text, madlib2.text, madlib3.text, madlib4.text, madlib5.tex
 available_titles = ALL_TITLES
 available_texts = ALL_TEXTS
 
-# Randomly choose a title and a matching text from currently available titles and texts
-def choose_story_randomly(list_of_titles, list_of_texts):
 
+def choose_story_randomly(list_of_titles, list_of_texts):
+    """
+    Randomly chooses a title and a matching text from currently available titles and texts
+    """
     # Choose a title randomly
     randomly_chosen_title = random.choice(list_of_titles)
     get_index_of_randomly_chosen_title = list_of_titles.index(randomly_chosen_title)
@@ -311,20 +333,20 @@ choose_story_randomly(available_titles, available_texts)
 
 
 
-
-# Ask the user whether they would like to play again and give them options
 def play_again_or_not():
+    """
+    Asks the user whether they would like to play again and gives them options
+    """
     play_again_question = input("\nWould you like to play again (Y/N)?\n").upper()
     if play_again_question == "Y":
-        new_game_how = input("If you would like to re-use your words with a different story, type A and press Enter. \
-If you'd like to start a new game, type B and press Enter:\n").upper()
+        new_game_how = input("If you would like to re-use your words with a different story, type A and press Enter. If you'd like to start a new game, type B and press Enter:\n").upper()
         if new_game_how == "A":
             try:
                 choose_story_randomly(available_titles, available_texts)
                 play_again_or_not()
             except IndexError:
-                all_stories_used = input("You have seen all available stories. If you would like to start a new game, type B and press Enter:\n").upper()
-                if all_stories_used == "B":
+                all_stories_used = input("You have seen all available stories. If you would like to start a new game, type N and press Enter:\n").upper()
+                if all_stories_used == "N":
                     clear_terminal()
                     restart_program()
                 else:
@@ -341,6 +363,3 @@ If you'd like to start a new game, type B and press Enter:\n").upper()
         print("Invalid input. Thanks for playing MAD LIBS!")
 
 play_again_or_not()
-
-
-
