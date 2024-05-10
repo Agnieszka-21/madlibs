@@ -6,13 +6,14 @@ import os
 # Python library to choose a random story from the provided ones
 import random 
 
-# Two Python libraries used to access dictionary API & the file containing the API key
+# Python libraries used to access dictionary API & the .env file containing the API key
 import json
 import requests
-import dictionary_api
+from dotenv import load_dotenv
 
 # Rich library
-import rich 
+from rich.text import Text
+
 
 # Clears the terminal window prior to new content. For Windows and macOS/Linux
 def clear_terminal():
@@ -88,16 +89,18 @@ def get_word_input():
 
 def look_up_word():
     # Access the dictionary API key
-    app_key = dictionary_api.API_KEY_SERVICE
+    load_dotenv()
+    APP_KEY = os.getenv('API_KEY_SERVICE')
     try:
+        # Look up word in the dictionary
         # Code figured out based on the following tutorial: https://www.youtube.com/watch?v=hpc5jyVpUpw
-        response = requests.get(f"https://www.dictionaryapi.com/api/v3/references/collegiate/json/{current_word.word_required}?key={app_key}")
+        response = requests.get(f"https://www.dictionaryapi.com/api/v3/references/collegiate/json/{current_word.word_required}?key={APP_KEY}")
         word_checked = response.json()
         print(word_checked)
 
         def validate_word():
             try: 
-                # Check if the word can be found in the dictionary
+                # Check if the exact word can be found in the dictionary
                 current_word.word_required in word_checked[0]['meta']['id']
                 #print("Validation successful.")
                 #print(word_checked[0]['meta']['id'])
@@ -110,6 +113,7 @@ def look_up_word():
                 # If such a label is not found (usually for plural nouns)
                 elif 'plural of' in word_checked[0]['cxs'][0]['cxl']:
                     fl_available = ["noun"]
+                # If British spelling rather than American
                 elif 'chiefly British spelling of' in word_checked[0]['cxs'][0]['cxl']:
                     amer_spelling = word_checked[0]['cxs'][0]['cxtis'][0]['cxt'].upper()
                     switch_to_amer = input(f"We weren't able to check your word but there seems to be a similar word with US spelling. Would you like to try {amer_spelling} instead? (Y/N)\n").upper()
