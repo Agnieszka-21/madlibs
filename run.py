@@ -1,5 +1,6 @@
 # Python library used to clear terminal
 import os
+import sys
 
 # Python library to choose a random story from the provided ones
 import random
@@ -22,13 +23,15 @@ def clear_terminal():
     os.system('cls' if os.name == 'nt' else 'clear')
 
 
-def restart_program():  # Does it work for macOS/Linux?
+def restart_program():
     """
     Restarts the program when user wants to play again with new words
     """
-    os.system('cls' if os.name == 'nt' else 'clear')
-    script_name = os.path.basename(__file__)
-    os.system(script_name)
+    # os.system('cls' if os.name == 'nt' else 'clear')
+    # script_name = os.path.basename(__file__)
+    # os.system(script_name)
+    python = sys.executable
+    os.execl(python, python, * sys.argv)
 
 
 def welcome():
@@ -37,13 +40,12 @@ def welcome():
     """
     game_title = "Welcome to MAD LIBS!"
     welcome_text = Text(justify="left")
-    welcome_text.append("\nHow to play: \nYou will be asked "
+    welcome_text.append("\nHow to play: You will be asked "
                         "to provide certain words (a noun, adjective "
                         "etc.) that are then inserted into a randomly "
-                        "selected story. To provide your words, "
-                        "simply type them as prompted and confirm "
-                        "the submission of each word by pressing "
-                        "Enter. Afterwards, simply read the "
+                        "selected story. Simply type each word "
+                        "as prompted and press Enter to "
+                        "submit it. Afterwards, read the "
                         "complete story. Have fun!\n")
     print(game_title)
     print(welcome_text)
@@ -83,26 +85,26 @@ def get_word_input():
     to fill any blanks in a mad lib
     """
     if len(words_accepted) == 0:
-        noun1.word_required = input("Noun:").upper()
+        noun1.word_required = input("Noun: ").upper()
         global current_word
         current_word = noun1
     elif len(words_accepted) == 1:
-        noun2.word_required = input("Another noun:").upper()
+        noun2.word_required = input("Another noun: ").upper()
         current_word = noun2
     elif len(words_accepted) == 2:
-        noun_pl.word_required = input("Plural noun:").upper()
+        noun_pl.word_required = input("Plural noun: ").upper()
         current_word = noun_pl
     elif len(words_accepted) == 3:
-        adj1.word_required = input("Adjective:").upper()
+        adj1.word_required = input("Adjective: ").upper()
         current_word = adj1
     elif len(words_accepted) == 4:
-        adj2.word_required = input("Another adjective:").upper()
+        adj2.word_required = input("Another adjective: ").upper()
         current_word = adj2
     elif len(words_accepted) == 5:
-        adv.word_required = input("Adverb:").upper()
+        adv.word_required = input("Adverb: ").upper()
         current_word = adv
     elif len(words_accepted) == 6:
-        verb.word_required = input("Verb:").upper()
+        verb.word_required = input("Verb: ").upper()
         current_word = verb
 
 
@@ -196,7 +198,7 @@ def look_up_word():
                                 "noun. Try again:\n").upper()
                             look_up_word()
                     elif current_word.word_type == "adjective":
-                        if "adjective" or "adverb or adjective" in fl_avail:
+                        if "adjective" in fl_avail:
                             # print("Great, your word is an adjective.")
                             words_accepted.append(current_word.word_required)
                             # print(words_accepted)
@@ -206,7 +208,7 @@ def look_up_word():
                                 "adjective. Try again:\n").upper()
                             look_up_word()
                     elif current_word.word_type == "adverb":
-                        if "adverb" or "adverb or adjective" in fl_avail or (
+                        if "adverb" in fl_avail or (
                             "adjective" in fl_avail and
                                 current_word.word_required[-2:] == 'LY'):
                             # print("Great, your word is an adverb.")
@@ -351,7 +353,7 @@ madlib6 = Story("\nFirst Day at Wizard School", "\nHermione jumped out "
                 "at school, she took her seat in class and prepared her "
                 "first potion. The ingredients included a(n) "
                 f"{adj1.word_required} bezoar and {adj2.word_required} "
-                f"{noun_pl.word_required}. It would be worth it when"
+                f"{noun_pl.word_required}. It would be worth it when "
                 f"she could turn a spider into a(n) {noun2.word_required}.")
 
 madlib7 = Story("\nAmazon Explorers", f"\nThe {adj1.word_required} "
