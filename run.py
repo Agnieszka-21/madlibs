@@ -11,8 +11,11 @@ import requests
 from dotenv import load_dotenv
 
 # Rich library
+from rich.console import Console
+from rich.panel import Panel
 from rich.style import Style
 from rich.text import Text
+#from rich import print
 
 
 def clear_terminal():
@@ -27,9 +30,6 @@ def restart_program():
     """
     Restarts the program when user wants to play again with new words
     """
-    # os.system('cls' if os.name == 'nt' else 'clear')
-    # script_name = os.path.basename(__file__)
-    # os.system(script_name)
     python = sys.executable
     os.execl(python, python, * sys.argv)
 
@@ -38,8 +38,10 @@ def welcome():
     """
     Prints a welcome message and a short description of how to play the game
     """
-    game_title = "Welcome to MAD LIBS!"
-    welcome_text = Text(justify="left")
+    console = Console()
+    game_title = Text("\nWELCOME TO MAD LIBS", justify="right", style="dark_orange3")
+    #game_title.stylize("dark_orange3", 0, 19)
+    welcome_text = Text(justify="center")
     welcome_text.append("\nHow to play: You will be asked "
                         "to provide certain words (a noun, adjective "
                         "etc.) that are then inserted into a randomly "
@@ -47,8 +49,9 @@ def welcome():
                         "as prompted and press Enter to "
                         "submit it. Afterwards, read the "
                         "complete story. Have fun!\n")
-    print(game_title)
-    print(welcome_text)
+    # welcome_text.stylize("dark_orange3", 0, 13)
+    console.print(game_title)
+    console.print(welcome_text)
 
 
 class Words:
