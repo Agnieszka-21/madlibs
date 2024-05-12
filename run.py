@@ -12,7 +12,7 @@ from dotenv import load_dotenv
 
 # Rich library
 from rich.console import Console
-from rich.panel import Panel
+from rich.markdown import Markdown
 from rich.style import Style
 from rich.text import Text
 #from rich import print
@@ -39,9 +39,9 @@ def welcome():
     Prints a welcome message and a short description of how to play the game
     """
     console = Console()
-    game_title = Text("\nWELCOME TO MAD LIBS", justify="right", style="dark_orange3")
+    game_title = Text("WELCOME TO MAD LIBS", style="bold dark_orange3")
     #game_title.stylize("dark_orange3", 0, 19)
-    welcome_text = Text(justify="center")
+    welcome_text = Text()
     welcome_text.append("\nHow to play: You will be asked "
                         "to provide certain words (a noun, adjective "
                         "etc.) that are then inserted into a randomly "
@@ -157,17 +157,17 @@ def look_up_word():
                         look_up_word()
                     elif switch_to_amer == 'N':
                         current_word.word_required = input(
-                            "Okay, please try a different word:\n").upper()
+                            "Okay, please try a different word: ").upper()
                         look_up_word()
                     else:
                         current_word.word_required = input(
                             "Your input was invalid. Please submit "
-                            "a different word:\n").upper()
+                            "a different word: ").upper()
                         look_up_word()
                 else:
                     current_word.word_required = input(
                         "Something went wrong. Please submit a "
-                        "different word:\n").upper()
+                        "different word: ").upper()
 
                 # Check for homographs
                 if len(word_checked) > 1 and (
@@ -198,7 +198,7 @@ def look_up_word():
                         else:
                             current_word.word_required = input(
                                 "It looks like your word is not a "
-                                "noun. Try again:\n").upper()
+                                "noun. Try again: ").upper()
                             look_up_word()
                     elif current_word.word_type == "adjective":
                         if "adjective" in fl_avail:
@@ -208,7 +208,7 @@ def look_up_word():
                         else:
                             current_word.word_required = input(
                                 "It looks like your word is not an "
-                                "adjective. Try again:\n").upper()
+                                "adjective. Try again: ").upper()
                             look_up_word()
                     elif current_word.word_type == "adverb":
                         if "adverb" in fl_avail or (
@@ -221,7 +221,7 @@ def look_up_word():
                         else:
                             current_word.word_required = input(
                                 "It looks like your word is not an "
-                                "adverb. Try again:\n").upper()
+                                "adverb. Try again: ").upper()
                             look_up_word()
                     elif current_word.word_type == "verb":
                         if "verb" in fl_avail:
@@ -231,19 +231,19 @@ def look_up_word():
                         else:
                             current_word.word_required = input(
                                 "It looks like your word is not a verb. "
-                                "Try again:\n").upper()
+                                "Try again: ").upper()
                             look_up_word()
                     else:
                         input("It looks like your word is "
                               f"not a {current_word.word_type}. "
-                              "Please try again:\n").upper()
+                              "Please try again: ").upper()
                 valid_words_type()
 
             # Word not found in the dictionary (misspelled/not a word)
             except TypeError:
                 current_word.word_required = input(
                     "Please check for typos and try again. Enter "
-                    f"your {current_word.word_type} here:\n").upper()
+                    f"your {current_word.word_type} here: ").upper()
                 look_up_word()
 
             # Word could not be validated (none of the required
@@ -252,7 +252,7 @@ def look_up_word():
                 current_word.word_required = input(
                     "Your word could not be validated. Please try "
                     f"again - enter your {current_word.word_type} "
-                    "here:\n").upper()
+                    "here: ").upper()
                 look_up_word()
         validate_word()
 
