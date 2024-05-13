@@ -134,19 +134,35 @@ def look_up_word():
             try:
                 # Check if the exact word can be found in the dictionary
                 current_word.word_required in word_checked[0]['meta']['id']
-                # print("Validation successful.")
-                # print(word_checked[0]['meta']['id'])
+                print(word_checked[0]['meta']['id'])
                 # print(current_word.word_required)
 
                 # Aiming to access 'fl' of the given word (e.g. noun, verb)
                 if 'fl' in word_checked[0]:
                     fl_avail = [word_checked[0]['fl']]
-                    # print(fl_avail)
+                    print("Print 1:", fl_avail)
+                    
+                    # Check for homographs
+                    if len(word_checked) > 1 and (
+                        'hom' in word_checked[1]) and (
+                            'fl' in word_checked[1]):
+                        # print("This word has multiple meanings and functions")
+                        fl_avail.append(word_checked[1]['fl'])
+
+                        if len(word_checked) > 2 and (
+                            'hom' in word_checked[2]) and (
+                                'fl' in word_checked[2]):
+                            fl_avail.append(word_checked[2]['fl'])
+                        print("Print 2:", fl_avail)
+                
                 # If such a label is not found (usually for plural nouns)
                 elif 'plural of' in word_checked[0]['cxs'][0]['cxl']:
                     fl_avail = ["noun"]
+                
                 # If British spelling rather than American
                 elif 'British spelling' in word_checked[0]['cxs'][0]['cxl']:
+                    fl_avail = []
+                    print("British spelling fl:", fl_avail)
                     amer = word_checked[0]['cxs'][0]['cxtis'][0]['cxt'].upper()
                     switch_to_amer = input(
                         "We weren't able to check your word but there seems "
@@ -164,31 +180,19 @@ def look_up_word():
                             "Your input was invalid. Please submit "
                             "a different word: ").upper()
                         look_up_word()
+                    return
                 else:
                     current_word.word_required = input(
                         "Something went wrong. Please submit a "
                         "different word: ").upper()
 
-                # Check for homographs
-                if len(word_checked) > 1 and (
-                    'hom' in word_checked[1]) and (
-                        'fl' in word_checked[1]):
-                    # print("This word has multiple meanings and functions")
-                    fl_avail.append(word_checked[1]['fl'])
-
-                    if len(word_checked) > 2 and (
-                        'hom' in word_checked[2]) and (
-                            'fl' in word_checked[2]):
-                        fl_avail.append(word_checked[2]['fl'])
-                    # print(fl_avail)
-                else:
-                    pass
 
                 def valid_words_type():
                     """
                     Checks if the valid word has the correct grammatical
                     type (function label)
                     """
+                    print("Print 3:", fl_avail)
                     global current_word
                     if current_word.word_type == "noun":
                         if "noun" in fl_avail:
@@ -201,8 +205,9 @@ def look_up_word():
                                 "noun. Try again: ").upper()
                             look_up_word()
                     elif current_word.word_type == "adjective":
+                        print("Print 4:", fl_avail)
                         if "adjective" in fl_avail:
-                            # print("Great, your word is an adjective.")
+                            print("Print 5: Great, your word is an adjective.")
                             words_accepted.append(current_word.word_required)
                             # print(words_accepted)
                         else:
@@ -255,6 +260,7 @@ def look_up_word():
                     "here: ").upper()
                 look_up_word()
         validate_word()
+
 
     # Problem with connecting to the dictionary API
     except ConnectionError:
