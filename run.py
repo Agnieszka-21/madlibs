@@ -279,7 +279,13 @@ def look_up_word():
             else:
                 print("Thanks for playing MAD LIBS!")
 
+    except:
+        current_word.word_required = input(
+            "Something went wrong... Please submit a "
+            f"different {current_word.word_type}: ").upper()
+        look_up_word()
 
+                
 def start_game(WORDS_NEEDED):
     """
     Starts a game by printing the welcome message
