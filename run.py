@@ -1,4 +1,4 @@
-# Python library used to clear terminal
+# Python libraries used to clear terminal & restart program
 import os
 import sys
 
@@ -167,7 +167,7 @@ def look_up_word():
                     switch_to_amer = input(
                         "We weren't able to check your word but there seems "
                         "to be a similar word with US spelling. Would you "
-                        f"like to try {amer} instead? (Y/N)\n").upper()
+                        f"like to try {amer} instead? (Y/N) ").upper()
                     if switch_to_amer == 'Y':
                         current_word.word_required = amer
                         look_up_word()
@@ -265,14 +265,14 @@ def look_up_word():
     # Problem with connecting to the dictionary API
     except ConnectionError:
         print("Sorry, there was a connection issue.")
-        restart = input("Type R and press Enter to restart the game:\n")
+        restart = input("Type R and press Enter to restart the game: ")
         if restart == "R":
             clear_terminal()
             restart_program()
         else:
             restart_ask_again = input(
                 "Invalid input. Please type R "
-                "and press Enter to restart the game:\n")
+                "and press Enter to restart the game: ")
             if restart_ask_again == "R":
                 clear_terminal()
                 restart_program()
@@ -431,38 +431,45 @@ def play_again_or_not():
     Asks the user whether they would like to play again
     and gives them options
     """
+    options = ["Y", "N"]
     play_again_question = input(
-        "\nWould you like to play again (Y/N)?\n").upper()
-    if play_again_question == "Y":
-        new_game_how = input(
-            "If you would like to re-use your words with "
-            "a different story, type A and press Enter. If you'd "
-            "like to start a new game, type B and press Enter:\n").upper()
-        if new_game_how == "A":
-            try:
-                choose_story_randomly(available_titles, available_texts)
-                play_again_or_not()
-            except IndexError:
-                all_stories_used = input(
-                    "You have seen all available stories. "
-                    "If you would like to start a new game, "
-                    "type N and press Enter:\n").upper()
-                if all_stories_used == "N":
-                    clear_terminal()
-                    restart_program()
-                else:
-                    print("Invalid input. Thanks for playing MAD LIBS!")
-        elif new_game_how == "B":
-            clear_terminal()
-            restart_program()
-        else:
-            input("Please choose A or B and press Enter:\n").upper()
-    elif play_again_question == "N":
-        end_game = "Okay, thanks for playing!"
-        print(end_game)
+        "\nWould you like to play again (Y/N)? ").upper()
+    while play_again_question not in options:
+        print("Invalid input. Let's try one more time...")
+        play_again_or_not()
+        return
     else:
-        print("Invalid input. Thanks for playing MAD LIBS!")
+        if play_again_question == "Y":
+            new_game_how = input(
+                "If you would like to re-use your words with "
+                "a different story, type A and press Enter. If you'd "
+                "like to start a new game, type B and press Enter: ").upper()
+            if new_game_how == "A":
+                try:
+                    choose_story_randomly(available_titles, available_texts)
+                    play_again_or_not()
+                except IndexError:
+                    all_stories_used = input(
+                        "You have seen all available stories. "
+                        "If you would like to start a new game, "
+                        "type N and press Enter: ").upper()
+                    if all_stories_used == "N":
+                        clear_terminal()
+                        restart_program()
+                    else:
+                        print("Invalid input. Thanks for playing MAD LIBS!")
+            elif new_game_how == "B":
+                clear_terminal()
+                restart_program()
+            else:
+                input("Please choose A or B and press Enter: ").upper()
+        elif play_again_question == "N":
+            end_game = "Okay, thanks for playing!"
+            print(end_game)
+        else:
+            print("Invalid input. Thanks for playing MAD LIBS!")
 
 
+clear_terminal()
 choose_story_randomly(available_titles, available_texts)
 play_again_or_not()
