@@ -66,7 +66,7 @@ class Words:
 
 noun1 = Words("input", "noun", "(e.g. tree, car, dog)")
 noun2 = Words("input", "noun", "(e.g. tree, car, dog)")
-noun_pl = Words("input", "plural", "(e.g. cats, mice)")
+noun_pl = Words("input", "plural noun", "(e.g. cats, mice)")
 adj1 = Words("input", "adjective", "(e.g. sad, beautiful)")
 adj2 = Words("input", "adjective", "(e.g. sad, beautiful)")
 adv = Words("input", "adverb", "(e.g. gladly, tomorrow)")
@@ -157,7 +157,7 @@ def look_up_word():
                 
                 # If such a label is not found (usually for plural nouns)
                 elif 'plural of' in word_checked[0]['cxs'][0]['cxl']:
-                    fl_avail = ["plural"]
+                    fl_avail = ["plural noun"]
                 
                 # If British spelling rather than American
                 elif 'British spelling' in word_checked[0]['cxs'][0]['cxl']:
@@ -181,12 +181,18 @@ def look_up_word():
                             "a different word: ").upper()
                         look_up_word()
                     return
+                
+                # None of the above requirements was met when checking
+                # the word - invalid word
                 else:
                     current_word.word_required = input(
-                        "Something went wrong. Please submit a "
-                        "different word: ").upper()
+                        "Oops, something went wrong. Please submit "
+                        f"a different {current_word.word_type} "
+                        f"{current_word.examples}: ").upper()
+                    look_up_word()
+                    return
 
-
+        
                 def valid_words_type():
                     """
                     Checks if the valid word has the correct grammatical
@@ -204,8 +210,8 @@ def look_up_word():
                                 "It looks like your word is not a noun. "
                                 f"Try again {current_word.examples}: ").upper()
                             look_up_word()
-                    elif current_word.word_type == "plural":
-                        if ("plural" in fl_avail) or (
+                    elif current_word.word_type == "plural noun":
+                        if ("plural noun" in fl_avail) or (
                             "noun" in fl_avail and
                                 current_word.word_required[-1:] == 'S'):
                             words_accepted.append(current_word.word_required)
@@ -259,7 +265,8 @@ def look_up_word():
             except TypeError:
                 current_word.word_required = input(
                     "Please check for typos and try again. Enter "
-                    f"your {current_word.word_type} here: ").upper()
+                    f"your {current_word.word_type} "
+                    f"{current_word.examples} here: ").upper()
                 look_up_word()
 
             # Word could not be validated (none of the required
@@ -293,7 +300,8 @@ def look_up_word():
     except:
         current_word.word_required = input(
             "Something went wrong... Please submit a "
-            f"different {current_word.word_type}: ").upper()
+            f"different {current_word.word_type} "
+            f"{current_word.examples}: ").upper()
         look_up_word()
 
                 
