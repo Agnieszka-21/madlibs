@@ -64,13 +64,13 @@ class Words:
         self.examples = examples
 
 
-noun1 = Words("noun", "noun", "(e.g. tree, car, dog)")
-noun2 = Words("noun", "noun", "(e.g. tree, car, dog)")
-noun_pl = Words("noun", "noun", "(e.g. cats, mice)")
-adj1 = Words("adjective", "adjective", "(e.g. sad, beautiful)")
-adj2 = Words("adjective", "adjective", "(e.g. sad, beautiful)")
-adv = Words("adverb", "adverb", "(e.g. gladly, tomorrow)")
-verb = Words("verb", "verb", "(e.g. walk, swim)")
+noun1 = Words("input", "noun", "(e.g. tree, car, dog)")
+noun2 = Words("input", "noun", "(e.g. tree, car, dog)")
+noun_pl = Words("input", "plural", "(e.g. cats, mice)")
+adj1 = Words("input", "adjective", "(e.g. sad, beautiful)")
+adj2 = Words("input", "adjective", "(e.g. sad, beautiful)")
+adv = Words("input", "adverb", "(e.g. gladly, tomorrow)")
+verb = Words("input", "verb", "(e.g. walk, swim)")
 
 
 # A list of all required word inputs
@@ -157,7 +157,7 @@ def look_up_word():
                 
                 # If such a label is not found (usually for plural nouns)
                 elif 'plural of' in word_checked[0]['cxs'][0]['cxl']:
-                    fl_avail = ["noun"]
+                    fl_avail = ["plural"]
                 
                 # If British spelling rather than American
                 elif 'British spelling' in word_checked[0]['cxs'][0]['cxl']:
@@ -203,6 +203,17 @@ def look_up_word():
                             current_word.word_required = input(
                                 "It looks like your word is not a noun. "
                                 f"Try again {current_word.examples}: ").upper()
+                            look_up_word()
+                    elif current_word.word_type == "plural":
+                        if ("plural" in fl_avail) or (
+                            "noun" in fl_avail and
+                                current_word.word_required[-1:] == 'S'):
+                            words_accepted.append(current_word.word_required)
+                        else:
+                            current_word.word_required = input(
+                                "It looks like your word is not a plural "
+                                f"noun. Try again {current_word.examples}: "
+                            ).upper()
                             look_up_word()
                     elif current_word.word_type == "adjective":
                         # print("Print 4:", fl_avail)
