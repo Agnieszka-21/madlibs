@@ -445,6 +445,10 @@ def play_again_or_not():
             return
    
     def how_to_play_again():
+        """
+        Works only when user chose Y (yes) - they
+        would like to play again
+        """
         if play_again_question == "Y":
             new_game_options = ["A", "B"]
             new_game_how = input(
@@ -456,24 +460,33 @@ def play_again_or_not():
                 how_to_play_again()
                 return
             else:
-                if new_game_how == "A":
-                    try:
-                        choose_story_randomly(available_titles, available_texts)
-                        play_again_or_not()
-                    except IndexError:
-                        all_stories_used = input(
-                            "You have seen all available stories. "
-                            "If you would like to start a new game, "
-                            "type N and press Enter: ").upper()
-                        if all_stories_used == "N":
-                            clear_terminal()
-                            restart_program()
-                        else:
-                            print("Invalid input. Thanks for playing MAD LIBS!")
-                elif new_game_how == "B":
+                if new_game_how == "B":
                     clear_terminal()
                     restart_program()
 
+        def reuse_words():
+            """
+            Works only if user chose option A - play again
+            and re-use the same words with another story
+            """   
+            if new_game_how == "A":
+                try:
+                    choose_story_randomly(available_titles, available_texts)
+                    play_again_or_not()
+                except IndexError:
+                    all_stories_used = input(
+                        "You have seen all available stories. "
+                        "If you would like to start a new game, "
+                        "type Y and press Enter: ").upper()
+                    while all_stories_used != "Y":
+                        print("Invalid input. Let's try again...")
+                        reuse_words()
+                        return
+                    if all_stories_used == "Y":
+                        clear_terminal()
+                        restart_program()
+                    
+        reuse_words()
     how_to_play_again()
 
 
