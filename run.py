@@ -58,18 +58,19 @@ class Words:
     """
     Required word inputs from the user and their grammatical types
     """
-    def __init__(self, word_required, word_type):
+    def __init__(self, word_required, word_type, examples):
         self.word_required = word_required
         self.word_type = word_type
+        self.examples = examples
 
 
-noun1 = Words("noun", "noun")
-noun2 = Words("noun", "noun")
-noun_pl = Words("noun", "noun")
-adj1 = Words("adjective", "adjective")
-adj2 = Words("adjective", "adjective")
-adv = Words("adverb", "adverb")
-verb = Words("verb", "verb")
+noun1 = Words("noun", "noun", "(e.g. tree, car, dog)")
+noun2 = Words("noun", "noun", "(e.g. tree, car, dog)")
+noun_pl = Words("noun", "noun", "(e.g. cats, mice)")
+adj1 = Words("adjective", "adjective", "(e.g. sad, beautiful)")
+adj2 = Words("adjective", "adjective", "(e.g. sad, beautiful)")
+adv = Words("adverb", "adverb", "(e.g. gladly, tomorrow)")
+verb = Words("verb", "verb", "(e.g. walk, swim)")
 
 
 # A list of all required word inputs
@@ -140,7 +141,6 @@ def look_up_word():
                 # Aiming to access 'fl' of the given word (e.g. noun, verb)
                 if 'fl' in word_checked[0]:
                     fl_avail = [word_checked[0]['fl']]
-                    # print("Print 1:", fl_avail)
                     
                     # Check for homographs
                     if len(word_checked) > 1 and (
@@ -153,7 +153,7 @@ def look_up_word():
                             'hom' in word_checked[2]) and (
                                 'fl' in word_checked[2]):
                             fl_avail.append(word_checked[2]['fl'])
-                        # print("Print 2:", fl_avail)
+                    # print("Print 2:", fl_avail)
                 
                 # If such a label is not found (usually for plural nouns)
                 elif 'plural of' in word_checked[0]['cxs'][0]['cxl']:
@@ -201,8 +201,8 @@ def look_up_word():
                             # print(words_accepted)
                         else:
                             current_word.word_required = input(
-                                "It looks like your word is not a "
-                                "noun. Try again: ").upper()
+                                "It looks like your word is not a noun. "
+                                f"Try again {current_word.examples}: ").upper()
                             look_up_word()
                     elif current_word.word_type == "adjective":
                         # print("Print 4:", fl_avail)
@@ -212,8 +212,8 @@ def look_up_word():
                             # print(words_accepted)
                         else:
                             current_word.word_required = input(
-                                "It looks like your word is not an "
-                                "adjective. Try again: ").upper()
+                                "It looks like your word is not an adjective. "
+                                f"Try again {current_word.examples}: ").upper()
                             look_up_word()
                     elif current_word.word_type == "adverb":
                         if "adverb" in fl_avail or (
@@ -225,8 +225,8 @@ def look_up_word():
                             # print(words_accepted)
                         else:
                             current_word.word_required = input(
-                                "It looks like your word is not an "
-                                "adverb. Try again: ").upper()
+                                "It looks like your word is not an adverb. "
+                                f"Try again {current_word.examples}: ").upper()
                             look_up_word()
                     elif current_word.word_type == "verb":
                         if "verb" in fl_avail:
@@ -236,7 +236,7 @@ def look_up_word():
                         else:
                             current_word.word_required = input(
                                 "It looks like your word is not a verb. "
-                                "Try again: ").upper()
+                                f"Try again {current_word.examples}: ").upper()
                             look_up_word()
                     else:
                         input("It looks like your word is "
