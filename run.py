@@ -2,6 +2,9 @@
 import os
 import sys
 
+# To delay clearing the terminal after getting all word inputs
+from time import sleep
+
 # Python library to choose a random story from the provided ones
 import random
 
@@ -13,6 +16,7 @@ from dotenv import load_dotenv
 # Rich library
 from rich.console import Console
 from rich.markdown import Markdown
+from rich.padding import Padding
 from rich.style import Style
 from rich.text import Text
 #from rich import print
@@ -34,12 +38,14 @@ def restart_program():
     os.execl(python, python, * sys.argv)
 
 
+# From Rich library, used for printing rich text
+console = Console()
+
 def welcome():
     """
     Prints a welcome message and a short description of how to play the game
     """
-    console = Console()
-    game_title = Text("WELCOME TO MAD LIBS", style="bold dark_orange3")
+    game_title = Text("WELCOME TO MAD LIBS", style="bold orange_red1")
     #game_title.stylize("dark_orange3", 0, 19)
     welcome_text = Text()
     welcome_text.append("\nHow to play: You will be asked "
@@ -124,7 +130,6 @@ def look_up_word():
             "https://www.dictionaryapi.com/api/v3/references/"
             f"collegiate/json/{current_word.word_required}?key={APP_KEY}")
         word_checked = response.json()
-        # print(word_checked)
 
         def validate_word():
             """
@@ -135,8 +140,7 @@ def look_up_word():
             try:
                 # Check if the exact word can be found in the dictionary
                 current_word.word_required in word_checked[0]['meta']['id']
-                # print(word_checked[0]['meta']['id'])
-                # print(current_word.word_required)
+                print(word_checked[0]['meta']['id'])
 
                 # Aiming to access 'fl' of the given word (e.g. noun, verb)
                 if 'fl' in word_checked[0]:
@@ -146,14 +150,12 @@ def look_up_word():
                     if len(word_checked) > 1 and (
                         'hom' in word_checked[1]) and (
                             'fl' in word_checked[1]):
-                        # print("This word has multiple meanings and functions")
                         fl_avail.append(word_checked[1]['fl'])
 
                         if len(word_checked) > 2 and (
                             'hom' in word_checked[2]) and (
                                 'fl' in word_checked[2]):
                             fl_avail.append(word_checked[2]['fl'])
-                    # print("Print 2:", fl_avail)
                 
                 # If such a label is not found (usually for plural nouns)
                 elif 'plural of' in word_checked[0]['cxs'][0]['cxl']:
@@ -162,7 +164,6 @@ def look_up_word():
                 # If British spelling rather than American
                 elif 'British spelling' in word_checked[0]['cxs'][0]['cxl']:
                     fl_avail = []
-                    # print("British spelling fl:", fl_avail)
                     amer = word_checked[0]['cxs'][0]['cxtis'][0]['cxt'].upper()
                     switch_to_amer = input(
                         "We weren't able to check your word but there seems "
@@ -198,13 +199,14 @@ def look_up_word():
                     Checks if the valid word has the correct grammatical
                     type (function label)
                     """
-                    # print("Print 3:", fl_avail)
                     global current_word
                     if current_word.word_type == "noun":
                         if "noun" in fl_avail:
-                            # print("Great, your word is a noun.")
+                            valid_noun = Text(
+                                "Great, your word is a noun.", 
+                                style="sea_green1")
+                            console.print(valid_noun)
                             words_accepted.append(current_word.word_required)
-                            # print(words_accepted)
                         else:
                             current_word.word_required = input(
                                 "It looks like your word is not a noun. "
@@ -214,6 +216,10 @@ def look_up_word():
                         if ("plural noun" in fl_avail) or (
                             "noun" in fl_avail and
                                 current_word.word_required[-1:] == 'S'):
+                            valid_noun_pl = Text(
+                                "Great, your word is a plural noun.", 
+                                style="sea_green1")
+                            console.print(valid_noun_pl)
                             words_accepted.append(current_word.word_required)
                         else:
                             current_word.word_required = input(
@@ -222,11 +228,12 @@ def look_up_word():
                             ).upper()
                             look_up_word()
                     elif current_word.word_type == "adjective":
-                        # print("Print 4:", fl_avail)
                         if "adjective" in fl_avail:
-                            # print("Print 5: Great, your word is an adjective.")
+                            valid_adj = Text(
+                                "Great, your word is an adjective.", 
+                                style="sea_green1")
+                            console.print(valid_adj)                            
                             words_accepted.append(current_word.word_required)
-                            # print(words_accepted)
                         else:
                             current_word.word_required = input(
                                 "It looks like your word is not an adjective. "
@@ -236,10 +243,11 @@ def look_up_word():
                         if "adverb" in fl_avail or (
                             "adjective" in fl_avail and
                                 current_word.word_required[-2:] == 'LY'):
-                            # print("Great, your word is an adverb.")
-                            # print(current_word.word_required[-2:])
+                            valid_adverb = Text(
+                                "Great, your word is an adverb.", 
+                                style="sea_green1")
+                            console.print(valid_noun_pl)
                             words_accepted.append(current_word.word_required)
-                            # print(words_accepted)
                         else:
                             current_word.word_required = input(
                                 "It looks like your word is not an adverb. "
@@ -247,9 +255,11 @@ def look_up_word():
                             look_up_word()
                     elif current_word.word_type == "verb":
                         if "verb" in fl_avail:
-                            # print("Great, your word is a verb.")
+                            valid_verb = Text(
+                                "Great, your word is a verb.", 
+                                style="sea_green1")
+                            console.print(valid_noun_pl)
                             words_accepted.append(current_word.word_required)
-                            # print(words_accepted)
                         else:
                             current_word.word_required = input(
                                 "It looks like your word is not a verb. "
@@ -303,6 +313,7 @@ def look_up_word():
             f"different {current_word.word_type} "
             f"{current_word.examples}: ").upper()
         look_up_word()
+        return
 
                 
 def start_game(WORDS_NEEDED):
@@ -374,7 +385,7 @@ madlib5 = Story("\nSummer Camp Mystery", f"\nIt was a(n) {adv.word_required} "
                 f"{adj1.word_required} summer day - the first day of camp! "
                 f"The camp counsellor told us to {verb.word_required} for "
                 f"the {noun1.word_required} - a local legend with sharp "
-                f"teeth, bushy {noun2.word_required}, and a very  "
+                f"teeth, bushy {noun2.word_required}, and a very "
                 f"{adj2.word_required} smell. That night as other campers "
                 "and I were going to sleep, we heard a noise. It sounded "
                 f"like someone chewing on {noun_pl.word_required}...")
@@ -504,11 +515,12 @@ def play_again_or_not():
                     if all_stories_used == "Y":
                         clear_terminal()
                         restart_program()
-                    
+
         reuse_words()
     how_to_play_again()
 
 
+sleep(0.5)
 clear_terminal()
 choose_story_randomly(available_titles, available_texts)
 play_again_or_not()
