@@ -246,7 +246,7 @@ def look_up_word():
                             valid_adverb = Text(
                                 "Great, your word is an adverb.", 
                                 style="sea_green1")
-                            console.print(valid_noun_pl)
+                            console.print(valid_adverb)
                             words_accepted.append(current_word.word_required)
                         else:
                             current_word.word_required = input(
@@ -258,7 +258,7 @@ def look_up_word():
                             valid_verb = Text(
                                 "Great, your word is a verb.", 
                                 style="sea_green1")
-                            console.print(valid_noun_pl)
+                            console.print(valid_verb)
                             words_accepted.append(current_word.word_required)
                         else:
                             current_word.word_required = input(
@@ -307,13 +307,13 @@ def look_up_word():
             else:
                 print("Thanks for playing MAD LIBS!")
 
-    except:
-        current_word.word_required = input(
-            "Something went wrong... Please submit a "
-            f"different {current_word.word_type} "
-            f"{current_word.examples}: ").upper()
-        look_up_word()
-        return
+    #except:
+        #current_word.word_required = input(
+            #"Something went wrong... Please submit a "
+            #f"different {current_word.word_type} "
+            #f"{current_word.examples}: ").upper()
+        #look_up_word()
+        #return
 
                 
 def start_game(WORDS_NEEDED):
