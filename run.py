@@ -82,9 +82,6 @@ adv = Words("input", "adverb", "(e.g. gladly, tomorrow)")
 verb = Words("input", "verb", "(e.g. walk, swim)")
 
 
-# A list of all required word inputs
-WORDS_NEEDED = (noun1, noun2, noun_pl, adj1, adj2, adv, verb)
-
 # A list that grows with each valid word input from user
 words_accepted = []
 
@@ -357,8 +354,8 @@ def look_up_word():
                                    "validated (possibly not a word).",
                                    style="orange3"))
                 current_word.input = input(
-                    f"Please try again - enter your "
-                    f"{current_word.word_type} here: ").upper()
+                    f"Please try again - enter your {current_word.word_type} "
+                    f"{current_word.examples} here: ").upper()
                 exclude_numbers()
                 look_up_word()
         validate_word()
@@ -391,19 +388,21 @@ def look_up_word():
         return
 
                 
-def start_game(WORDS_NEEDED):
+def start_game():
     """
     Starts a game by printing the welcome message
     and asking for word inputs
     """
     welcome()
-    for word in WORDS_NEEDED:
+    # A list of all required word inputs
+    words_needed = (noun1, noun2, noun_pl, adj1, adj2, adv, verb)
+    for word in words_needed:
         get_word_input()
         exclude_numbers()
         look_up_word()
 
 
-start_game(WORDS_NEEDED)
+start_game()
 
 
 class Story:
