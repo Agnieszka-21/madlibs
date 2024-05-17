@@ -140,7 +140,7 @@ def look_up_word():
             try:
                 # Check if the exact word can be found in the dictionary
                 # current_word.word_required.lower() in word_checked[0]['meta']['id']
-                print(word_checked[0]['meta']['id'])
+                # print(word_checked[0]['meta']['id'])
 
                 # Aiming to access 'fl' of the given word (e.g. noun, verb)
                 if 'fl' in word_checked[0]:
@@ -199,9 +199,21 @@ def look_up_word():
                     Checks if the valid word has the correct grammatical
                     type (function label)
                     """
+                    # Variable dict_word will be used to show which exact word
+                    # has been found and checked in the dictionary to validate
+                    # user input
+                    if word_checked[0]['meta']['id'][-2:] == ':1':
+                        dict_word = word_checked[0]['meta']['id'][:-2].upper()
+                    else:
+                        dict_word = word_checked[0]['meta']['id'].upper()
+                    
+                    # Check whether specific criteria have been met for each
+                    # word type
                     global current_word
                     if current_word.word_type == "noun":
                         if "noun" in fl_avail:
+                            print(f"Your word has been found under {dict_word} "
+                                f"and identified as: {fl_avail}")
                             valid_noun = Text(
                                 "Great, your noun has been accepted.", 
                                 style="sea_green1")
@@ -214,10 +226,12 @@ def look_up_word():
                             look_up_word()
                     elif current_word.word_type == "plural noun":
                         if ("plural noun" in fl_avail) or (
-                            "noun" in fl_avail and current_word.word_required[-1:] 
+                            "noun" in fl_avail and current_word.word_required[-1:]
                             == 'S') or ("noun" in fl_avail and 
                             current_word.word_required.lower() in 
                             word_checked[0]['meta']['stems']):
+                            print(f"Your word has been found under {dict_word} "
+                                f"and identified as: {fl_avail}")
                             valid_noun_pl = Text(
                                 "Great, your plural noun has been accepted.", 
                                 style="sea_green1")
@@ -231,6 +245,8 @@ def look_up_word():
                             look_up_word()
                     elif current_word.word_type == "adjective":
                         if "adjective" in fl_avail:
+                            print(f"Your word has been found under {dict_word} "
+                                f"and identified as: {fl_avail}")
                             valid_adj = Text(
                                 "Great, your adjective has been accepted.", 
                                 style="sea_green1")
@@ -242,11 +258,22 @@ def look_up_word():
                                 f"Try again {current_word.examples}: ").upper()
                             look_up_word()
                     elif current_word.word_type == "adverb":
-                        if "adverb" in fl_avail or (
-                            "adjective" in fl_avail and
-                                current_word.word_required[-2:] == 'LY'):
+                        if "adverb" in fl_avail:
+                            print(f"Your word has been found under {dict_word} "
+                                f"and identified as: {fl_avail}")
                             valid_adverb = Text(
-                                "Great, your word adverb has been accepted.", 
+                                "Great, your adverb has been accepted.", 
+                                style="sea_green1")
+                            console.print(valid_adverb)
+                            words_accepted.append(current_word.word_required) 
+                        elif ("adjective" in fl_avail and
+                                current_word.word_required[-2:] == 'LY'):
+                            print(f"Your word has been found under {dict_word} "
+                                f"and identified as: {fl_avail}. However, "
+                                "adding the suffix -ly turns an adjective into "
+                                "an adverb.")
+                            valid_adverb = Text(
+                                "Great, your adverb has been accepted.", 
                                 style="sea_green1")
                             console.print(valid_adverb)
                             words_accepted.append(current_word.word_required)
@@ -257,6 +284,8 @@ def look_up_word():
                             look_up_word()
                     elif current_word.word_type == "verb":
                         if "verb" in fl_avail:
+                            print(f"Your word has been found under {dict_word} "
+                                f"and identified as: {fl_avail}")
                             valid_verb = Text(
                                 "Great, your verb has been accepted.", 
                                 style="sea_green1")
@@ -522,7 +551,7 @@ def play_again_or_not():
     how_to_play_again()
 
 
-sleep(0.5)
+sleep(0.75)
 clear_terminal()
 choose_story_randomly(available_titles, available_texts)
 play_again_or_not()
