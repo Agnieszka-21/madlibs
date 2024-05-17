@@ -121,6 +121,20 @@ def get_word_input():
         current_word = verb
 
 
+def exclude_numbers():
+    """
+    Check if user input can be is a number. If it is, ask for another input
+    """
+    try:
+        int(current_word.input)
+        print("Sorry, numbers are not allowed.")
+        current_word.input = input(
+            f"Please submit a valid {current_word.word_type} {current_word.examples}: ")
+        return
+    except ValueError:
+        pass
+
+
 def look_up_word():
     """
     Looks up each word input in the dictionary
@@ -128,6 +142,7 @@ def look_up_word():
     # Access the dictionary API key
     load_dotenv()
     APP_KEY = os.getenv('API_KEY_SERVICE')
+
     try:
         response = requests.get(
             "https://www.dictionaryapi.com/api/v3/references/"
@@ -180,6 +195,7 @@ def look_up_word():
                     elif switch_to_amer == 'N':
                         current_word.input = input(
                             "Okay, please try a different word: ").upper()
+                        exclude_numbers()
                         look_up_word()
                     else:
                         invalid_input = Text("Your input was invalid...", 
@@ -187,6 +203,7 @@ def look_up_word():
                         console.print(invalid_input)
                         current_word.input = input(
                             "Please submit a different word: ").upper()
+                        exclude_numbers()
                         look_up_word()
                     return
                 
@@ -197,6 +214,7 @@ def look_up_word():
                         "Oops, something went wrong. Please submit "
                         f"a different {current_word.word_type} "
                         f"{current_word.examples}: ").upper()
+                    exclude_numbers()
                     look_up_word()
                     return
 
@@ -232,6 +250,7 @@ def look_up_word():
                                           style="orange3")
                             current_word.input = input(
                                 f"Try again {current_word.examples}: ").upper()
+                            exclude_numbers()
                             look_up_word()
                     # Word type: plural noun
                     elif current_word.word_type == "plural noun":
@@ -253,6 +272,7 @@ def look_up_word():
                             current_word.input = input(
                                 f"Try again {current_word.examples}: "
                             ).upper()
+                            exclude_numbers()
                             look_up_word()
                     # Word type: adjective
                     elif current_word.word_type == "adjective":
@@ -269,6 +289,7 @@ def look_up_word():
                                           "adjective.", style="orange3")
                             current_word.input = input(
                                 f"Try again {current_word.examples}: ").upper()
+                            exclude_numbers()
                             look_up_word()
                     # Word type: adverb
                     elif current_word.word_type == "adverb":
@@ -284,9 +305,9 @@ def look_up_word():
                             current_word.input[-2:] == 'LY') and (
                                 current_word.input not in adj_with_ly())):
                             print(f"Your word has been found under {dict_word} "
-                                f"and identified as: {fl_avail}. However, "
-                                "adding the suffix -ly turns an adjective into "
-                                "an adverb.")
+                                f"and identified as: {fl_avail}. However, by "
+                                "adding the suffix -ly, you turned the adjective "
+                                "into an adverb, so...")
                             valid_adverb = Text(
                                 "Great, your adverb has been accepted.", 
                                 style="sea_green1")
@@ -297,6 +318,7 @@ def look_up_word():
                                           "adverb.", style="orange3")
                             current_word.input = input(
                                 f"Try again {current_word.examples}: ").upper()
+                            exclude_numbers()
                             look_up_word()
                     # Word type: verb
                     elif current_word.word_type == "verb":
@@ -313,6 +335,7 @@ def look_up_word():
                                           style="orange3")
                             current_word.input = input(
                                 f"Try again {current_word.examples}: ").upper()
+                            exclude_numbers()
                             look_up_word()
 
                 valid_words_type()
@@ -324,6 +347,7 @@ def look_up_word():
                 current_word.input = input(
                     f"Enter your {current_word.word_type} "
                     f"{current_word.examples} here: ").upper()
+                exclude_numbers()
                 look_up_word()
 
             # Word could not be validated (none of the required
@@ -335,6 +359,7 @@ def look_up_word():
                 current_word.input = input(
                     f"Please try again - enter your "
                     f"{current_word.word_type} here: ").upper()
+                exclude_numbers()
                 look_up_word()
         validate_word()
 
@@ -361,6 +386,7 @@ def look_up_word():
             "Something went wrong... Please submit a "
             f"different {current_word.word_type} "
             f"{current_word.examples}: ").upper()
+        exclude_numbers()
         look_up_word()
         return
 
@@ -373,6 +399,7 @@ def start_game(WORDS_NEEDED):
     welcome()
     for word in WORDS_NEEDED:
         get_word_input()
+        exclude_numbers()
         look_up_word()
 
 
