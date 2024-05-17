@@ -220,8 +220,9 @@ def look_up_word():
                             console.print(valid_noun)
                             words_accepted.append(current_word.word_required)
                         else:
+                            console.print("It looks like your word is not a noun.",
+                                          style="orange_red1")
                             current_word.word_required = input(
-                                "It looks like your word is not a noun. "
                                 f"Try again {current_word.examples}: ").upper()
                             look_up_word()
                     elif current_word.word_type == "plural noun":
@@ -238,9 +239,10 @@ def look_up_word():
                             console.print(valid_noun_pl)
                             words_accepted.append(current_word.word_required)
                         else:
+                            console.print("It looks like your word is not a "
+                                          "plural noun.", style="orange_red1")
                             current_word.word_required = input(
-                                "It looks like your word is not a plural "
-                                f"noun. Try again {current_word.examples}: "
+                                f"Try again {current_word.examples}: "
                             ).upper()
                             look_up_word()
                     elif current_word.word_type == "adjective":
@@ -253,8 +255,9 @@ def look_up_word():
                             console.print(valid_adj)                            
                             words_accepted.append(current_word.word_required)
                         else:
+                            console.print("It looks like your word is not an "
+                                          "adjective.", style="orange_red1")
                             current_word.word_required = input(
-                                "It looks like your word is not an adjective. "
                                 f"Try again {current_word.examples}: ").upper()
                             look_up_word()
                     elif current_word.word_type == "adverb":
@@ -278,8 +281,9 @@ def look_up_word():
                             console.print(valid_adverb)
                             words_accepted.append(current_word.word_required)
                         else:
+                            console.print("It looks like your word is not an "
+                                          "adverb.", style="orange_red1")
                             current_word.word_required = input(
-                                "It looks like your word is not an adverb. "
                                 f"Try again {current_word.examples}: ").upper()
                             look_up_word()
                     elif current_word.word_type == "verb":
@@ -292,14 +296,15 @@ def look_up_word():
                             console.print(valid_verb)
                             words_accepted.append(current_word.word_required)
                         else:
+                            console.print("It looks like your word is not a verb.",
+                                          style="orange_red1")
                             current_word.word_required = input(
-                                "It looks like your word is not a verb. "
                                 f"Try again {current_word.examples}: ").upper()
                             look_up_word()
-                    else:
-                        input("It looks like your word is "
-                              f"not a {current_word.word_type}. "
-                              "Please try again: ").upper()
+                    # else:
+                        # input("It looks like your word is "
+                              # f"not a {current_word.word_type}. "
+                              # "Please try again: ").upper()
                 valid_words_type()
 
             # Word not found in the dictionary (misspelled/not a word)
