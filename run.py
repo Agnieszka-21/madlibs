@@ -45,7 +45,7 @@ def welcome():
     """
     Prints a welcome message and a short description of how to play the game
     """
-    game_title = Text("WELCOME TO MAD LIBS", style="bold orange_red1")
+    game_title = Text("WELCOME TO MAD LIBS", style="bold orange3")
     #game_title.stylize("dark_orange3", 0, 19)
     welcome_text = Text()
     welcome_text.append("\nHow to play: You will be asked "
@@ -165,10 +165,12 @@ def look_up_word():
                 elif 'British spelling' in word_checked[0]['cxs'][0]['cxl']:
                     fl_avail = []
                     amer = word_checked[0]['cxs'][0]['cxtis'][0]['cxt'].upper()
+                    error_msg_uk = Text("We weren't able to check your word...", 
+                                        style="orange3")
+                    console.print(error_msg_uk)
                     switch_to_amer = input(
-                        "We weren't able to check your word but there seems "
-                        "to be a similar word with US spelling. Would you "
-                        f"like to try {amer} instead? (Y/N) ").upper()
+                        "There seems to be a similar word with US spelling. "
+                        f"Would you like to try {amer} instead? (Y/N) ").upper()
                     if switch_to_amer == 'Y':
                         current_word.input = amer
                         look_up_word()
@@ -177,9 +179,11 @@ def look_up_word():
                             "Okay, please try a different word: ").upper()
                         look_up_word()
                     else:
+                        invalid_input = Text("Your input was invalid...", 
+                                             style="orange3")
+                        console.print(invalid_input)
                         current_word.input = input(
-                            "Your input was invalid. Please submit "
-                            "a different word: ").upper()
+                            "Please submit a different word: ").upper()
                         look_up_word()
                     return
                 
@@ -222,7 +226,7 @@ def look_up_word():
                             words_accepted.append(current_word.input)
                         else:
                             console.print("It looks like your word is not a noun.",
-                                          style="orange_red1")
+                                          style="orange3")
                             current_word.input = input(
                                 f"Try again {current_word.examples}: ").upper()
                             look_up_word()
@@ -242,7 +246,7 @@ def look_up_word():
                             words_accepted.append(current_word.input)
                         else:
                             console.print("It looks like your word is not a "
-                                          "plural noun.", style="orange_red1")
+                                          "plural noun.", style="orange3")
                             current_word.input = input(
                                 f"Try again {current_word.examples}: "
                             ).upper()
@@ -259,7 +263,7 @@ def look_up_word():
                             words_accepted.append(current_word.input)
                         else:
                             console.print("It looks like your word is not an "
-                                          "adjective.", style="orange_red1")
+                                          "adjective.", style="orange3")
                             current_word.input = input(
                                 f"Try again {current_word.examples}: ").upper()
                             look_up_word()
@@ -286,7 +290,7 @@ def look_up_word():
                             words_accepted.append(current_word.input)
                         else:
                             console.print("It looks like your word is not an "
-                                          "adverb.", style="orange_red1")
+                                          "adverb.", style="orange3")
                             current_word.input = input(
                                 f"Try again {current_word.examples}: ").upper()
                             look_up_word()
@@ -302,7 +306,7 @@ def look_up_word():
                             words_accepted.append(current_word.input)
                         else:
                             console.print("It looks like your word is not a verb.",
-                                          style="orange_red1")
+                                          style="orange3")
                             current_word.input = input(
                                 f"Try again {current_word.examples}: ").upper()
                             look_up_word()
@@ -311,19 +315,22 @@ def look_up_word():
 
             # Word not found in the dictionary (misspelled/not a word)
             except TypeError:
+                console.print(Text("Please check for typos and try again...",
+                                   style="orange3"))
                 current_word.input = input(
-                    "Please check for typos and try again. Enter "
-                    f"your {current_word.word_type} "
+                    f"Enter your {current_word.word_type} "
                     f"{current_word.examples} here: ").upper()
                 look_up_word()
 
             # Word could not be validated (none of the required
             # details regarding its 'fl' could be accessed)
             except IndexError:
+                console.print(Text("Unfortunately, your input could not be "
+                                   "validated (possibly not a word).",
+                                   style="orange3"))
                 current_word.input = input(
-                    "Your word could not be validated. Please try "
-                    f"again - enter your {current_word.word_type} "
-                    "here: ").upper()
+                    f"Please try again - enter your "
+                    f"{current_word.word_type} here: ").upper()
                 look_up_word()
         validate_word()
 
@@ -345,13 +352,13 @@ def look_up_word():
             else:
                 print("Thanks for playing MAD LIBS!")
 
-    #except:
-        #current_word.input = input(
-            #"Something went wrong... Please submit a "
-            #f"different {current_word.word_type} "
-            #f"{current_word.examples}: ").upper()
-        #look_up_word()
-        #return
+    except:
+        current_word.input = input(
+            "Something went wrong... Please submit a "
+            f"different {current_word.word_type} "
+            f"{current_word.examples}: ").upper()
+        look_up_word()
+        return
 
                 
 def start_game(WORDS_NEEDED):
@@ -503,7 +510,8 @@ def play_again_or_not():
     play_again_question = input(
         "\nWould you like to play again (Y/N)? ").upper()
     while play_again_question not in options:
-        print("Invalid input. Let's try one more time...")
+        console.print(Text("Invalid input. Let's try one more time...",
+                           style="orange3"))
         play_again_or_not()
         return
     else:
@@ -524,7 +532,8 @@ def play_again_or_not():
                 "different story, type A and press Enter. If you'd like "
                 "to start a brand new game, type B and press Enter: ").upper()
             while new_game_how not in new_game_options:
-                print("Invalid input. Let's try once again...")
+                console.print(Text("Invalid input. Let's try once again...",
+                                   style="orange3"))
                 how_to_play_again()
                 return
             else:
@@ -547,7 +556,8 @@ def play_again_or_not():
                         "If you would like to start a new game, "
                         "type Y and press Enter: ").upper()
                     while all_stories_used != "Y":
-                        print("Invalid input. Let's try again...")
+                        console.print(Text("Invalid input. Let's try again...",
+                                           style="orange3"))
                         reuse_words()
                         return
                     if all_stories_used == "Y":
