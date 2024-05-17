@@ -13,6 +13,9 @@ import json
 import requests
 from dotenv import load_dotenv
 
+# Function adj_with_ly returns a list that helps validate adverbs correctly
+from python_madlibs.adj_list_ly_ending import adj_with_ly
+
 # Rich library
 from rich.console import Console
 from rich.markdown import Markdown
@@ -277,8 +280,9 @@ def look_up_word():
                                 style="sea_green1")
                             console.print(valid_adverb)
                             words_accepted.append(current_word.input) 
-                        elif ("adjective" in fl_avail and
-                                current_word.input[-2:] == 'LY'):
+                        elif ("adjective" in fl_avail and (
+                            current_word.input[-2:] == 'LY') and (
+                                current_word.input not in adj_with_ly())):
                             print(f"Your word has been found under {dict_word} "
                                 f"and identified as: {fl_avail}. However, "
                                 "adding the suffix -ly turns an adjective into "
