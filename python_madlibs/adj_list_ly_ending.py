@@ -315,3 +315,16 @@ adj_list = ["sly",
             "noncorrelatively",
             "semimountainously",
             "supercatholically"]
+
+
+def adj_with_ly():
+    """
+    Convert all strings from adj_list into uppercase
+    to create an updated list that can be used for word
+    input validation for adverbs
+    """
+    adj_list_upper = []
+    for i in adj_list:
+        adj_list_upper.append(i.upper())
+    return adj_list_upper
+
