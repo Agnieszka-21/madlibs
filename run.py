@@ -139,7 +139,7 @@ def look_up_word():
             """
             try:
                 # Check if the exact word can be found in the dictionary
-                current_word.word_required in word_checked[0]['meta']['id']
+                # current_word.word_required.lower() in word_checked[0]['meta']['id']
                 print(word_checked[0]['meta']['id'])
 
                 # Aiming to access 'fl' of the given word (e.g. noun, verb)
@@ -203,7 +203,7 @@ def look_up_word():
                     if current_word.word_type == "noun":
                         if "noun" in fl_avail:
                             valid_noun = Text(
-                                "Great, your word is a noun.", 
+                                "Great, your noun has been accepted.", 
                                 style="sea_green1")
                             console.print(valid_noun)
                             words_accepted.append(current_word.word_required)
@@ -214,10 +214,12 @@ def look_up_word():
                             look_up_word()
                     elif current_word.word_type == "plural noun":
                         if ("plural noun" in fl_avail) or (
-                            "noun" in fl_avail and
-                                current_word.word_required[-1:] == 'S'):
+                            "noun" in fl_avail and current_word.word_required[-1:] 
+                            == 'S') or ("noun" in fl_avail and 
+                            current_word.word_required.lower() in 
+                            word_checked[0]['meta']['stems']):
                             valid_noun_pl = Text(
-                                "Great, your word is a plural noun.", 
+                                "Great, your plural noun has been accepted.", 
                                 style="sea_green1")
                             console.print(valid_noun_pl)
                             words_accepted.append(current_word.word_required)
@@ -230,7 +232,7 @@ def look_up_word():
                     elif current_word.word_type == "adjective":
                         if "adjective" in fl_avail:
                             valid_adj = Text(
-                                "Great, your word is an adjective.", 
+                                "Great, your adjective has been accepted.", 
                                 style="sea_green1")
                             console.print(valid_adj)                            
                             words_accepted.append(current_word.word_required)
@@ -244,7 +246,7 @@ def look_up_word():
                             "adjective" in fl_avail and
                                 current_word.word_required[-2:] == 'LY'):
                             valid_adverb = Text(
-                                "Great, your word is an adverb.", 
+                                "Great, your word adverb has been accepted.", 
                                 style="sea_green1")
                             console.print(valid_adverb)
                             words_accepted.append(current_word.word_required)
@@ -256,7 +258,7 @@ def look_up_word():
                     elif current_word.word_type == "verb":
                         if "verb" in fl_avail:
                             valid_verb = Text(
-                                "Great, your word is a verb.", 
+                                "Great, your verb has been accepted.", 
                                 style="sea_green1")
                             console.print(valid_verb)
                             words_accepted.append(current_word.word_required)
