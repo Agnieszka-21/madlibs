@@ -65,7 +65,8 @@ def welcome():
 
 class Words:
     """
-    Required word inputs from the user and their grammatical types
+    Required word inputs from the user, their grammatical types
+    and examples
     """
     def __init__(self, input, word_type, examples):
         self.input = input
@@ -183,6 +184,7 @@ def look_up_word():
                     error_msg_uk = Text("We weren't able to check your word...", 
                                         style="orange3")
                     console.print(error_msg_uk)
+                    amer_yes_or_no = ["Y", "N"]
                     switch_to_amer = input(
                         "There seems to be a similar word with US spelling. "
                         f"Would you like to try {amer} instead? (Y/N) ").upper()
@@ -209,7 +211,7 @@ def look_up_word():
                 else:
                     current_word.input = input(
                         "Oops, something went wrong. Please submit "
-                        f"a different {current_word.word_type} "
+                        f"a valid {current_word.word_type} "
                         f"{current_word.examples}: ").upper()
                     exclude_numbers()
                     look_up_word()
@@ -524,7 +526,8 @@ def choose_story_randomly(list_of_titles, list_of_texts):
     matching_text = list_of_texts[index_of_chosen_title]
 
     # Print the randomly chosen mad lib to the terminal
-    print(randomly_chosen_title, matching_text)
+    console.print(Text(randomly_chosen_title, style="bold sea_green1"))
+    console.print(Text(matching_text, style="sea_green1"))
 
     # Update the list of available titles and texts
     available_titles = list_of_titles.remove(randomly_chosen_title)
@@ -598,7 +601,7 @@ def play_again_or_not():
     how_to_play_again()
 
 
-sleep(0.75)
+sleep(1)
 clear_terminal()
 choose_story_randomly(available_titles, available_texts)
 play_again_or_not()
