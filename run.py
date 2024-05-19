@@ -9,20 +9,24 @@ from time import sleep
 import random
 
 # Libraries needed to access dictionary API & the .env file with API key
-import json
 import requests
 from dotenv import load_dotenv
 
 # Function adj_with_ly returns a list that helps validate adverbs correctly
 from python_madlibs.adj_list_ly_ending import adj_with_ly
 
-# Rich library
+# Rich library used for styling printed text
 from rich.console import Console
-from rich.markdown import Markdown
-from rich.padding import Padding
-from rich.style import Style
 from rich.text import Text
-#from rich import print
+
+# From Rich library, used for printing rich text
+console = Console()
+
+# A list that grows with each valid word input from user
+words_accepted = []
+
+# Current word input being looked up and validated
+current_word = None
 
 
 def clear_terminal():
@@ -41,15 +45,11 @@ def restart_program():
     os.execl(python, python, * sys.argv)
 
 
-# From Rich library, used for printing rich text
-console = Console()
-
 def welcome():
     """
     Prints a welcome message and a short description of how to play the game
     """
     game_title = Text("WELCOME TO MAD LIBS", style="bold orange3")
-    #game_title.stylize("dark_orange3", 0, 19)
     welcome_text = Text()
     welcome_text.append("\nHow to play: You will be asked "
                         "to provide certain words (a noun, adjective "
@@ -58,7 +58,6 @@ def welcome():
                         "as prompted and press Enter to "
                         "submit it. Afterwards, read the "
                         "complete story. Have fun!\n")
-    # welcome_text.stylize("dark_orange3", 0, 13)
     console.print(game_title)
     console.print(welcome_text)
 
@@ -81,13 +80,6 @@ adj1 = Words("input", "adjective", "(e.g. sad, beautiful)")
 adj2 = Words("input", "adjective", "(e.g. sad, beautiful)")
 adv = Words("input", "adverb", "(e.g. gladly, tomorrow)")
 verb = Words("input", "verb", "(e.g. walk, swim)")
-
-
-# A list that grows with each valid word input from user
-words_accepted = []
-
-# Current word input being looked up and validated
-current_word = None
 
 
 def get_word_input():
@@ -121,13 +113,15 @@ def get_word_input():
 
 def exclude_numbers():
     """
-    Check if user input can be is a number. If it is, ask for another input
+    Checks if word input submitted by user is a number.
+    If it is, user is asked for another input
     """
     try:
         int(current_word.input)
         print("Sorry, numbers are not allowed.")
         current_word.input = input(
-            f"Please submit a valid {current_word.word_type} {current_word.examples}: ")
+            f"Please submit a valid {current_word.word_type} "
+            f"{current_word.examples}: ")
         return
     except ValueError:
         pass
@@ -149,20 +143,16 @@ def look_up_word():
 
         def validate_word():
             """
-            Makes sure the user input is a valid word and add
-            the word's 'fl', functional labels, to the list fl_avail
-            (available labels)
+            Makes sure that user input is a valid word and adds
+            the word's 'fl' (functional label like "noun" or "verb") to the
+            list of available labels called fl_avail
             """
             try:
-                # Check if the exact word can be found in the dictionary
-                # current_word.input.lower() in word_checked[0]['meta']['id']
-                # print(word_checked[0]['meta']['id'])
-
                 # Aiming to access 'fl' of the given word (e.g. noun, verb)
                 if 'fl' in word_checked[0]:
                     fl_avail = [word_checked[0]['fl']]
-                    
-                    # Check for homographs
+
+                    # Check for homographs - words with multiple labels
                     if len(word_checked) > 1 and (
                         'hom' in word_checked[1]) and (
                             'fl' in word_checked[1]):
@@ -172,22 +162,23 @@ def look_up_word():
                             'hom' in word_checked[2]) and (
                                 'fl' in word_checked[2]):
                             fl_avail.append(word_checked[2]['fl'])
-                
+
                 # If such a label is not found (usually for plural nouns)
                 elif 'plural of' in word_checked[0]['cxs'][0]['cxl']:
                     fl_avail = ["plural noun"]
-                
+
                 # If British spelling rather than American
                 elif 'British spelling' in word_checked[0]['cxs'][0]['cxl']:
                     fl_avail = []
                     amer = word_checked[0]['cxs'][0]['cxtis'][0]['cxt'].upper()
-                    error_msg_uk = Text("We weren't able to check your word...", 
+                    error_msg_uk = Text("We weren't able to check your word.",
                                         style="orange3")
                     console.print(error_msg_uk)
                     amer_yes_or_no = ["Y", "N"]
                     switch_to_amer = input(
-                        "There seems to be a similar word with US spelling. "
-                        f"Would you like to try {amer} instead? (Y/N) ").upper()
+                        "There seems to be a similar word ith US spelling. "
+                        f"Would you like to try {amer} instead? "
+                        "(Y/N) ").upper()
                     if switch_to_amer == 'Y':
                         current_word.input = amer
                         look_up_word()
@@ -197,7 +188,7 @@ def look_up_word():
                         exclude_numbers()
                         look_up_word()
                     else:
-                        invalid_input = Text("Your input was invalid...", 
+                        invalid_input = Text("Your input was invalid...",
                                              style="orange3")
                         console.print(invalid_input)
                         current_word.input = input(
@@ -205,7 +196,7 @@ def look_up_word():
                         exclude_numbers()
                         look_up_word()
                     return
-                
+
                 # None of the above requirements was met when checking
                 # the word - invalid word
                 else:
@@ -217,7 +208,6 @@ def look_up_word():
                     look_up_word()
                     return
 
-        
                 def valid_words_type():
                     """
                     Checks if the valid word has the correct grammatical
@@ -230,23 +220,23 @@ def look_up_word():
                         dict_word = word_checked[0]['meta']['id'][:-2].upper()
                     else:
                         dict_word = word_checked[0]['meta']['id'].upper()
-                    
-                    # Check whether specific criteria have been met for each
-                    # word type
+
+                    # Check whether specific word type criteria have been met
                     # Word type: noun
                     global current_word
                     if current_word.word_type == "noun":
                         if "noun" in fl_avail:
-                            print(f"Your word has been found under {dict_word} "
+                            print(
+                                f"Your word has been found under {dict_word} "
                                 f"and identified as: {fl_avail}")
                             valid_noun = Text(
-                                "Great, your noun has been accepted.", 
+                                "Great, your noun has been accepted.",
                                 style="sea_green1")
                             console.print(valid_noun)
                             words_accepted.append(current_word.input)
                         else:
-                            console.print("It looks like your word is not a noun.",
-                                          style="orange3")
+                            console.print("It looks like your word is not a "
+                                          "noun.", style="orange3")
                             current_word.input = input(
                                 f"Try again {current_word.examples}: ").upper()
                             exclude_numbers()
@@ -254,15 +244,14 @@ def look_up_word():
                     # Word type: plural noun
                     elif current_word.word_type == "plural noun":
                         if ("plural noun" in fl_avail) or (
-                            "noun" in fl_avail and current_word.input[-1:]
-                            == 'S') or ("noun" in fl_avail and 
-                            current_word.input.lower() in 
-                            word_checked[0]['meta']['stems']):
-                            print(f"Your word has been found under {dict_word} "
-                                f"and identified as: {fl_avail}")
+                            "noun" in fl_avail and current_word.input.lower()
+                                in word_checked[0]['meta']['stems']):
+                            print(
+                                "Your word has been found under "
+                                f"{dict_word} and identified as: {fl_avail}")
                             valid_noun_pl = Text(
-                                "Great, your plural noun has been accepted.", 
-                                style="sea_green1")
+                                "Great, your plural noun has been ",
+                                "accepted.", style="sea_green1")
                             console.print(valid_noun_pl)
                             words_accepted.append(current_word.input)
                         else:
@@ -276,12 +265,12 @@ def look_up_word():
                     # Word type: adjective
                     elif current_word.word_type == "adjective":
                         if "adjective" in fl_avail:
-                            print(f"Your word has been found under {dict_word} "
-                                f"and identified as: {fl_avail}")
+                            print(f"Your word has been found under {dict_word}"
+                                  f" and identified as: {fl_avail}")
                             valid_adj = Text(
-                                "Great, your adjective has been accepted.", 
+                                "Great, your adjective has been accepted.",
                                 style="sea_green1")
-                            console.print(valid_adj)                            
+                            console.print(valid_adj)
                             words_accepted.append(current_word.input)
                         else:
                             console.print("It looks like your word is not an "
@@ -293,22 +282,22 @@ def look_up_word():
                     # Word type: adverb
                     elif current_word.word_type == "adverb":
                         if "adverb" in fl_avail:
-                            print(f"Your word has been found under {dict_word} "
-                                f"and identified as: {fl_avail}")
+                            print("Your word has been found under "
+                                  f"{dict_word} and identified as: {fl_avail}")
                             valid_adverb = Text(
-                                "Great, your adverb has been accepted.", 
+                                "Great, your adverb has been accepted.",
                                 style="sea_green1")
                             console.print(valid_adverb)
-                            words_accepted.append(current_word.input) 
+                            words_accepted.append(current_word.input)
                         elif ("adjective" in fl_avail and (
                             current_word.input[-2:] == 'LY') and (
                                 current_word.input not in adj_with_ly())):
-                            print(f"Your word has been found under {dict_word} "
-                                f"and identified as: {fl_avail}. However, by "
-                                "adding the suffix -ly, you turned the adjective "
-                                "into an adverb, so...")
+                            print("Your word has been found under "
+                                  f"{dict_word} and identified as: {fl_avail}."
+                                  " However, by adding the suffix -ly, you "
+                                  "turned the adjective into an adverb, so...")
                             valid_adverb = Text(
-                                "Great, your adverb has been accepted.", 
+                                "Great, your adverb has been accepted.",
                                 style="sea_green1")
                             console.print(valid_adverb)
                             words_accepted.append(current_word.input)
@@ -322,16 +311,17 @@ def look_up_word():
                     # Word type: verb
                     elif current_word.word_type == "verb":
                         if "verb" in fl_avail:
-                            print(f"Your word has been found under {dict_word} "
-                                f"and identified as: {fl_avail}")
+                            print("Your word has been found under "
+                                  f"{dict_word} and identified as: "
+                                  f"{fl_avail}")
                             valid_verb = Text(
-                                "Great, your verb has been accepted.", 
+                                "Great, your verb has been accepted.",
                                 style="sea_green1")
                             console.print(valid_verb)
                             words_accepted.append(current_word.input)
                         else:
-                            console.print("It looks like your word is not a verb.",
-                                          style="orange3")
+                            console.print("It looks like your word is not a "
+                                          "verb.", style="orange3")
                             current_word.input = input(
                                 f"Try again {current_word.examples}: ").upper()
                             exclude_numbers()
@@ -362,7 +352,6 @@ def look_up_word():
                 look_up_word()
         validate_word()
 
-
     # Problem with connecting to the dictionary API
     except ConnectionError:
         print("Sorry, there was a connection issue.")
@@ -380,16 +369,15 @@ def look_up_word():
             else:
                 print("Thanks for playing MAD LIBS!")
 
-    except:
+    except requests.exceptions.JSONDecodeError:
         current_word.input = input(
             "Something went wrong... Please submit a "
-            f"different {current_word.word_type} "
-            f"{current_word.examples}: ").upper()
+            f"{current_word.word_type} {current_word.examples}: ").upper()
         exclude_numbers()
         look_up_word()
         return
 
-                
+
 def start_game():
     """
     Starts a game by printing the welcome message
@@ -552,7 +540,7 @@ def play_again_or_not():
             end_game = "Okay, thanks for playing!"
             print(end_game)
             return
-   
+
     def how_to_play_again():
         """
         Works only when user chose Y (yes) - they
@@ -578,7 +566,7 @@ def play_again_or_not():
             """
             Works only if user chose option A - play again
             and re-use the same words with another story
-            """   
+            """
             if new_game_how == "A":
                 try:
                     choose_story_randomly(available_titles, available_texts)
