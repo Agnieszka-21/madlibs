@@ -1,12 +1,11 @@
-# A comprehensive list of adjectives ending in 'ly,'
-
+# A comprehensive list of adjectives ending in 'ly'
 adj_list = ["sly",
             "eely",
             "oily",
             "paly",
             "pily",
             "ugly",
-            "wily", 
+            "wily",
             "burly",
             "coaly",
             "curly",
@@ -184,7 +183,7 @@ adj_list = ["sly",
             "unlovely",
             "unportly",
             "unwifely",
-            "wizardly", 
+            "wizardly",
             "bastardly",
             "bumpkinly",
             "butcherly",
@@ -320,12 +319,12 @@ adj_list = ["sly",
 
 def adj_with_ly():
     """
-    Convert all strings from adj_list into uppercase
-    to create an updated list that can be used for word
-    input validation for adverbs
+    Converts all strings from adj_list into uppercase to create an updated
+    list that can be used for word input validation for adverbs inside the
+    valid_words_type function (to avoid confusion between adjectives
+    ending in -ly and adverbs ending in -ly)
     """
     adj_list_upper = []
     for i in adj_list:
         adj_list_upper.append(i.upper())
     return adj_list_upper
-
