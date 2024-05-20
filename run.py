@@ -149,7 +149,6 @@ def look_up_word():
             list of available labels called fl_avail
             """
             try:
-                print(word_checked[0])
                 # Aiming to access 'fl' of the given word (e.g. noun, verb)
                 if 'fl' in word_checked[0]:
                     fl_avail = [word_checked[0]['fl']]
