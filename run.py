@@ -9,6 +9,7 @@ from time import sleep
 import random
 
 # Libraries needed to access dictionary API & the .env file with API key
+import json
 import requests
 from dotenv import load_dotenv
 
@@ -148,6 +149,7 @@ def look_up_word():
             list of available labels called fl_avail
             """
             try:
+                print(word_checked[0])
                 # Aiming to access 'fl' of the given word (e.g. noun, verb)
                 if 'fl' in word_checked[0]:
                     fl_avail = [word_checked[0]['fl']]
@@ -164,15 +166,17 @@ def look_up_word():
                             fl_avail.append(word_checked[2]['fl'])
 
                 # If such a label is not found (usually for plural nouns)
-                elif 'plural of' in word_checked[0]['cxs'][0]['cxl']:
+                elif 'cxs' in word_checked[0] and \
+                        'plural of' in word_checked[0]['cxs'][0]['cxl']:
                     fl_avail = ["plural noun"]
 
                 # If British spelling rather than American
-                elif 'British spelling' in word_checked[0]['cxs'][0]['cxl']:
+                elif 'cxs' in word_checked[0] and 'British spelling' \
+                        in word_checked[0]['cxs'][0]['cxl']:
                     fl_avail = []
                     amer = word_checked[0]['cxs'][0]['cxtis'][0]['cxt'].upper()
-                    error_msg_uk = Text("We weren't able to check your word.",
-                                        style="orange3")
+                    error_msg_uk = Text("We weren't able to check your word. "
+                                        "However...", style="orange3")
                     console.print(error_msg_uk)
                     amer_yes_or_no = ["Y", "N"]
                     switch_to_amer = input(
@@ -243,15 +247,15 @@ def look_up_word():
                             look_up_word()
                     # Word type: plural noun
                     elif current_word.word_type == "plural noun":
-                        if ("plural noun" in fl_avail) or (
-                            "noun" in fl_avail and current_word.input.lower()
-                                in word_checked[0]['meta']['stems']):
-                            print(
-                                "Your word has been found under "
-                                f"{dict_word} and identified as: {fl_avail}")
+                        if "plural noun" in fl_avail or \
+                            (("noun" in fl_avail) and
+                                (current_word.input.lower() in
+                                    word_checked[0]['meta']['stems'])):
+                            print("Your word has been found under "
+                                  f"{dict_word} and identified as: {fl_avail}")
                             valid_noun_pl = Text(
-                                "Great, your plural noun has been ",
-                                "accepted.", style="sea_green1")
+                                "Great, your plural noun has been accepted.",
+                                style="sea_green1")
                             console.print(valid_noun_pl)
                             words_accepted.append(current_word.input)
                         else:
@@ -267,9 +271,8 @@ def look_up_word():
                         if "adjective" in fl_avail:
                             print(f"Your word has been found under {dict_word}"
                                   f" and identified as: {fl_avail}")
-                            valid_adj = Text(
-                                "Great, your adjective has been accepted.",
-                                style="sea_green1")
+                            valid_adj = Text("Great, your adjective has been "
+                                             "accepted.", style="sea_green1")
                             console.print(valid_adj)
                             words_accepted.append(current_word.input)
                         else:
@@ -338,6 +341,7 @@ def look_up_word():
                     f"{current_word.examples} here: ").upper()
                 exclude_numbers()
                 look_up_word()
+                return
 
             # Word could not be validated (none of the required
             # details regarding its 'fl' could be accessed)
@@ -350,6 +354,7 @@ def look_up_word():
                     f"{current_word.examples} here: ").upper()
                 exclude_numbers()
                 look_up_word()
+
         validate_word()
 
     # Problem with connecting to the dictionary API
