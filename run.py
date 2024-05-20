@@ -9,7 +9,6 @@ from time import sleep
 import random
 
 # Libraries needed to access dictionary API & the .env file with API key
-import json
 import requests
 from dotenv import load_dotenv
 
@@ -219,7 +218,7 @@ def look_up_word():
                     # Variable dict_word will be used to show which exact word
                     # has been found and checked in the dictionary to validate
                     # user input
-                    if word_checked[0]['meta']['id'][-2:] == ':1':
+                    if word_checked[0]['meta']['id'][-2] == ':':
                         dict_word = word_checked[0]['meta']['id'][:-2].upper()
                     else:
                         dict_word = word_checked[0]['meta']['id'].upper()
@@ -267,7 +266,11 @@ def look_up_word():
                             look_up_word()
                     # Word type: adjective
                     elif current_word.word_type == "adjective":
-                        if "adjective" in fl_avail:
+                        if ("adjective" in fl_avail and (
+                            current_word.input[-2:] != 'LY')) or (
+                                "adjective" in fl_avail and (
+                                    current_word.input[-2:] == 'LY') and (
+                                        current_word.input in adj_with_ly())):
                             print(f"Your word has been found under {dict_word}"
                                   f" and identified as: {fl_avail}")
                             valid_adj = Text("Great, your adjective "
