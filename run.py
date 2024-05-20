@@ -50,7 +50,7 @@ def welcome():
     """
     Prints a welcome message and a short description of how to play the game
     """
-    game_title = Text("WELCOME TO MAD LIBS", style="bold orange3")
+    game_title = Text("WELCOME TO MAD LIBS", style="bold sea_green1")
     welcome_text = Text()
     welcome_text.append("\nHow to play: You will be asked "
                         "to provide certain words (a noun, adjective "
@@ -233,8 +233,8 @@ def look_up_word():
                                 f"Your word has been found under {dict_word} "
                                 f"and identified as: {fl_avail}")
                             valid_noun = Text(
-                                "Great, your noun has been accepted.",
-                                style="sea_green1")
+                                f"Great, your noun {current_word.input} has "
+                                "been accepted.", style="sea_green1")
                             console.print(valid_noun)
                             words_accepted.append(current_word.input)
                         else:
@@ -253,8 +253,8 @@ def look_up_word():
                             print("Your word has been found under "
                                   f"{dict_word} and identified as: {fl_avail}")
                             valid_noun_pl = Text(
-                                "Great, your plural noun has been accepted.",
-                                style="sea_green1")
+                                f"Great, your plural noun {current_word.input} "
+                                "has been accepted.", style="sea_green1")
                             console.print(valid_noun_pl)
                             words_accepted.append(current_word.input)
                         else:
@@ -270,7 +270,8 @@ def look_up_word():
                         if "adjective" in fl_avail:
                             print(f"Your word has been found under {dict_word}"
                                   f" and identified as: {fl_avail}")
-                            valid_adj = Text("Great, your adjective has been "
+                            valid_adj = Text("Great, your adjective "
+                                             f"{current_word.input} has been "
                                              "accepted.", style="sea_green1")
                             console.print(valid_adj)
                             words_accepted.append(current_word.input)
@@ -287,8 +288,8 @@ def look_up_word():
                             print("Your word has been found under "
                                   f"{dict_word} and identified as: {fl_avail}")
                             valid_adverb = Text(
-                                "Great, your adverb has been accepted.",
-                                style="sea_green1")
+                                f"Great, your adverb {current_word.input} has "
+                                "been accepted.", style="sea_green1")
                             console.print(valid_adverb)
                             words_accepted.append(current_word.input)
                         elif ("adjective" in fl_avail and (
@@ -299,8 +300,8 @@ def look_up_word():
                                   " However, by adding the suffix -ly, you "
                                   "turned the adjective into an adverb, so...")
                             valid_adverb = Text(
-                                "Great, your adverb has been accepted.",
-                                style="sea_green1")
+                                f"Great, your adverb {current_word.input} has "
+                                "been accepted.", style="sea_green1")
                             console.print(valid_adverb)
                             words_accepted.append(current_word.input)
                         else:
@@ -317,8 +318,8 @@ def look_up_word():
                                   f"{dict_word} and identified as: "
                                   f"{fl_avail}")
                             valid_verb = Text(
-                                "Great, your verb has been accepted.",
-                                style="sea_green1")
+                                f"Great, your verb {current_word.input} has "
+                                "been accepted.", style="sea_green1")
                             console.print(valid_verb)
                             words_accepted.append(current_word.input)
                         else:
@@ -475,13 +476,13 @@ madlib7 = Story("\nAmazon Explorers", f"\nThe {adj1.input} "
                 f"Below, he could {verb.input} tall trees "
                 f"growing along the edge of a(n) {noun1.input}. "
                 "Behind him, he could hear his co-pilot, Emma, muttering. "
-                f"'We are not going to make it. When the {adj2.input} "
+                f"'We are not going to make it! When the {adj2.input} "
                 "eagle flew into the wing, it damaged it too much. We need "
                 f"to find somewhere clear to land.' {adv.input}, "
                 "Marcus noticed a clearing - a perfect landing spot. "
                 "They got out of the plane to check the damaged "
                 f"{noun2.input}. Suddenly, a loud roar made them "
-                "jump. From out of the jungle emerged"
+                "jump. From out of the jungle emerged "
                 f"a pair of {noun_pl.input}...")
 
 madlib8 = Story("\nDino Danger", "\nDinosaurs were a diverse group of "
@@ -531,18 +532,18 @@ def play_again_or_not():
     Asks the user whether they would like to play again
     and gives them options
     """
-    options = ["Y", "N"]
+    play_again_options = ["Y", "N"]
     play_again_question = input(
         "\nWould you like to play again (Y/N)? ").upper()
-    while play_again_question not in options:
+    while play_again_question not in play_again_options:
         console.print(Text("Invalid input. Let's try one more time...",
                            style="orange3"))
         play_again_or_not()
         return
     else:
         if play_again_question == "N":
-            end_game = "Okay, thanks for playing!"
-            print(end_game)
+            end_game = "\nOkay, thanks for playing MAD LIBS!"
+            console.print(Text(end_game, style="bold sea_green1"))
             return
 
     def how_to_play_again():
