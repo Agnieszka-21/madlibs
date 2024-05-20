@@ -121,7 +121,7 @@ def exclude_numbers():
         print("Sorry, numbers are not allowed.")
         current_word.input = input(
             f"Please submit a valid {current_word.word_type} "
-            f"{current_word.examples}: ")
+            f"{current_word.examples}: ").upper()
         return
     except ValueError:
         pass
@@ -252,8 +252,8 @@ def look_up_word():
                             print("Your word has been found under "
                                   f"{dict_word} and identified as: {fl_avail}")
                             valid_noun_pl = Text(
-                                f"Great, your plural noun {current_word.input} "
-                                "has been accepted.", style="sea_green1")
+                                f"Great, your plural noun {current_word.input}"
+                                " has been accepted.", style="sea_green1")
                             console.print(valid_noun_pl)
                             words_accepted.append(current_word.input)
                         else:
@@ -379,7 +379,7 @@ def look_up_word():
 
     except requests.exceptions.JSONDecodeError:
         current_word.input = input(
-            "Something went wrong... Please submit a "
+            "Something went wrong... Please submit a(n) "
             f"{current_word.word_type} {current_word.examples}: ").upper()
         exclude_numbers()
         look_up_word()
