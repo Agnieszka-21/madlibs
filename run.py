@@ -49,7 +49,7 @@ def welcome():
     """
     Prints a welcome message and a short description of how to play the game
     """
-    game_title = Text("WELCOME TO MAD LIBS", style="bold sea_green1")
+    game_title = Text("\nWELCOME TO MAD LIBS", style="bold sea_green1")
     welcome_text = Text()
     welcome_text.append("\nHow to play: You will be asked "
                         "to provide certain words (a noun, adjective "
@@ -57,7 +57,7 @@ def welcome():
                         "selected story. Simply type each word "
                         "as prompted and press Enter to "
                         "submit it. Afterwards, read the "
-                        "complete story. Have fun!\n")
+                        "complete story. Have fun!")
     console.print(game_title)
     console.print(welcome_text)
 
@@ -88,26 +88,26 @@ def get_word_input():
     to fill any blanks in a mad lib
     """
     if len(words_accepted) == 0:
-        noun1.input = input("Noun: ").upper()
+        noun1.input = input("\nNoun: ").upper()
         global current_word
         current_word = noun1
     elif len(words_accepted) == 1:
-        noun2.input = input("Another noun: ").upper()
+        noun2.input = input("\nAnother noun: ").upper()
         current_word = noun2
     elif len(words_accepted) == 2:
-        noun_pl.input = input("Plural noun: ").upper()
+        noun_pl.input = input("\nPlural noun: ").upper()
         current_word = noun_pl
     elif len(words_accepted) == 3:
-        adj1.input = input("Adjective: ").upper()
+        adj1.input = input("\nAdjective: ").upper()
         current_word = adj1
     elif len(words_accepted) == 4:
-        adj2.input = input("Another adjective: ").upper()
+        adj2.input = input("\nAnother adjective: ").upper()
         current_word = adj2
     elif len(words_accepted) == 5:
-        adv.input = input("Adverb: ").upper()
+        adv.input = input("\nAdverb: ").upper()
         current_word = adv
     elif len(words_accepted) == 6:
-        verb.input = input("Verb: ").upper()
+        verb.input = input("\nVerb: ").upper()
         current_word = verb
 
 
@@ -118,7 +118,7 @@ def exclude_numbers():
     """
     try:
         int(current_word.input)
-        print("Sorry, numbers are not allowed.")
+        console.print("Sorry, numbers are not allowed.", style="orange3")
         current_word.input = input(
             f"Please submit a valid {current_word.word_type} "
             f"{current_word.examples}: ").upper()
@@ -202,9 +202,10 @@ def look_up_word():
                 # None of the above requirements was met when checking
                 # the word - invalid word
                 else:
+                    console.print(Text("Oops, something went wrong.",
+                                       style="orange3"))
                     current_word.input = input(
-                        "Oops, something went wrong. Please submit "
-                        f"a valid {current_word.word_type} "
+                        f"Please submit a valid {current_word.word_type} "
                         f"{current_word.examples}: ").upper()
                     exclude_numbers()
                     look_up_word()
@@ -357,12 +358,15 @@ def look_up_word():
                     f"{current_word.examples} here: ").upper()
                 exclude_numbers()
                 look_up_word()
+                return
 
         validate_word()
 
     # Problem with connecting to the dictionary API
     except ConnectionError:
-        print("Sorry, there was a connection issue.")
+        console.print(Text("Sorry, there was a connection issue and we "
+                           "couldn't access the dictionary to check your "
+                           "word input.", style="orange3"))
         restart = input("Type R and press Enter to restart the game: ")
         if restart == "R":
             clear_terminal()
@@ -375,12 +379,15 @@ def look_up_word():
                 clear_terminal()
                 restart_program()
             else:
-                print("Thanks for playing MAD LIBS!")
+                print("Invalid input.")
+                console.print(Text("Thanks for playing MAD LIBS!"))
 
+    # When user presses Enter without submitting any input
     except requests.exceptions.JSONDecodeError:
+        console.print(Text("Something went wrong...", style="orange3"))
         current_word.input = input(
-            "Something went wrong... Please submit a(n) "
-            f"{current_word.word_type} {current_word.examples}: ").upper()
+            f"Please submit a(n) {current_word.word_type} "
+            f"{current_word.examples}: ").upper()
         exclude_numbers()
         look_up_word()
         return
@@ -557,7 +564,7 @@ def play_again_or_not():
         if play_again_question == "Y":
             new_game_options = ["A", "B"]
             new_game_how = input(
-                "If you would like to re-use your words with a "
+                "\nIf you would like to re-use your words with a "
                 "different story, type A and press Enter. If you'd like "
                 "to start a brand new game, type B and press Enter: ").upper()
             while new_game_how not in new_game_options:
@@ -577,11 +584,12 @@ def play_again_or_not():
             """
             if new_game_how == "A":
                 try:
+                    clear_terminal()
                     choose_story_randomly(available_titles, available_texts)
                     play_again_or_not()
                 except IndexError:
                     all_stories_used = input(
-                        "You have seen all available stories. "
+                        "\nYou have seen all available stories. "
                         "If you would like to start a new game, "
                         "type Y and press Enter: ").upper()
                     while all_stories_used != "Y":
@@ -597,7 +605,7 @@ def play_again_or_not():
     how_to_play_again()
 
 
-sleep(1)
+sleep(1.2)
 clear_terminal()
 choose_story_randomly(available_titles, available_texts)
 play_again_or_not()
