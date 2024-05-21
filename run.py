@@ -29,6 +29,8 @@ words_accepted = []
 current_word = None
 
 
+# Code based on this article:
+# https://www.geeksforgeeks.org/clear-screen-python/
 def clear_terminal():
     """
     Clears the terminal window prior to new content.
@@ -36,7 +38,8 @@ def clear_terminal():
     """
     os.system('cls' if os.name == 'nt' else 'clear')
 
-
+# Code has been copied from the following source:
+# https://gist.github.com/jrosco/d01b28c2f37100bb5278
 def restart_program():
     """
     Restarts the program when user wants to play again with new words
@@ -588,8 +591,8 @@ def play_again_or_not():
                     choose_story_randomly(available_titles, available_texts)
                     play_again_or_not()
                 except IndexError:
-                    console.print(Text("\nYou have seen all available stories. ",
-                                       style="orange3"))
+                    console.print(Text("\nYou have seen all available "
+                                       "stories.", style="orange3"))
                     all_stories_used = input(
                         "If you would like to start a new game, "
                         "type Y and press Enter. Any other input will end "
@@ -598,7 +601,7 @@ def play_again_or_not():
                         clear_terminal()
                         restart_program()
                     else:
-                        end_game = "\nOkay, thanks for playing MAD LIBS!"
+                        end_game = "\nThanks for playing MAD LIBS!"
                         console.print(Text(end_game, style="bold sea_green1"))
 
         reuse_words()
