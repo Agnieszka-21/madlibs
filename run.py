@@ -588,18 +588,18 @@ def play_again_or_not():
                     choose_story_randomly(available_titles, available_texts)
                     play_again_or_not()
                 except IndexError:
+                    console.print(Text("\nYou have seen all available stories. ",
+                                       style="orange3"))
                     all_stories_used = input(
-                        "\nYou have seen all available stories. "
                         "If you would like to start a new game, "
-                        "type Y and press Enter: ").upper()
-                    while all_stories_used != "Y":
-                        console.print(Text("Invalid input. Let's try again...",
-                                           style="orange3"))
-                        reuse_words()
-                        return
+                        "type Y and press Enter. Any other input will end "
+                        "the game: ").upper()
                     if all_stories_used == "Y":
                         clear_terminal()
                         restart_program()
+                    else:
+                        end_game = "\nOkay, thanks for playing MAD LIBS!"
+                        console.print(Text(end_game, style="bold sea_green1"))
 
         reuse_words()
     how_to_play_again()
