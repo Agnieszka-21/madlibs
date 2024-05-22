@@ -370,14 +370,15 @@ def look_up_word():
         console.print(Text("Sorry, there was a connection issue and we "
                            "couldn't access the dictionary to check your "
                            "word input.", style="orange3"))
-        restart = input("Type R and press Enter to restart the game: ")
+        restart = input("Type R and press Enter to restart the "
+                        "game: ").upper()
         if restart == "R":
             clear_terminal()
             restart_program()
         else:
+            console.print(Text("Invalid input.", style="orange3"))
             restart_ask_again = input(
-                "Invalid input. Please type R "
-                "and press Enter to restart the game: ")
+                "Please type R and press Enter to restart the game: ")
             if restart_ask_again == "R":
                 clear_terminal()
                 restart_program()
