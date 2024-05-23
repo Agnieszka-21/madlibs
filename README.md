@@ -68,7 +68,6 @@ Features planned include:
   1) re-use the same words with a different story for a quick fun read, or
   2) start from scratch by submitting new word inputs.
   
-![Flow chart - initial game logic](link)
 
 ### The Structure Plane
 
@@ -106,6 +105,54 @@ Eight stories will be provided, each with a different theme, some of them loosel
 
 ### The Skeleton Plane
 
+The following flowchart was created to depict the basic logic of the game. It illustrates the steps that are needed for a complete game of Mad Libs Grammar, without going into too much detail.
+
+![Flowchart - game logic](link)
+
+Since getting 7 valid word inputs from the user (2 nouns, 1 plural noun, 2 adjectives, an adverb, and a verb) is an essential part of this application, much thought went into creating and refining a reliable validation process for these inputs. To keep it clear and easy to follow, I split it into 3 parts:
+
+- __Word input validation - part 1__
+  
+  - Request a word input from the user, specifying which grammatical type is needed (e.g. a noun). 
+  - Make sure the input is not a number (integer) using the function exclude_numbers.
+    - If the input is a number: inform the user that numbers are not allowed and request another input instead, adding examples of the required word type for clarity. Restart the valiation process.
+    - If the input is not a number, simply move on to the next step.
+  - Via API, try to establish a connection with the online dictionary (Merriam-Webster Collegiate Dictionary), and look up the word submitted by the user (function look_up_word).
+    - Possible errors and how to handle them:
+      - ConnectionError: the online dictionary could not be accessed. Apologize for the issue and ask the user if they would like to restart the game. Ask for input (R) - if R is submitted, clear the terminal and restart the program. If the user submits anything else, inform them that their input is invalid and ask one last time if they would like to restart the game, requesting input (R). If the input is invalid again, simply print the "Thank you for playing MAD LIBS" message and end the game. Otherwise, clear the terminal and restart the program.
+      - requests.exceptions.JSONDecodeError: the user pressed Enter without submitting anything. Inform them that something went wrong and request input once again, this time adding examples of the required word type for more clarity. Restart the validation process.
+    - If there are no errors, move on to part 2 of word validation inside the nested function validate_word.
+
+  ![Flowchart - validation part 1](link)
+
+- __Word input validation - part 2__
+
+  - Try to access specific details in the dictionary within the entry for the word that is being validated (nested function validate_word, inside the function look_up_word).
+  - These specific details include:
+    - A key called 'fl' (functional label). Its value defines the grammatical function of the word (e.g. "noun"). In case the word is a homograph and therefore has multiple meanings and functions (like "extract", for example, which is both a verb and a noun), check its further 'fl' keys (up to 2 more, if available) for a more accurate validation. If at least one 'fl' was found, add its value to the list called fl_avail, which gathers available functional labels of the current word. This prepares us for part 3 of word validation.
+    - If the 'fl' key has not been found, look for another key called 'cxs', and if it is present, check whether it contains under 'cxl' (a nested key) the value "plural of". Irregular plural forms of nouns (such as "mice" or "men") can be identified this way. Add "plural noun" to the list called fl_avail and move on to part 3 of the validation process.
+    - If "plural of" has not been found inside the 'cxl' key, check whether the 'cxs' key is present and whether the nested key 'cxl' contains the phrase "British spelling". This is the case for words that are spelled differently in US English and British English. Since the online dictionary prioritizes US spelling, the British version - while it still has its own entry - does not contain any of the information needed to identify the word type. Therefore, inform the user that their word could not be validated but there is a similar word with US spelling, and ask them if they would like to submit that word instead. If they agree, find its'fl' by going back to look_up_word to restart the validation process (since the input is clearly not a number, we can skip the part of excluding numbers). If the user refuses to use the suggested word (input N) or submits an invalid input, request another word input from them, adding examples of the expected word type for more clarity. Restart the validation process.
+    - If none of these details could be accessed (for example, the user submitted a bunch of random letters that are not even similar to any actual word), inform the user that something went wrong and request another input, specifying the expected word type and adding examples. Restart the validation process.
+  - Possible errors and how to handle them: 
+    - IndexError: occurs when the user submits a floating point number, an input containing special characters etc. Inform the user that their input could not be validated and is possibly not a word. Request another input, adding examples of the currently required word type for more clarity. Restart the validation process.
+    - TypeError: the word submitted by the user was misspelled (in such a case the dictionary simply returns a list of similar words). Ask the user to check for typos and request another input, adding examples of the expected word type. Restart the validation process.
+  
+  ![Flowchart - validation part 2](link)
+
+- __Word input validation - part 3__
+
+  - This is the last part of the word validation process, and it is being taken care of by the function valid_words_type, nested inside validate_word, which is nested inside the look_up_word function. 
+  - Once the list fl_avail contains a value or multiple values (like "noun", "adjective" etc.) after going through the validate_word function, check whether the 'fl' value for the current word is correct for the expected word type. If needed, other criteria might need to be met, too. Each word type has its own set of criteria.
+  - Nouns simply need the value "noun" in fl_avail to be accepted. If this value is not present, the user is informed that their word is not a noun, and a new input is requested. The message includes examples of the expected word type. Once a new input is obtained, the entire validation process is restarted for the new word input.
+  - Plural nouns are accepted if the value "plural noun" is found within fl_avail (for nouns with irregular plural form), or if the value "noun" is found in fl_avail and the submitted word was found under the key 'stems' in the dictionary (which lists all the entry's headwords, variants, inflections... including the plural form). 
+  - Adjectives are acceped if the value "adjective" is found in fl_avail, as long as the word does not end in 'LY'. Otherwise, if an adjective ends in 'LY', an additional criterium must be met: the adjective needs to be found in the list adj_with_ly. This additional requirement resulted from the realization that while many adverbs end in 'LY' (basically, one can create an adverb by adding the suffix -ly to an adjective, e.g. "glad" - "gladly"), there are also multiple adjectives with this ending, and this additional criterium helps to avoid inaccurate classification. If these criteria are not met, the user is informed that their word is not an adjective, and is requested to submit another input (examples are given in order to make it clear and simple). The validation process starts from the beginning for that new input.
+  - Adverbs are accepted if the value "adverb" is present in fl_avail. Since some adverbs that are derived from adjectives do not have separate entries in the dictionary, another option is to have the value "adjective" in fl_avail if the word ends in 'LY', and it is not found in the list of adj_with_ly. (SCREEENSHOT) If these criteria are not met, the user is informed that their word is not an adverb, and is requested to submit another input (examples of the expected word type are given for more clarity). The validation process starts from the beginning for that new input.
+  - Verbs simply need the value "verb" in fl_avail to be accepted. If this value is not present, the user is informed that their word is not a verb, and is requested to submit another input (again, word examples are given). The validation process starts from the beginning for that new input.
+  
+  ![Flowchart - validation part 3](link)
+
+
+
 ### The Surface Plane
 
 
@@ -130,10 +177,10 @@ The following tutorials, articles, documentation and media were used to create t
 
 ### Content
 
-- The API Dictionary Merriam-Webster (https://dictionaryapi.com/products/api-collegiate-dictionary) has been used to validate word inputs from the user.
+- The Dictionary API Merriam-Webster (https://dictionaryapi.com/products/api-collegiate-dictionary) has been used to validate word inputs from the user.
 
 ### Media?
 
 ## Acknowledgements
 
-I would like to express my sincere gratitude to my mentor, Matt Bodden, whose suggestions and practical advice helped me ensure that this project not only takes my understanding of JavaScript to a higher level, but also encourages best practices that result in a positive experience for the user of this web application.
+I would like to express my sincere gratitude to my mentor, Matt Bodden, whose suggestions and practical advice helped me ensure that this project not only takes my understanding of Python to a higher level, but also encourages best practices that result in a positive experience for the user of this web application.
