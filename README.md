@@ -1,36 +1,3 @@
-![CI logo](https://codeinstitute.s3.amazonaws.com/fullstack/ci_logo_small.png)
-
-Welcome,
-
-This is the Code Institute student template for deploying your third portfolio project, the Python command-line project. The last update to this file was: **March 14, 2023**
-
-## Reminders
-
-- Your code must be placed in the `run.py` file
-- Your dependencies must be placed in the `requirements.txt` file
-- Do not edit any of the other files or your code may not deploy properly
-
-## Creating the Heroku app
-
-When you create the app, you will need to add two buildpacks from the _Settings_ tab. The ordering is as follows:
-
-1. `heroku/python`
-2. `heroku/nodejs`
-
-You must then create a _Config Var_ called `PORT`. Set this to `8000`
-
-If you have credentials, such as in the Love Sandwiches project, you must create another _Config Var_ called `CREDS` and paste the JSON into the value field.
-
-Connect your GitHub repository and deploy as normal.
-
-## Constraints
-
-The deployment terminal is set to 80 columns by 24 rows. That means that each line of text needs to be 80 characters or less otherwise it will be wrapped onto a second line.
-
----
-
-Happy coding!
-
 # Mad Libs Grammar
 
 ## Introduction
@@ -40,6 +7,39 @@ Mad Libs Grammar is a web application developed in Python. It is based on the co
 The game utilizes the Code Institute's template that generates a "terminal" onto the page, making it available within a web browser. 
 
 ## Table of Contents
+
+- [Mad Libs Grammar](#mad-libs-grammar)
+  - [Introduction](#introduction)
+  - [Table of Contents](#table-of-contents)
+  - [UX](#ux)
+    - [The Strategy Plane](#the-strategy-plane)
+      - [Site Goals](#site-goals)
+      - [User Stories](#user-stories)
+    - [The Scope Plane](#the-scope-plane)
+    - [The Structure Plane](#the-structure-plane)
+      - [User Story 1](#user-story-1)
+      - [Acceptance Criteria](#acceptance-criteria)
+      - [Implementation](#implementation)
+      - [User Story 2](#user-story-2)
+      - [Acceptance Criteria](#acceptance-criteria-1)
+      - [Implementation](#implementation-1)
+      - [User Story 3](#user-story-3)
+      - [Acceptance Criteria](#acceptance-criteria-2)
+      - [Implementation](#implementation-2)
+    - [The Skeleton Plane](#the-skeleton-plane)
+    - [The Surface Plane](#the-surface-plane)
+  - [Future Enhancements](#future-enhancements)
+  - [Testing](#testing)
+    - [Testing Overview](#testing-overview)
+    - [Validator Testing](#validator-testing)
+    - [Notable Bugs](#notable-bugs)
+  - [Libraries Utilized](#libraries-utilized)
+  - [Deployment](#deployment)
+  - [Credits](#credits)
+    - [Code](#code)
+    - [Content](#content)
+  - [Acknowledgements](#acknowledgements)
+
 
 ## UX
 
@@ -240,11 +240,45 @@ Since the application runs in a terminal and the Code Institute's template clear
 
 ### Testing Overview
 
+Continuous testing was an integral part of the development process. I used numerous print statements, which were removed as specific features reached their desired shape and functionality. The statements helped me understand which exact details were accessed via API in the online dictionary, how my functions influenced one another, and what information I had to gather in order to print clear messages for the user. Testing multiple word inputs, as well as the behavior of the application in response to them was an important step in the development of a refined and reliable input validation process. While there is still potential for further improvements, I ensured to handle any and all errors that I encountered, and took great care to handle various word inputs in a way that prevents mistakes as much as possible, at the same time allowing for a lot of variety without restricting the user in their choice of word inputs. Tests were conducted mainly in my development environment, and once results were positive, they were re-checked within the live application after it was deployed to Heroku.
+
 ### Validator Testing
+
+I utilized the Code Institute's [Python Linter](https://pep8ci.herokuapp.com/) in order to check my Python files. No errors were reported - see screenshots below:
+- [run.py](link)
+- [adj_list_ly_ending.py](link)
 
 ### Notable Bugs
 
+There are no notable bugs within the project. While I did encounter a few stubborn issues, especially when it comes to the word validation process (which turned out to be significantly more complex than I expected initially) and the local scope of variables in Python (that led me toward utilizing classes and nested functions), I overcame the challenges and found solutions or workarounds that make this program fully functional.
+
+
 ## Libraries Utilized
+
+Several built-in Python libraries have been used in this project.
+
+__os__
+This library allowed me to clear the terminal (os.system and os.name) as well as restart the program (os.execl). Thanks to these functionalities the application is clearer and visually more pleasing to the user, and the game can be restarted from scratch without the user having to click the "Run program" again.
+
+__sys__
+This module was needed for the restart_program function (sys.executable) that allows the user to play the game multiple times with new inputs.
+
+__time__
+This library was imported to utilize the time.sleep functionality needed after receiving the last valid word input, so that the user can see for a moment that the word they submitted has been accepted. After this delay of 1.5 seconds the terminal is cleared and a story with their inputs is printed to the terminal.
+
+__random__
+This library allows for a random choice of a mad lib title and a matching text from the available ones, listed under available_titles and available_texts. If the user decides to play again while re-using their word inputs, these two variables (lists) get updated and another story can be chosen randomly from the updated range.
+
+__requests__
+This module (specifically the requests.get functionality) makes it possible to work with the dictionary API in the word input validation process by allowing to send HTTP requests to a specified URL. 
+
+__dotenv__
+This library was used to load one specific environment variable - the API key - from the .env file, making it easy and convenient to manage sensitive information.
+
+An additional library was used for styling text in the terminal:
+__Rich__
+This library allowed me to print rich text to the terminal, adding automatic justification to the left that prevents the occurrence of awkward word splits in longer texts. It also gave me the option of using colors in order to keep the terminal visually interesting and to send clear signals to the user (contrasting colors to signify that an input has been accepted or rejected etc.).
+
 
 ## Deployment
 
