@@ -176,11 +176,63 @@ The use of these two classes allows for adding further word inputs and stories i
 
 ### The Surface Plane
 
+__Welcome screen__
+At the start of the game, the user can see the following screen with the game's title/welcome message, a short explanation of how to play the game, and a prompt to submit the first input:
+![Welcome screen](link)
+
+__Word inputs__
+The user is asked to submit 7 word inputs in total, and each of them gets validated before being accepted. You can see an example here:
+![Word inputs](link)
+
+Whenever an input is accepted or rejected, a colored message is printed to the terminal to keep the user updated (see the screenshot below).
+![Correct and incorrect inputs (example with nouns)](link)
+
+If a word is identified as British (the dictionary is favoring US English so entries for words with British spelling provide only limited information), the user gets to see the following message:
+![British spelling](link)
+
+Here are some examples of accepted and rejected word inputs that are expected to be adjectives:
+![Adjectives - correct](link)
+![Adjectives - incorrect](link)
+
+And adverbs:
+![Adverb - correct](link)
+![Adverb - incorrect](link)
+
+If the user submits a bunch of random letters that are not a word, they get to see this:
+![Random letters input](link)
+
+Whenever the user tries to submit a number (integer), their input is rejected:
+![Numbers rejected](image.png)
+
+Should the user try to submit a floating point number or something containing special characters, the following message is printed to the terminal:
+![Float and special characters](link)
+
+And if the submitted word happens to have been misspelled, the user is asked for another input:
+![Typo](link)
+
+__Stories__
+After all inputs have been obtained, a randomly chosen story containing the user's word inputs is printed to the terminal. All inputs are capitalized to make them clearly distinguishable and also in order to avoid any issues when such a word appears at the beginning of a new sentence. The user is also asked whether they would like to play again.
+![Story and play again](link)
+
+__Play again options__
+If the user does choose to play again, they are presented with 2 options to choose from:
+![Play again options & invalid input handling](link)
+
+Should the user choose option A repeatedly and run out of stories to print, they will receive the following information:
+![All stories used](link)
+
+__Endof game__
+Whenever the user chooses to end the game, a thank you message is printed to the terminal.
+![Thanks for playing](link)
+
+__Styling__
+Since the application runs in a terminal and the Code Institute's template clearly asks not to change any files other than run.py, styling has been applied only within the terminal. The Rich library has been used here to print colored statements to the console for added visual interest and clarity. All messages signalling an error or issue of some kind are printed in orange to quickly catch the user's attention and encourage them to take action. All messages confirming that the user's word input has been accepted are printed in sea green. Since I wanted to keep the number of colors to the minimum and was happy to make sea green the "theme color" of the game, the main title ("Welcome to MAD LIBS"), the thank you message at the end ("Thanks for playing MAD LIBS!"), and the stories are also printed in this shade. Additionally, both the welcome and the thank you message are printed in bold to make them stand out. By using Text from the Rich library, I also ensured that any printed statements are automatically justified to the left, which prevents any longer text from awkward splits in the middle of a word when the terminal's modest size leads to the text being divided into multiple lines.
 
 
 ## Future Enhancements
 
-- A more accurate process for validating plural and singular nouns would be helpful in maintaining the educational aspect of the game. Nouns with irregular plural form are always validated correctly, which is great. However, ensuring that nouns with a regular plural form (e.g. "dog" - "dogs") are correctly classified as singular or plural is rather challenging. The online dictionary does not seem to offer a way of making that distinction unambiguously. While there is a key containing inflections ('ins') with a nested key 'if' and its value being a fully spelled-out inflection, this particular value contains the asterisk sign (*) if the word has more than one syllable. Therefore, a simple comparison of the submitted word to this value does not suffice to provide accurate validation and a more refined solution would need to be applied.
+- An additional check could be added to prevent the user from submitting the same word more than once during a game.
+- A more accurate process for validating plural and singular nouns would be helpful in maintaining the educational aspect of the game. Nouns with irregular plural form are always validated correctly, which is great. However, ensuring that nouns with a regular plural form (e.g. "dog" - "dogs") are correctly classified as singular or plural is more challenging. The online dictionary does not seem to offer a way of making that distinction unambiguously. While there is a key containing inflections ('ins') with a nested key 'if' and its value being a fully spelled-out inflection, this particular value contains additionally an asterisk (*) if the word has more than one syllable. Therefore, a simple comparison of the submitted word to this value does not suffice to provide accurate validation and a more refined solution would need to be applied.
 - More stories could be added as further instances of the class Story to provide a wider range of topics and to keep users entertained for longer, also encouraging them to return to the application multiple times.
 
 
@@ -226,10 +278,10 @@ The following tutorials, articles, documentation and media were used to create t
 
 - The function clear_terminal is based on the code from an article on the forum [geeksforgeeks.org](https://www.geeksforgeeks.org/clear-screen-python/). Link included also in the run.py file.
 - Code for the function restart_program has been copied from [jrosco's GitHub account](https://gist.github.com/jrosco/d01b28c2f37100bb5278). Link included also in the run.py file.
-- [This YouTube tutorial](https://www.youtube.com/watch?v=hpc5jyVpUpw) from VideoLab proved extremely helpful in understanding API and how to access and use the online dictionary in my program.
+- [This YouTube tutorial](https://www.youtube.com/watch?v=hpc5jyVpUpw) by VideoLab proved extremely helpful in understanding API and how to access and use the online dictionary in my program.
 - [This documentation](https://rich.readthedocs.io/en/stable/index.html) proved indespensible when working with the Rich library (text styling).
 - [The following article by Jake Witcher](https://dev.to/jakewitcher/using-env-files-for-environment-variables-in-python-applications-55a1) helped me understand how to use an .env file to safely store my API key for the online dictionary.
-- 
+
 
 ### Content
 
