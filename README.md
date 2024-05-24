@@ -4,7 +4,9 @@
 
 Mad Libs Grammar is a web application developed in Python. It is based on the concept of Mad Libs - a simple game for both children and adults. Sometimes played purely for fun or as a party game, in this application the game clearly focuses on grammar, asking the user for word inputs that are specifically nouns, adjectives, adverbs and verbs. Therefore, this particular version of Mad Libs is aimed toward any users who understand the basics of the English grammar. Any provided word inputs are validated via API, one by one, using an online dictionary. Once all required word inputs are obtained and accepted as valid, one of available stories is printed to the terminal, with the user's inputs instead of any blanks, providing a quick fun read full of surprising twists. 
 
-The game utilizes the Code Institute's template that generates a "terminal" onto the page, making it available within a web browser. 
+The game utilizes the Code Institute's template that generates a "terminal" onto the page, making it available within a web browser.
+
+![Screenshot of the application terminal](https://github.com/Agnieszka-21/madlibs/blob/main/assets/screenshots/mad_introduction.png)
 
 ## Table of Contents
 
@@ -110,7 +112,7 @@ Eight stories will be provided, each with a different theme, some of them loosel
   
 The following flowchart was created to depict the basic logic of the game. It illustrates the steps that are needed for a complete game of Mad Libs Grammar, without going into too much detail.
 
-![Flowchart - game logic](link)
+![Flowchart - game logic](https://github.com/Agnieszka-21/madlibs/blob/main/assets/flowcharts/flow_game_logic.png)
 
 Since getting 7 valid word inputs from the user (2 nouns, 1 plural noun, 2 adjectives, an adverb, and a verb) is an essential part of this application, much thought went into creating and refining a reliable validation process for these inputs. To keep it clear and easy to follow, I split it into 3 parts:
 
@@ -126,7 +128,7 @@ Since getting 7 valid word inputs from the user (2 nouns, 1 plural noun, 2 adjec
       - requests.exceptions.JSONDecodeError: the user pressed Enter without submitting anything. Inform them that something went wrong and request input once again, this time adding examples of the required word type for more clarity. Restart the validation process.
     - If there are no errors, move on to part 2 of word validation inside the nested function validate_word.
 
-  ![Flowchart - validation part 1](link)
+  ![Flowchart - validation part 1](https://github.com/Agnieszka-21/madlibs/blob/main/assets/flowcharts/flow_validation1.png)
 
 - __Word input validation - part 2__
 
@@ -140,7 +142,7 @@ Since getting 7 valid word inputs from the user (2 nouns, 1 plural noun, 2 adjec
     - IndexError: occurs when the user submits a floating point number, an input containing special characters etc. Inform the user that their input could not be validated and is possibly not a word. Request another input, adding examples of the currently required word type for more clarity. Restart the validation process.
     - TypeError: the word submitted by the user was misspelled (in such a case the dictionary simply returns a list of similar words). Ask the user to check for typos and request another input, adding examples of the expected word type. Restart the validation process.
   
-  ![Flowchart - validation part 2](link)
+  ![Flowchart - validation part 2](https://github.com/Agnieszka-21/madlibs/blob/main/assets/flowcharts/flow_validation2.png)
 
 - __Word input validation - part 3__
 
@@ -152,7 +154,7 @@ Since getting 7 valid word inputs from the user (2 nouns, 1 plural noun, 2 adjec
   - Adverbs are accepted if the value "adverb" is present in fl_avail. Since some adverbs that are derived from adjectives do not have separate entries in the dictionary, another option is to have the value "adjective" in fl_avail if the word ends in 'LY', and it is not found in the list of adj_with_ly. (SCREEENSHOT) If these criteria are not met, the user is informed that their word is not an adverb, and is requested to submit another input (examples of the expected word type are given for more clarity). The validation process starts from the beginning for that new input.
   - Verbs simply need the value "verb" in fl_avail to be accepted. If this value is not present, the user is informed that their word is not a verb, and is requested to submit another input (again, word examples are given). The validation process starts from the beginning for that new input.
   
-  ![Flowchart - validation part 3](link)
+  ![Flowchart - validation part 3](https://github.com/Agnieszka-21/madlibs/blob/main/assets/flowcharts/flow_validation3.png)
 
 This 3-part validation process runs in a loop until each of the 7 required word inputs is obained. Once all inputs are validated and accepted, one of the available mad lib stories is chosen randomly and printed to the terminal with the user's inputs in specified places. The user can then read the entire story and enjoy the unexpected twists and turns. 
 
@@ -163,7 +165,7 @@ The user is also asked whether they would like to play again, and if they decide
   - Option B is to start from the beginning, with new word inputs. If the user chooses this option, the terminal is cleared, and the program starts again from the beginning.
 Whenever the user decides to end the game, a thank you message is printed to the terminal. The flowchart below illustrates the process of ending the game in more detail.
 
-![Flowchart - end of game](link)
+![Flowchart - end of game](https://github.com/Agnieszka-21/madlibs/blob/main/assets/flowcharts/flow_end_of_game.png)
 
 - __The use of classes__
   
@@ -178,52 +180,52 @@ The use of these two classes allows for adding further word inputs and stories i
 
 __Welcome screen__
 At the start of the game, the user can see the following screen with the game's title/welcome message, a short explanation of how to play the game, and a prompt to submit the first input:
-![Welcome screen](link)
+![Welcome screen](https://github.com/Agnieszka-21/madlibs/blob/main/assets/screenshots/mad_welcome_screen.png)
 
 __Word inputs__
 The user is asked to submit 7 word inputs in total, and each of them gets validated before being accepted. You can see an example here:
-![Word inputs](link)
+![Word inputs](https://github.com/Agnieszka-21/madlibs/blob/main/assets/screenshots/mad_inputs.png)
 
 Whenever an input is accepted or rejected, a colored message is printed to the terminal to keep the user updated (see the screenshot below).
-![Correct and incorrect inputs (example with nouns)](link)
+![Correct and incorrect inputs (example with nouns)](https://github.com/Agnieszka-21/madlibs/blob/main/assets/screenshots/mad_nouns_correct.png)
 
 If a word is identified as British (the dictionary is favoring US English so entries for words with British spelling provide only limited information), the user gets to see the following message:
-![British spelling](link)
+![British spelling](https://github.com/Agnieszka-21/madlibs/blob/main/assets/screenshots/mad_british_to_amer.png)
 
 Here are some examples of accepted and rejected word inputs that are expected to be adjectives:
-![Adjectives - correct](link)
-![Adjectives - incorrect](link)
+![Adjectives - correct](https://github.com/Agnieszka-21/madlibs/blob/main/assets/screenshots/mad_adj_correct.png)
+![Adjectives - incorrect](https://github.com/Agnieszka-21/madlibs/blob/main/assets/screenshots/mad_adj_incorrect.png)
 
 And adverbs:
-![Adverb - correct](link)
-![Adverb - incorrect](link)
+![Adverb - correct](https://github.com/Agnieszka-21/madlibs/blob/main/assets/screenshots/mad_adv_correct_adv.png)
+![Adverb - incorrect](https://github.com/Agnieszka-21/madlibs/blob/main/assets/screenshots/mad_adv_incorrect.png)
 
 If the user submits a bunch of random letters that are not a word, they get to see this:
-![Random letters input](link)
+![Random letters input](https://github.com/Agnieszka-21/madlibs/blob/main/assets/screenshots/mad_random_letters.png)
 
 Whenever the user tries to submit a number (integer), their input is rejected:
-![Numbers rejected](image.png)
+![Numbers rejected](https://github.com/Agnieszka-21/madlibs/blob/main/assets/screenshots/mad_number.png)
 
 Should the user try to submit a floating point number or something containing special characters, the following message is printed to the terminal:
-![Float and special characters](link)
+![Float and special characters](https://github.com/Agnieszka-21/madlibs/blob/main/assets/screenshots/mad_float_asterisk.png)
 
 And if the submitted word happens to have been misspelled, the user is asked for another input:
-![Typo](link)
+![Typo](https://github.com/Agnieszka-21/madlibs/blob/main/assets/screenshots/mad_typo.png)
 
 __Stories__
 After all inputs have been obtained, a randomly chosen story containing the user's word inputs is printed to the terminal. All inputs are capitalized to make them clearly distinguishable and also in order to avoid any issues when such a word appears at the beginning of a new sentence. The user is also asked whether they would like to play again.
-![Story and play again](link)
+![Story and play again](https://github.com/Agnieszka-21/madlibs/blob/main/assets/screenshots/mad_story_and_play_again.png)
 
 __Play again options__
 If the user does choose to play again, they are presented with 2 options to choose from:
-![Play again options & invalid input handling](link)
+![Play again options & invalid input handling](https://github.com/Agnieszka-21/madlibs/blob/main/assets/screenshots/mad_story_playagain_options_invalid.png)
 
 Should the user choose option A repeatedly and run out of stories to print, they will receive the following information:
-![All stories used](link)
+![All stories used](https://github.com/Agnieszka-21/madlibs/blob/main/assets/screenshots/mad_all_stories_used.png)
 
-__Endof game__
+__End of game__
 Whenever the user chooses to end the game, a thank you message is printed to the terminal.
-![Thanks for playing](link)
+![Thanks for playing](https://github.com/Agnieszka-21/madlibs/blob/main/assets/screenshots/mad_thanks_for_playing.png)
 
 __Styling__
 Since the application runs in a terminal and the Code Institute's template clearly asks not to change any files other than run.py, styling has been applied only within the terminal. The Rich library has been used here to print colored statements to the console for added visual interest and clarity. All messages signalling an error or issue of some kind are printed in orange to quickly catch the user's attention and encourage them to take action. All messages confirming that the user's word input has been accepted are printed in sea green. Since I wanted to keep the number of colors to the minimum and was happy to make sea green the "theme color" of the game, the main title ("Welcome to MAD LIBS"), the thank you message at the end ("Thanks for playing MAD LIBS!"), and the stories are also printed in this shade. Additionally, both the welcome and the thank you message are printed in bold to make them stand out. By using Text from the Rich library, I also ensured that any printed statements are automatically justified to the left, which prevents any longer text from awkward splits in the middle of a word when the terminal's modest size leads to the text being divided into multiple lines.
@@ -245,8 +247,8 @@ Continuous testing was an integral part of the development process. I used numer
 ### Validator Testing
 
 I utilized the Code Institute's [Python Linter](https://pep8ci.herokuapp.com/) in order to check my Python files. No errors were reported - see screenshots below:
-- [run.py](link)
-- [adj_list_ly_ending.py](link)
+- [run.py](https://github.com/Agnieszka-21/madlibs/blob/main/assets/screenshots/mad_run.py_validator.png)
+- [adj_list_ly_ending.py](https://github.com/Agnieszka-21/madlibs/blob/main/assets/screenshots/mad_adj_with_ly_validator.png)
 
 ### Notable Bugs
 
