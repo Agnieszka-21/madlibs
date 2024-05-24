@@ -38,6 +38,7 @@ def clear_terminal():
     """
     os.system('cls' if os.name == 'nt' else 'clear')
 
+
 # Code has been copied from the following source:
 # https://gist.github.com/jrosco/d01b28c2f37100bb5278
 def restart_program():
@@ -181,8 +182,8 @@ def look_up_word():
                     console.print(error_msg_uk)
                     amer_yes_or_no = ["Y", "N"]
                     switch_to_amer = input(
-                        "There seems to be a similar word ith US spelling. "
-                        f"Would you like to try {amer} instead? "
+                        "There seems to be a similar word with US spelling. "
+                        f"\nWould you like to try {amer} instead? "
                         "(Y/N) ").upper()
                     if switch_to_amer == 'Y':
                         current_word.input = amer
@@ -232,9 +233,9 @@ def look_up_word():
                     global current_word
                     if current_word.word_type == "noun":
                         if "noun" in fl_avail:
-                            print(
+                            console.print(Text(
                                 f"Your word has been found under {dict_word} "
-                                f"and identified as: {fl_avail}")
+                                f"and identified as: {fl_avail}"))
                             valid_noun = Text(
                                 f"Great, your noun {current_word.input} has "
                                 "been accepted.", style="sea_green1")
@@ -253,8 +254,9 @@ def look_up_word():
                             (("noun" in fl_avail) and
                                 (current_word.input.lower() in
                                     word_checked[0]['meta']['stems'])):
-                            print("Your word has been found under "
-                                  f"{dict_word} and identified as: {fl_avail}")
+                            console.print(Text(
+                                f"Your word has been found under {dict_word} "
+                                f"and identified as: {fl_avail}"))
                             valid_noun_pl = Text(
                                 f"Great, your plural noun {current_word.input}"
                                 " has been accepted.", style="sea_green1")
@@ -275,8 +277,9 @@ def look_up_word():
                                 "adjective" in fl_avail and (
                                     current_word.input[-2:] == 'LY') and (
                                         current_word.input in adj_with_ly())):
-                            print(f"Your word has been found under {dict_word}"
-                                  f" and identified as: {fl_avail}")
+                            console.print(Text(
+                                f"Your word has been found under {dict_word} "
+                                f"and identified as: {fl_avail}"))
                             valid_adj = Text("Great, your adjective "
                                              f"{current_word.input} has been "
                                              "accepted.", style="sea_green1")
@@ -292,8 +295,9 @@ def look_up_word():
                     # Word type: adverb
                     elif current_word.word_type == "adverb":
                         if "adverb" in fl_avail:
-                            print("Your word has been found under "
-                                  f"{dict_word} and identified as: {fl_avail}")
+                            console.print(Text(
+                                f"Your word has been found under {dict_word} "
+                                f"and identified as: {fl_avail}"))
                             valid_adverb = Text(
                                 f"Great, your adverb {current_word.input} has "
                                 "been accepted.", style="sea_green1")
@@ -302,10 +306,11 @@ def look_up_word():
                         elif ("adjective" in fl_avail and (
                             current_word.input[-2:] == 'LY') and (
                                 current_word.input not in adj_with_ly())):
-                            print("Your word has been found under "
-                                  f"{dict_word} and identified as: {fl_avail}."
-                                  " However, by adding the suffix -ly, you "
-                                  "turned the adjective into an adverb, so...")
+                            console.print(Text(
+                                "Your word has been found under "
+                                f"{dict_word} and identified as: {fl_avail}."
+                                " However, by adding the suffix -ly, you "
+                                "turned the adjective into an adverb, so..."))
                             valid_adverb = Text(
                                 f"Great, your adverb {current_word.input} has "
                                 "been accepted.", style="sea_green1")
@@ -321,9 +326,10 @@ def look_up_word():
                     # Word type: verb
                     elif current_word.word_type == "verb":
                         if "verb" in fl_avail:
-                            print("Your word has been found under "
-                                  f"{dict_word} and identified as: "
-                                  f"{fl_avail}")
+                            console.print(Text(
+                                "Your word has been found under "
+                                f"{dict_word} and identified as: "
+                                f"{fl_avail}"))
                             valid_verb = Text(
                                 f"Great, your verb {current_word.input} has "
                                 "been accepted.", style="sea_green1")
@@ -339,7 +345,7 @@ def look_up_word():
 
                 valid_words_type()
 
-            # Word not found in the dictionary (misspelled/not a word)
+            # Word not found in the dictionary (misspelled)
             except TypeError:
                 console.print(Text("Please check for typos and try again...",
                                    style="orange3"))
@@ -384,7 +390,8 @@ def look_up_word():
                 restart_program()
             else:
                 print("Invalid input.")
-                console.print(Text("Thanks for playing MAD LIBS!"))
+                console.print(Text(
+                    "Thanks for playing MAD LIBS!", style="sea_green1"))
 
     # When user presses Enter without submitting any input
     except requests.exceptions.JSONDecodeError:
@@ -596,7 +603,7 @@ def play_again_or_not():
                                        "stories.", style="orange3"))
                     all_stories_used = input(
                         "If you would like to start a new game, "
-                        "type Y and press Enter. Any other input will end "
+                        "type Y and press Enter. \nAny other input will end "
                         "the game: ").upper()
                     if all_stories_used == "Y":
                         clear_terminal()
@@ -609,7 +616,7 @@ def play_again_or_not():
     how_to_play_again()
 
 
-sleep(1.2)
+sleep(1.5)
 clear_terminal()
 choose_story_randomly(available_titles, available_texts)
 play_again_or_not()
