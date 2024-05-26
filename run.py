@@ -322,6 +322,13 @@ def look_up_word():
                                     style="sea_green1")
                                 console.print(valid_noun_pl)
                                 words_accepted.append(current_word.input)
+                            else:
+                                console.print(Text("Your word seems to be a "
+                                                   "singular noun."))
+                                current_word.input = input(
+                                    "Please submit a plural noun "
+                                    f"{current_word.examples}: "
+                                    ).upper().strip()
                         else:
                             console.print("It looks like your word is not a "
                                           "plural noun.", style="orange3")
@@ -612,6 +619,26 @@ def choose_story_randomly(list_of_titles, list_of_texts):
     available_texts = list_of_texts.remove(matching_text)
 
 
+def reuse_words():
+    try:
+        clear_terminal()
+        choose_story_randomly(available_titles, available_texts)
+        play_again_or_not()
+    except IndexError:
+        console.print(Text(
+            "\nYou have seen all available stories.", style="orange3"))
+        all_stories_used = input(
+            "If you would like to start a new game, "
+            "type Y and press Enter. \nAny other input will end "
+            "the game: ").upper().strip()
+        if all_stories_used == "Y":
+            clear_terminal()
+            restart_program()
+        else:
+            end_game = "\nThanks for playing MAD LIBS!"
+            console.print(Text(end_game, style="bold sea_green1"))
+
+
 def play_again_or_not():
     """
     Asks the user whether they would like to play again
@@ -622,8 +649,8 @@ def play_again_or_not():
             play_again_options = ["Y", "N"]
             play_again_input = input(
                 "\nWould you like to play again (Y/N)? ").upper().strip()
-            test = play_again_input.isalpha()
-            if test is False:
+            test_play_again = play_again_input.isalpha()
+            if test_play_again is False:
                 raise ValueError
             if play_again_input in play_again_options:
                 break
@@ -653,8 +680,8 @@ def play_again_or_not():
                         "like to start a brand new game, type B and press "
                         "Enter: "
                         ).upper().strip()
-                    test = new_game_input.isalpha()
-                    if test is False:
+                    test_new = new_game_input.isalpha()
+                    if test_new is False:
                         raise ValueError
                     if new_game_input in new_game_options:
                         break
@@ -671,28 +698,9 @@ def play_again_or_not():
             if new_game_input == "B":
                 clear_terminal()
                 restart_program()
+            elif new_game_input == "A":
+                reuse_words()
 
-        def reuse_words():
-            if new_game_input == "A":
-                try:
-                    clear_terminal()
-                    choose_story_randomly(available_titles, available_texts)
-                    play_again_or_not()
-                except IndexError:
-                    console.print(Text("\nYou have seen all available "
-                                       "stories.", style="orange3"))
-                    all_stories_used = input(
-                        "If you would like to start a new game, "
-                        "type Y and press Enter. \nAny other input will end "
-                        "the game: ").upper().strip()
-                    if all_stories_used == "Y":
-                        clear_terminal()
-                        restart_program()
-                    else:
-                        end_game = "\nThanks for playing MAD LIBS!"
-                        console.print(Text(end_game, style="bold sea_green1"))
-
-        reuse_words()
     how_to_play_again()
 
 
