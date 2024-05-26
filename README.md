@@ -269,7 +269,8 @@ Since the application runs in a terminal and the Code Institute's template clear
 ## Future Enhancements
 
 - An additional check could be added to prevent the user from submitting the same word more than once during a game.
-- A more accurate process for validating plural and singular nouns would be helpful in maintaining the educational aspect of the game. Nouns with irregular plural form are always validated correctly, which is great. However, ensuring that nouns with a regular plural form (e.g. "dog" - "dogs") are correctly classified as singular or plural is more challenging. The online dictionary does not seem to offer a way of making that distinction unambiguously. While there is a key containing inflections ('ins') with a nested key 'if' and its value being a fully spelled-out inflection, this particular value contains additionally an asterisk (*) if the word has more than one syllable. Therefore, a simple comparison of the submitted word to this value does not suffice to provide accurate validation and a more refined solution would need to be applied.
+- For a more thorough search for the 'fl' key (functional label of a word, like "noun" or "adverb") in homographs, another if statement could be added inside the validate_word function to check another one or two possible 'fl' values. At the moment, up to 3 different 'fl' values are being imported from the dictionary for each word with multiple meanings and functions.
+- A more accurate process for validating plural and singular nouns would be helpful in supporting the educational aspect of the game. Nouns with irregular plural form are always validated correctly. However, ensuring that nouns with a regular plural form (e.g. "dog" - "dogs") are correctly classified as singular or plural is more challenging as there are multiple rules regarding how to create a plural noun, depending on its singular counterpart's ending, for example, or other aspects. The online dictionary does not seem to offer a way of making that distinction unambiguously. While there is a key containing inflections ('ins') with a nested key 'if' and its value being a fully spelled-out inflection, this particular value contains additionally an asterisk (*) if the word has more than one syllable. Therefore, a simple comparison of the submitted word to this value does not suffice to provide accurate validation and a more refined solution would need to be applied.
 - More stories could be added as further instances of the class Story to provide a wider range of topics and to keep users entertained for longer, also encouraging them to return to the application multiple times.
 
 
@@ -287,7 +288,7 @@ I utilized the Code Institute's [Python Linter](https://pep8ci.herokuapp.com/) i
 
 ### Notable Bugs
 
-There are no notable bugs within the project. While I did encounter a few stubborn issues, especially when it comes to the word validation process (which turned out to be significantly more complex than I expected initially) and the local scope of variables in Python (that led me toward utilizing classes and nested functions), I overcame the challenges and found solutions or workarounds that make this program fully functional.
+There are no notable bugs within the project. While I did encounter a few stubborn issues, especially when it comes to the word validation process (which turned out to be significantly more complex than I expected initially) and the local scope of variables in Python (that led me toward utilizing classes and nested functions), I overcame the challenges and found solutions or workarounds that make this program fully functional. 
 
 
 ## Libraries Utilized
