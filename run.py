@@ -53,7 +53,7 @@ def welcome():
     """
     Prints a welcome message and a short description of how to play the game
     """
-    game_title = Text("\nWELCOME TO MAD LIBS", style="bold sea_green1")
+    game_title = Text("\nWELCOME TO MAD LIBS GRAMMAR", style="bold sea_green1")
     welcome_text = Text()
     welcome_text.append("\nHow to play: You will be asked "
                         "to provide certain words (a noun, adjective "
@@ -308,6 +308,16 @@ def look_up_word():
                                         "accepted.", style="sea_green1")
                                     console.print(valid_noun_pl)
                                     words_accepted.append(current_word.input)
+                                else:
+                                    console.print(
+                                        Text("Your word seems to be a "
+                                             "singular noun."), style="orange3")
+                                    current_word.input = input(
+                                        "Please submit a plural noun "
+                                        f"{current_word.examples}: "
+                                        ).upper().strip()
+                                    exclude_numbers()
+                                    look_up_word()
                             elif (current_word.input != dict_word and
                                     current_word.input.lower() in
                                     word_checked[nouns_index]['meta']
@@ -322,13 +332,6 @@ def look_up_word():
                                     style="sea_green1")
                                 console.print(valid_noun_pl)
                                 words_accepted.append(current_word.input)
-                            else:
-                                console.print(Text("Your word seems to be a "
-                                                   "singular noun."))
-                                current_word.input = input(
-                                    "Please submit a plural noun "
-                                    f"{current_word.examples}: "
-                                    ).upper().strip()
                         else:
                             console.print("It looks like your word is not a "
                                           "plural noun.", style="orange3")
@@ -620,6 +623,11 @@ def choose_story_randomly(list_of_titles, list_of_texts):
 
 
 def reuse_words():
+    """
+    Prints another story to the terminal (as long as there is a story
+    available) while re-using word inputs. Called when user chooses to
+    play again and picks option A
+    """
     try:
         clear_terminal()
         choose_story_randomly(available_titles, available_texts)
@@ -670,6 +678,10 @@ def play_again_or_not():
         console.print(Text(end_game, style="bold sea_green1"))
 
     def how_to_play_again():
+        """
+        Works only if the user chooses to play again. Gives the user
+        2 options regarding how to play a new game.
+        """
         if play_again_input == "Y":
             while True:
                 try:
