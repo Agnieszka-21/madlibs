@@ -98,6 +98,7 @@ def get_word_input():
     elif len(words_accepted) == 1:
         noun2.input = input("\nAnother noun: ").upper().strip()
         current_word = noun2
+        exclude_repetitions()
     elif len(words_accepted) == 2:
         noun_pl.input = input("\nPlural noun: ").upper().strip()
         current_word = noun_pl
@@ -107,12 +108,30 @@ def get_word_input():
     elif len(words_accepted) == 4:
         adj2.input = input("\nAnother adjective: ").upper().strip()
         current_word = adj2
+        exclude_repetitions()
     elif len(words_accepted) == 5:
         adv.input = input("\nAdverb: ").upper().strip()
         current_word = adv
     elif len(words_accepted) == 6:
         verb.input = input("\nVerb: ").upper().strip()
         current_word = verb
+
+
+def exclude_repetitions():
+    """
+    Prevents from accepting the same input twice.
+    Used for nouns and adjectives
+    """
+    if current_word.input == noun1.input:
+        console.print(Text(
+            "You have already used this word. Let's try again..."),
+            style="orange3")
+        get_word_input()
+    elif current_word.input == adj1.input:
+        console.print(Text(
+            "You have already used this word. Let's try again..."),
+            style="orange3")
+        get_word_input()
 
 
 def exclude_numbers():
@@ -310,8 +329,8 @@ def look_up_word():
                                     words_accepted.append(current_word.input)
                                 else:
                                     console.print(
-                                        Text("Your word seems to be a "
-                                             "singular noun."), style="orange3")
+                                        Text("Your word seems to be a singular"
+                                             " noun."), style="orange3")
                                     current_word.input = input(
                                         "Please submit a plural noun "
                                         f"{current_word.examples}: "
