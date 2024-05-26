@@ -92,26 +92,26 @@ def get_word_input():
     to fill any blanks in a mad lib
     """
     if len(words_accepted) == 0:
-        noun1.input = input("\nNoun: ").upper()
+        noun1.input = input("\nNoun: ").upper().strip()
         global current_word
         current_word = noun1
     elif len(words_accepted) == 1:
-        noun2.input = input("\nAnother noun: ").upper()
+        noun2.input = input("\nAnother noun: ").upper().strip()
         current_word = noun2
     elif len(words_accepted) == 2:
-        noun_pl.input = input("\nPlural noun: ").upper()
+        noun_pl.input = input("\nPlural noun: ").upper().strip()
         current_word = noun_pl
     elif len(words_accepted) == 3:
-        adj1.input = input("\nAdjective: ").upper()
+        adj1.input = input("\nAdjective: ").upper().strip()
         current_word = adj1
     elif len(words_accepted) == 4:
-        adj2.input = input("\nAnother adjective: ").upper()
+        adj2.input = input("\nAnother adjective: ").upper().strip()
         current_word = adj2
     elif len(words_accepted) == 5:
-        adv.input = input("\nAdverb: ").upper()
+        adv.input = input("\nAdverb: ").upper().strip()
         current_word = adv
     elif len(words_accepted) == 6:
-        verb.input = input("\nVerb: ").upper()
+        verb.input = input("\nVerb: ").upper().strip()
         current_word = verb
 
 
@@ -125,7 +125,7 @@ def exclude_numbers():
         console.print("Sorry, numbers are not allowed.", style="orange3")
         current_word.input = input(
             f"Please submit a valid {current_word.word_type} "
-            f"{current_word.examples}: ").upper()
+            f"{current_word.examples}: ").upper().strip()
         return
     except ValueError:
         pass
@@ -180,17 +180,16 @@ def look_up_word():
                     error_msg_uk = Text("We weren't able to check your word. "
                                         "However...", style="orange3")
                     console.print(error_msg_uk)
-                    amer_yes_or_no = ["Y", "N"]
                     switch_to_amer = input(
                         "There seems to be a similar word with US spelling. "
                         f"\nWould you like to try {amer} instead? "
-                        "(Y/N) ").upper()
+                        "(Y/N) ").upper().strip()
                     if switch_to_amer == 'Y':
                         current_word.input = amer
                         look_up_word()
                     elif switch_to_amer == 'N':
                         current_word.input = input(
-                            "Okay, please try a different word: ").upper()
+                            "Okay, please try a different word: ").upper().strip()
                         exclude_numbers()
                         look_up_word()
                     else:
@@ -198,7 +197,7 @@ def look_up_word():
                                              style="orange3")
                         console.print(invalid_input)
                         current_word.input = input(
-                            "Please submit a different word: ").upper()
+                            "Please submit a different word: ").upper().strip()
                         exclude_numbers()
                         look_up_word()
                     return
@@ -210,7 +209,7 @@ def look_up_word():
                                        style="orange3"))
                     current_word.input = input(
                         f"Please submit a valid {current_word.word_type} "
-                        f"{current_word.examples}: ").upper()
+                        f"{current_word.examples}: ").upper().strip()
                     exclude_numbers()
                     look_up_word()
                     return
@@ -245,7 +244,7 @@ def look_up_word():
                             console.print("It looks like your word is not a "
                                           "noun.", style="orange3")
                             current_word.input = input(
-                                f"Try again {current_word.examples}: ").upper()
+                                f"Try again {current_word.examples}: ").upper().strip()
                             exclude_numbers()
                             look_up_word()
                     # Word type: plural noun
@@ -267,7 +266,7 @@ def look_up_word():
                                           "plural noun.", style="orange3")
                             current_word.input = input(
                                 f"Try again {current_word.examples}: "
-                            ).upper()
+                            ).upper().strip()
                             exclude_numbers()
                             look_up_word()
                     # Word type: adjective
@@ -289,7 +288,7 @@ def look_up_word():
                             console.print("It looks like your word is not an "
                                           "adjective.", style="orange3")
                             current_word.input = input(
-                                f"Try again {current_word.examples}: ").upper()
+                                f"Try again {current_word.examples}: ").upper().strip()
                             exclude_numbers()
                             look_up_word()
                     # Word type: adverb
@@ -320,7 +319,7 @@ def look_up_word():
                             console.print("It looks like your word is not an "
                                           "adverb.", style="orange3")
                             current_word.input = input(
-                                f"Try again {current_word.examples}: ").upper()
+                                f"Try again {current_word.examples}: ").upper().strip()
                             exclude_numbers()
                             look_up_word()
                     # Word type: verb
@@ -339,7 +338,7 @@ def look_up_word():
                             console.print("It looks like your word is not a "
                                           "verb.", style="orange3")
                             current_word.input = input(
-                                f"Try again {current_word.examples}: ").upper()
+                                f"Try again {current_word.examples}: ").upper().strip()
                             exclude_numbers()
                             look_up_word()
 
@@ -351,7 +350,7 @@ def look_up_word():
                                    style="orange3"))
                 current_word.input = input(
                     f"Enter your {current_word.word_type} "
-                    f"{current_word.examples} here: ").upper()
+                    f"{current_word.examples} here: ").upper().strip()
                 exclude_numbers()
                 look_up_word()
                 return
@@ -364,7 +363,7 @@ def look_up_word():
                                    style="orange3"))
                 current_word.input = input(
                     f"Please try again - enter your {current_word.word_type} "
-                    f"{current_word.examples} here: ").upper()
+                    f"{current_word.examples} here: ").upper().strip()
                 exclude_numbers()
                 look_up_word()
                 return
@@ -377,14 +376,14 @@ def look_up_word():
                            "couldn't access the dictionary to check your "
                            "word input.", style="orange3"))
         restart = input("Type R and press Enter to restart the "
-                        "game: ").upper()
+                        "game: ").upper().strip()
         if restart == "R":
             clear_terminal()
             restart_program()
         else:
             console.print(Text("Invalid input.", style="orange3"))
             restart_ask_again = input(
-                "Please type R and press Enter to restart the game: ")
+                "Please type R and press Enter to restart the game: ").upper().strip()
             if restart_ask_again == "R":
                 clear_terminal()
                 restart_program()
@@ -398,7 +397,7 @@ def look_up_word():
         console.print(Text("Something went wrong...", style="orange3"))
         current_word.input = input(
             f"Please submit a(n) {current_word.word_type} "
-            f"{current_word.examples}: ").upper()
+            f"{current_word.examples}: ").upper().strip()
         exclude_numbers()
         look_up_word()
         return
@@ -555,7 +554,7 @@ def play_again_or_not():
     """
     play_again_options = ["Y", "N"]
     play_again_question = input(
-        "\nWould you like to play again (Y/N)? ").upper()
+        "\nWould you like to play again (Y/N)? ").upper().strip()
     while play_again_question not in play_again_options:
         console.print(Text("Invalid input. Let's try one more time...",
                            style="orange3"))
@@ -577,7 +576,7 @@ def play_again_or_not():
             new_game_how = input(
                 "\nIf you would like to re-use your words with a "
                 "different story, type A and press Enter. If you'd like "
-                "to start a brand new game, type B and press Enter: ").upper()
+                "to start a brand new game, type B and press Enter: ").upper().strip()
             while new_game_how not in new_game_options:
                 console.print(Text("Invalid input. Let's try once again...",
                                    style="orange3"))
@@ -604,7 +603,7 @@ def play_again_or_not():
                     all_stories_used = input(
                         "If you would like to start a new game, "
                         "type Y and press Enter. \nAny other input will end "
-                        "the game: ").upper()
+                        "the game: ").upper().strip()
                     if all_stories_used == "Y":
                         clear_terminal()
                         restart_program()
