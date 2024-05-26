@@ -612,21 +612,6 @@ def choose_story_randomly(list_of_titles, list_of_texts):
     available_texts = list_of_texts.remove(matching_text)
 
 
-def user_input():
-    while True:
-        try:
-            user_input = input("\nWould you like to play again (Y/N)? ").upper().strip()
-            test = user_input.isalpha()
-            options = ["Y", "N"]
-            if test == False:
-                raise ValueError
-            if user_input in options:
-                break
-            else:
-                print("Invalid input.")
-        except ValueError:
-            print("Your input is invalid.")
-
 def play_again_or_not():
     """
     Asks the user whether they would like to play again
@@ -638,60 +623,57 @@ def play_again_or_not():
             play_again_input = input(
                 "\nWould you like to play again (Y/N)? ").upper().strip()
             test = play_again_input.isalpha()
-            if test == False:
+            if test is False:
                 raise ValueError
             if play_again_input in play_again_options:
                 break
             else:
-                print("Invalid input. Let's try one more time...")
+                console.print(Text(
+                    "Invalid input. Let's try one more time..."),
+                    style="orange3")
                 play_again_or_not()
                 return
         except ValueError:
-            print("Your input is invalid. Let's try again...")
+            console.print(Text("Your input is invalid. Let's try "
+                               "again..."), style="orange3")
             play_again_or_not()
             return
     if play_again_input == "N":
         end_game = "\nOkay, thanks for playing MAD LIBS!"
         console.print(Text(end_game, style="bold sea_green1"))
 
-
-
-"""
-    while play_again_question not in play_again_options:
-        console.print(Text("Invalid input. Let's try one more time...",
-                           style="orange3"))
-        play_again_or_not()
-        return
-    else:
-        if play_again_question == "N":
-            end_game = "\nOkay, thanks for playing MAD LIBS!"
-            console.print(Text(end_game, style="bold sea_green1"))
-            return
-
     def how_to_play_again():
-        Works only when user chose Y (yes) - they
-        would like to play again
-        if play_again_question == "Y":
-            new_game_options = ["A", "B"]
-            new_game_how = input(
-                "\nIf you would like to re-use your words with a "
-                "different story, type A and press Enter. If you'd like "
-                "to start a brand new game, type B and press Enter: "
-                ).upper().strip()
-            while new_game_how not in new_game_options:
-                console.print(Text("Invalid input. Let's try once again...",
-                                   style="orange3"))
-                how_to_play_again()
-                return
-            else:
-                if new_game_how == "B":
-                    clear_terminal()
-                    restart_program()
+        if play_again_input == "Y":
+            while True:
+                try:
+                    new_game_options = ["A", "B"]
+                    new_game_input = input(
+                        "\nIf you would like to re-use your words with a "
+                        "different story, type A and press Enter. If you'd "
+                        "like to start a brand new game, type B and press "
+                        "Enter: "
+                        ).upper().strip()
+                    test = new_game_input.isalpha()
+                    if test is False:
+                        raise ValueError
+                    if new_game_input in new_game_options:
+                        break
+                    else:
+                        console.print(Text("Invalid input. Let's try one more "
+                                           "time..."), style="orange3")
+                        how_to_play_again()
+                        return
+                except ValueError:
+                    console.print(Text("Your input is invalid. Let's try "
+                                       "again..."), style="orange3")
+                    how_to_play_again()
+                    return
+            if new_game_input == "B":
+                clear_terminal()
+                restart_program()
 
         def reuse_words():
-            Works only if user chose option A - play again
-            and re-use the same words with another story
-            if new_game_how == "A":
+            if new_game_input == "A":
                 try:
                     clear_terminal()
                     choose_story_randomly(available_titles, available_texts)
@@ -712,11 +694,9 @@ def play_again_or_not():
 
         reuse_words()
     how_to_play_again()
-"""
 
 
 sleep(1.5)
 clear_terminal()
 choose_story_randomly(available_titles, available_texts)
 play_again_or_not()
-
