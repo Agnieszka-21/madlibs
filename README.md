@@ -48,6 +48,13 @@ The game utilizes the Code Institute's template that generates a "terminal" onto
     - [Validator Testing](#validator-testing)
     - [Notable Bugs](#notable-bugs)
   - [Libraries Utilized](#libraries-utilized)
+      - [os](#os)
+      - [sys](#sys)
+      - [time](#time)
+      - [random](#random)
+      - [requests](#requests)
+      - [dotenv](#dotenv)
+      - [Rich](#rich)
   - [Deployment](#deployment)
   - [Credits](#credits)
     - [Code](#code)
@@ -287,34 +294,26 @@ There are no notable bugs within the project. While I did encounter a few stubbo
 
 Several built-in Python libraries have been used in this project.
 
-__os__
-
+#### os
 This library allowed me to clear the terminal (os.system and os.name) as well as restart the program (os.execl). Thanks to these functionalities the application is clearer and visually more pleasing to the user, and the game can be restarted from scratch without the user having to click the "Run program" again.
 
-__sys__
-
+#### sys
 This module was needed for the restart_program function (sys.executable) that allows the user to play the game multiple times with new inputs.
 
-__time__
-
+#### time
 This library was imported to utilize the time.sleep functionality needed after receiving the last valid word input, so that the user can see for a moment that the word they submitted has been accepted. After this delay of 1.5 seconds the terminal is cleared and a story with their inputs is printed to the terminal.
 
-__random__
-
+#### random
 This library allows for a random choice of a mad lib title and a matching text from the available ones, listed under available_titles and available_texts. If the user decides to play again while re-using their word inputs, these two variables (lists) get updated and another story can be chosen randomly from the updated range.
 
-__requests__
-
+#### requests
 This module (specifically the requests.get functionality) makes it possible to work with the dictionary API in the word input validation process by allowing to send HTTP requests to a specified URL. 
 
-__dotenv__
-
+#### dotenv
 This library was used to load one specific environment variable - the API key - from the .env file, making it easy and convenient to manage sensitive information.
 
-An additional library was used for styling text in the terminal:
-
-__Rich__
-
+An additional library was used for styling text in the terminal.
+#### Rich
 This library allowed me to print rich text to the terminal, adding automatic justification to the left that prevents the occurrence of awkward word splits in longer texts. It also gave me the option of using colors in order to keep the terminal visually interesting and to send clear signals to the user (contrasting colors to signify that an input has been accepted or rejected etc.).
 
 
@@ -344,7 +343,7 @@ In order to deploy the application to Heroku I followed the following steps:
 
 ## Credits
 
-The following tutorials, articles, documentation and media were used to create this website...
+The following tutorials, articles, documentation and media were used to create this web application...
 
 ### Code
 
