@@ -612,14 +612,51 @@ def choose_story_randomly(list_of_titles, list_of_texts):
     available_texts = list_of_texts.remove(matching_text)
 
 
+def user_input():
+    while True:
+        try:
+            user_input = input("\nWould you like to play again (Y/N)? ").upper().strip()
+            test = user_input.isalpha()
+            options = ["Y", "N"]
+            if test == False:
+                raise ValueError
+            if user_input in options:
+                break
+            else:
+                print("Invalid input.")
+        except ValueError:
+            print("Your input is invalid.")
+
 def play_again_or_not():
     """
     Asks the user whether they would like to play again
     and gives them options
     """
-    play_again_options = ["Y", "N"]
-    play_again_question = input(
-        "\nWould you like to play again (Y/N)? ").upper().strip()
+    while True:
+        try:
+            play_again_options = ["Y", "N"]
+            play_again_input = input(
+                "\nWould you like to play again (Y/N)? ").upper().strip()
+            test = play_again_input.isalpha()
+            if test == False:
+                raise ValueError
+            if play_again_input in play_again_options:
+                break
+            else:
+                print("Invalid input. Let's try one more time...")
+                play_again_or_not()
+                return
+        except ValueError:
+            print("Your input is invalid. Let's try again...")
+            play_again_or_not()
+            return
+    if play_again_input == "N":
+        end_game = "\nOkay, thanks for playing MAD LIBS!"
+        console.print(Text(end_game, style="bold sea_green1"))
+
+
+
+"""
     while play_again_question not in play_again_options:
         console.print(Text("Invalid input. Let's try one more time...",
                            style="orange3"))
@@ -632,10 +669,8 @@ def play_again_or_not():
             return
 
     def how_to_play_again():
-        """
         Works only when user chose Y (yes) - they
         would like to play again
-        """
         if play_again_question == "Y":
             new_game_options = ["A", "B"]
             new_game_how = input(
@@ -654,10 +689,8 @@ def play_again_or_not():
                     restart_program()
 
         def reuse_words():
-            """
             Works only if user chose option A - play again
             and re-use the same words with another story
-            """
             if new_game_how == "A":
                 try:
                     clear_terminal()
@@ -679,9 +712,11 @@ def play_again_or_not():
 
         reuse_words()
     how_to_play_again()
+"""
 
 
 sleep(1.5)
 clear_terminal()
 choose_story_randomly(available_titles, available_texts)
 play_again_or_not()
+
