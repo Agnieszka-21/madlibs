@@ -194,7 +194,8 @@ def look_up_word():
                         look_up_word()
                     elif switch_to_amer == 'N':
                         current_word.input = input(
-                            "Okay, please try a different word: ").upper().strip()
+                            "Okay, please try a different word: "
+                            ).upper().strip()
                         exclude_numbers()
                         look_up_word()
                     else:
@@ -236,7 +237,8 @@ def look_up_word():
                     # Word type: noun
                     global current_word
                     if current_word.word_type == "noun":
-                        if "noun" in fl_avail:
+                        if "noun" in fl_avail and (
+                                current_word.input == dict_word):
                             console.print(Text(
                                 f"Your word has been found under {dict_word} "
                                 f"and identified as: {fl_avail}"))
@@ -245,19 +247,39 @@ def look_up_word():
                                 "been accepted.", style="sea_green1")
                             console.print(valid_noun)
                             words_accepted.append(current_word.input)
+                        elif "noun" in fl_avail and (
+                                current_word.input != dict_word):
+                            console.print(Text(
+                                "Your word is a noun but it seems to be "
+                                "slightly different from the valid option "
+                                f"{dict_word}. Therefore, we adjusted your "
+                                "word accordingly."
+                            ))
+                            valid_noun = Text(
+                                f"The noun {dict_word} has "
+                                "been accepted.", style="sea_green1")
+                            console.print(valid_noun)
+                            words_accepted.append(dict_word)
+                        elif "plural noun" in fl_avail:
+                            console.print(Text(
+                                f"Your word is a plural noun.", style="orange3"
+                            ))
+                            current_word.input = input(
+                                "Please submit a singular noun instead "
+                                f"{current_word.examples}: ").upper().strip()
+                            exclude_numbers()
+                            look_up_word()
                         else:
                             console.print("It looks like your word is not a "
                                           "noun.", style="orange3")
                             current_word.input = input(
-                                f"Try again {current_word.examples}: ").upper().strip()
+                                f"Try again {current_word.examples}: "
+                                ).upper().strip()
                             exclude_numbers()
                             look_up_word()
                     # Word type: plural noun
                     elif current_word.word_type == "plural noun":
-                        if "plural noun" in fl_avail or \
-                            (("noun" in fl_avail) and
-                                (current_word.input.lower() in
-                                    word_checked[0]['meta']['stems'])):
+                        if "plural noun" in fl_avail:
                             console.print(Text(
                                 f"Your word has been found under {dict_word} "
                                 f"and identified as: {fl_avail}"))
@@ -266,6 +288,40 @@ def look_up_word():
                                 " has been accepted.", style="sea_green1")
                             console.print(valid_noun_pl)
                             words_accepted.append(current_word.input)
+                        elif "noun" in fl_avail:
+                            # Get index of the "noun" from the fl_avail list
+                            nouns_index = fl_avail.index("noun")
+                            if 'ins' in word_checked[nouns_index]:
+                                # Get the value 'if' (inflection = plural)
+                                pl = word_checked[nouns_index]['ins'][0]['if']\
+                                    .split('*')
+                                plural = ''.join([str(item) for item in pl])
+                                if current_word.input == plural.upper():
+                                    console.print(Text(
+                                        "Your word has been found under "
+                                        f"{dict_word} (plural "
+                                        f"{plural.upper()}) "
+                                        f"and identified as: {fl_avail}"))
+                                    valid_noun_pl = Text(
+                                        "Great, your plural noun "
+                                        f"{current_word.input} has been "
+                                        "accepted.", style="sea_green1")
+                                    console.print(valid_noun_pl)
+                                    words_accepted.append(current_word.input)
+                            elif (current_word.input != dict_word and
+                                    current_word.input.lower() in
+                                    word_checked[nouns_index]['meta']
+                                    ['stems']):
+                                console.print(Text(
+                                    "Your word has been found under "
+                                    f"{dict_word} and identified as: "
+                                    f"{fl_avail}"))
+                                valid_noun_pl = Text(
+                                    "Great, your plural noun "
+                                    f"{current_word.input} has been accepted.",
+                                    style="sea_green1")
+                                console.print(valid_noun_pl)
+                                words_accepted.append(current_word.input)
                         else:
                             console.print("It looks like your word is not a "
                                           "plural noun.", style="orange3")
@@ -293,7 +349,8 @@ def look_up_word():
                             console.print("It looks like your word is not an "
                                           "adjective.", style="orange3")
                             current_word.input = input(
-                                f"Try again {current_word.examples}: ").upper().strip()
+                                f"Try again {current_word.examples}: "
+                                ).upper().strip()
                             exclude_numbers()
                             look_up_word()
                     # Word type: adverb
@@ -324,7 +381,8 @@ def look_up_word():
                             console.print("It looks like your word is not an "
                                           "adverb.", style="orange3")
                             current_word.input = input(
-                                f"Try again {current_word.examples}: ").upper().strip()
+                                f"Try again {current_word.examples}: "
+                                ).upper().strip()
                             exclude_numbers()
                             look_up_word()
                     # Word type: verb
@@ -343,7 +401,8 @@ def look_up_word():
                             console.print("It looks like your word is not a "
                                           "verb.", style="orange3")
                             current_word.input = input(
-                                f"Try again {current_word.examples}: ").upper().strip()
+                                f"Try again {current_word.examples}: "
+                                ).upper().strip()
                             exclude_numbers()
                             look_up_word()
 
@@ -388,7 +447,8 @@ def look_up_word():
         else:
             console.print(Text("Invalid input.", style="orange3"))
             restart_ask_again = input(
-                "Please type R and press Enter to restart the game: ").upper().strip()
+                "Please type R and press Enter to restart the game: "
+                ).upper().strip()
             if restart_ask_again == "R":
                 clear_terminal()
                 restart_program()
@@ -581,7 +641,8 @@ def play_again_or_not():
             new_game_how = input(
                 "\nIf you would like to re-use your words with a "
                 "different story, type A and press Enter. If you'd like "
-                "to start a brand new game, type B and press Enter: ").upper().strip()
+                "to start a brand new game, type B and press Enter: "
+                ).upper().strip()
             while new_game_how not in new_game_options:
                 console.print(Text("Invalid input. Let's try once again...",
                                    style="orange3"))
