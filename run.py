@@ -82,7 +82,7 @@ noun2 = Words("input", "noun", "(e.g. tree, car, dog)")
 noun_pl = Words("input", "plural noun", "(e.g. cats, mice)")
 adj1 = Words("input", "adjective", "(e.g. sad, beautiful)")
 adj2 = Words("input", "adjective", "(e.g. sad, beautiful)")
-adv = Words("input", "adverb", "(e.g. gladly, tomorrow)")
+adv = Words("input", "adverb", "(e.g. gladly, finally)")
 verb = Words("input", "verb", "(e.g. walk, swim)")
 
 
@@ -166,6 +166,11 @@ def look_up_word():
                             'hom' in word_checked[2]) and (
                                 'fl' in word_checked[2]):
                             fl_avail.append(word_checked[2]['fl'])
+
+                            if len(word_checked) > 3 and (
+                                'hom' in word_checked[3]) and (
+                                    'fl' in word_checked[3]):
+                                fl_avail.append(word_checked[3]['fl'])
 
                 # If such a label is not found (usually for plural nouns)
                 elif 'cxs' in word_checked[0] and \
