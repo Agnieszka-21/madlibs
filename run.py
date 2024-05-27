@@ -308,11 +308,11 @@ def look_up_word():
                             console.print(valid_noun_pl)
                             words_accepted.append(current_word.input)
                         elif "noun" in fl_avail:
-                            # Get index of the "noun" from the fl_avail list
-                            nouns_index = fl_avail.index("noun")
-                            if 'ins' in word_checked[nouns_index]:
+                            # Get index of the "noun" (ni) from the fl_avail list
+                            ni = fl_avail.index("noun")
+                            if 'ins' in word_checked[ni]:
                                 # Get the value 'if' (inflection = plural)
-                                pl = word_checked[nouns_index]['ins'][0]['if']\
+                                pl = word_checked[ni]['ins'][0]['if']\
                                     .split('*')
                                 plural = ''.join([str(item) for item in pl])
                                 if current_word.input == plural.upper():
@@ -339,8 +339,7 @@ def look_up_word():
                                     look_up_word()
                             elif (current_word.input != dict_word and
                                     current_word.input.lower() in
-                                    word_checked[nouns_index]['meta']
-                                    ['stems']):
+                                    word_checked[ni]['meta']['stems']):
                                 console.print(Text(
                                     "Your word has been found under "
                                     f"{dict_word} and identified as: "
@@ -351,6 +350,14 @@ def look_up_word():
                                     style="sea_green1")
                                 console.print(valid_noun_pl)
                                 words_accepted.append(current_word.input)
+                            else:
+                                console.print("It looks like your word is not "
+                                            "a plural noun.", style="orange3")
+                                current_word.input = input(
+                                    f"Try again {current_word.examples}: "
+                                ).upper().strip()
+                                exclude_numbers()
+                                look_up_word()
                         else:
                             console.print("It looks like your word is not a "
                                           "plural noun.", style="orange3")
