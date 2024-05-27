@@ -308,7 +308,7 @@ def look_up_word():
                             console.print(valid_noun_pl)
                             words_accepted.append(current_word.input)
                         elif "noun" in fl_avail:
-                            # Get index of the "noun" (ni) from the fl_avail list
+                            # Get index of the "noun" (ni) from fl_avail
                             ni = fl_avail.index("noun")
                             if 'ins' in word_checked[ni]:
                                 # Get the value 'if' (inflection = plural)
@@ -351,8 +351,9 @@ def look_up_word():
                                 console.print(valid_noun_pl)
                                 words_accepted.append(current_word.input)
                             else:
-                                console.print("It looks like your word is not "
-                                            "a plural noun.", style="orange3")
+                                console.print(
+                                    "It looks like your word is not "
+                                    "a plural noun.", style="orange3")
                                 current_word.input = input(
                                     f"Try again {current_word.examples}: "
                                 ).upper().strip()
