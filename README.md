@@ -137,7 +137,8 @@ Since getting 7 valid word inputs from the user (2 nouns, 1 plural noun, 2 adjec
 
 #### Word input validation - part 1
   
-- Request a word input from the user, specifying which grammatical type is needed (e.g. a noun). 
+- Request a word input from the user, specifying which grammatical type is needed (e.g. a noun).
+- When getting input for noun2 or adj2, make sure the user is submitting a new word (noun2 cannot be the same as noun1, and adj2 cannot be the same as adj1). If the user tries to submit the same noun or adjective twice, inform them that they have already used that word and request a different input (function exclude_repetitions).
 - Make sure the input is not a number (integer) using the function exclude_numbers.
  - If the input is a number: inform the user that numbers are not allowed and request another input instead, adding examples of the required word type for clarity. Restart the valiation process.
  - If the input is not a number, simply move on to the next step.
@@ -167,8 +168,8 @@ Since getting 7 valid word inputs from the user (2 nouns, 1 plural noun, 2 adjec
 
 - This is the last part of the word validation process, and it is being taken care of by the function valid_words_type, nested inside validate_word, which is nested inside the look_up_word function. 
 - Once the list fl_avail contains a value or multiple values (like "noun", "adjective" etc.) after going through the validate_word function, check whether the 'fl' value for the current word is correct for the expected word type. If needed, other criteria might need to be met, too. Each word type has its own set of criteria.
-- __Nouns__ simply need the value "noun" in fl_avail to be accepted. If this value is not present, the user is informed that their word is not a noun, and a new input is requested. The message includes examples of the expected word type. Once a new input is obtained, the entire validation process is restarted for the new word input.
-- __Plural nouns__ are accepted if the value "plural noun" is found within fl_avail (for nouns with irregular plural form), or if the value "noun" is found in fl_avail and the submitted word was found under the key 'stems' in the dictionary (which lists all the entry's headwords, variants, inflections... including its plural form). 
+- __Nouns__ need the value "noun" in fl_avail in order to be accepted, paired with the fact the the user's input is identical with the dictionary entry being looked up. This ensures that no plural nouns with regular plural form (e.g. "dog" - "dogs") get accepted instead of their singular form. If this last condition is not met (e.g. the user submitted the word "cats"), the user is notified in the terminal that their word is slightly different from a specific valid option, and their input is automatically replaced by that valid word (e.g. "cat"). If the value "noun" is not present, the user is informed that their word is not a noun, and a new input is requested. The message includes examples of the expected word type. Once a new input is obtained, the entire validation process is restarted for the new word input.
+- __Plural nouns__ are accepted if the value "plural noun" is found within fl_avail, which works well for nouns with irregular plural form. Another acceptable option is if the value "noun" is present within fl_avail and the entry's key 'ins' (inflections) can be accessed (not all noun entries have that key), and the word input is identical with the value related to the nested key 'if' (for words with more than one syllable, asterisks * are present inside that value to mark the division into syllables, so these had to be removed first). Should that last criterium not be met, the user is informed that their word seems to be a singular rather than plural form of a noun and is asked for another input. One last acceptable option is if the value "noun" is found in fl_avail and the submitted word was found under the key 'stems' in the dictionary (which lists all the entry's headwords, variants, inflections... including its plural form). If neither of these options applies, the user is informed that their word is not a plural noun, and is requested to submit another word input.
 - __Adjectives__ are acceped if the value "adjective" is found in fl_avail, as long as the word does not end in 'LY'. Otherwise, if an adjective ends in 'LY', an additional criterium must be met: the adjective needs to be found in the list adj_with_ly. This additional requirement resulted from the realization that while many adverbs end in 'LY' (basically, one can create an adverb by adding the suffix -ly to an adjective, e.g. "glad" - "gladly"), there are also multiple adjectives with this ending, and this additional criterium helps to avoid inaccurate classification. If these criteria are not met, the user is informed that their word is not an adjective, and is requested to submit another input (examples are given in order to make it clear and simple). The validation process starts from the beginning for that new input.
 - __Adverbs__ are accepted if the value "adverb" is present in fl_avail. Since some adverbs that are derived from adjectives do not have separate entries in the dictionary, another option is to have the value "adjective" in fl_avail if the word ends in 'LY', and it is not found in the list of adj_with_ly. (SCREEENSHOT) If these criteria are not met, the user is informed that their word is not an adverb, and is requested to submit another input (examples of the expected word type are given for more clarity). The validation process starts from the beginning for that new input.
 - __Verbs__ simply need the value "verb" in fl_avail to be accepted. If this value is not present, the user is informed that their word is not a verb, and is requested to submit another input (again, word examples are given). The validation process starts from the beginning for that new input.
@@ -189,10 +190,10 @@ Whenever the user decides to end the game, a thank you message is printed to the
 #### The use of classes
   
 In order to not only deepen my understanding of Python classes, but also to keep the number of variables with global scope to a minimum, I decided to create two classes for this program. 
-  - __Class Words__ is initiated with 3 instance variables: input, word_type, and examples. There are 7 instances of that class, one for each required word input. While the value of the variable "input" will be replaced by user's word input, the other two variables stay unchanged and are used during the word validation process (e.g. in printed statements).
-  - __Class Story__ is initiated with 2 instance variables: title and text. There are 8 instances of that class, one for each mad lib. 
+  - __Class Words__ is initiated with 3 instance variables: input, word_type, and examples. There are 7 instances of that class, one for each required word input. While the value of the variable "input" will be replaced by user's word input, the other two variables stay unchanged and are used during the word validation process (e.g. in printed statements, to signal to the user which word type is expected and to give examples of that word type).
+  - __Class Story__ is initiated with 2 instance variables: title and text. There are 8 instances of that class, one for each mad lib. A mad lib is chosen randomly each time the user submits 7 acceptable word inputs.  
 
-The use of these two classes allows for adding further word inputs and stories in a simple way and makes the code easily readable. 
+The use of these two classes allows for adding further word inputs and stories in a simple way and makes the code easily readable. It also contributes to the ease of passing around the data from each class, encouraging further development of this application. 
 
 
 ### The Surface Plane
@@ -268,10 +269,8 @@ Since the application runs in a terminal and the Code Institute's template clear
 
 ## Future Enhancements
 
-- An additional check could be added to prevent the user from submitting the same word more than once during a game.
-- For a more thorough search for the 'fl' key (functional label of a word, like "noun" or "adverb") in homographs, another if statement could be added inside the validate_word function to check another one or two possible 'fl' values. At the moment, up to 3 different 'fl' values are being imported from the dictionary for each word with multiple meanings and functions.
-- A more accurate process for validating plural and singular nouns would be helpful in supporting the educational aspect of the game. Nouns with irregular plural form are always validated correctly. However, ensuring that nouns with a regular plural form (e.g. "dog" - "dogs") are correctly classified as singular or plural is more challenging as there are multiple rules regarding how to create a plural noun, depending on its singular counterpart's ending, for example, or other aspects. The online dictionary does not seem to offer a way of making that distinction unambiguously. While there is a key containing inflections ('ins') with a nested key 'if' and its value being a fully spelled-out inflection, this particular value contains additionally an asterisk (*) if the word has more than one syllable. Therefore, a simple comparison of the submitted word to this value does not suffice to provide accurate validation and a more refined solution would need to be applied.
 - More stories could be added as further instances of the class Story to provide a wider range of topics and to keep users entertained for longer, also encouraging them to return to the application multiple times.
+- Further word inputs could be added (e.g. for longer stories) that either use the existing validation process or extend it if needed. 
 
 
 ## Testing
@@ -296,26 +295,26 @@ There are no notable bugs within the project. While I did encounter a few stubbo
 Several built-in Python libraries have been used in this project.
 
 #### os
-This library allowed me to clear the terminal (os.system and os.name) as well as restart the program (os.execl). Thanks to these functionalities the application is clearer and visually more pleasing to the user, and the game can be restarted from scratch without the user having to click the "Run program" again.
+This library allowed me to clear the terminal (os.system and os.name) as well as restart the program (os.execl). Thanks to these functionalities the application is clearer and visually more pleasing to the user, and the game can be restarted from scratch without the user having to click the "Run program" button again.
 
 #### sys
-This module was needed for the restart_program function (sys.executable) that allows the user to play the game multiple times with new inputs.
+This module was needed for the restart_program function (sys.executable) that allows the user to play the game multiple times with new inputs, without having to select the "Run program" button, thus being more user-friendly and supporting easeful interaction with the program.
 
 #### time
-This library was imported to utilize the time.sleep functionality needed after receiving the last valid word input, so that the user can see for a moment that the word they submitted has been accepted. After this delay of 1.5 seconds the terminal is cleared and a story with their inputs is printed to the terminal.
+This library was imported to utilize the time.sleep functionality needed after receiving the last valid word input, so that the user can see that the last word they submitted (verb) has been accepted. After this delay of 1.5 seconds the terminal is cleared and a story with the user's inputs is printed to the terminal. This reduces the need for unnecessary interactions or additional inputs from the user and therefore makes the game run more smoothly, providing optimal user experience.
 
 #### random
-This library allows for a random choice of a mad lib title and a matching text from the available ones, listed under available_titles and available_texts. If the user decides to play again while re-using their word inputs, these two variables (lists) get updated and another story can be chosen randomly from the updated range.
+This library allows for a random choice of a mad lib title and a matching text from the available ones, listed under available_titles and available_texts, adding to the element of surprise to the game. If the user decides to play again while re-using their word inputs, these two variables (available_titles and available_texts) get updated in order to avoid repetition, and another story can be chosen randomly from the updated range. Therefore, this library contributes in a significant way to supporting the fun/entertainment aspect of the application.
 
 #### requests
-This module (specifically the requests.get functionality) makes it possible to work with the dictionary API in the word input validation process by allowing to send HTTP requests to a specified URL. 
+This module (specifically the requests.get functionality) makes it possible to work with the dictionary API in the word input validation process by allowing to send HTTP requests to a specified URL. The dictionary API plays a vital role when checking the grammatical type of each submitted word, contributing to the educational aspect of the game.
 
 #### dotenv
-This library was used to load one specific environment variable - the API key - from the .env file, making it easy and convenient to manage sensitive information.
+This library was used to load one specific environment variable - the dictionary API key - from the .env file, making it easy and convenient to manage and protect this sensitive information, therefore protecting the integrity and security of the entire program. 
 
-An additional library was used for styling text in the terminal.
+An additional library was used for styling the text in the terminal.
 #### Rich
-This library allowed me to print rich text to the terminal, adding automatic justification to the left that prevents the occurrence of awkward word splits in longer texts. It also gave me the option of using colors in order to keep the terminal visually interesting and to send clear signals to the user (contrasting colors to signify that an input has been accepted or rejected etc.).
+This library allowed me to print rich text to the terminal, adding automatic justification to the left that prevents the occurrence of awkward word splits in longer texts. It also gave me the option of using colors in order to keep the terminal visually interesting, and to send clear signals to the user (contrasting colors to signify that an input has been accepted - sea green - or rejected - orange).
 
 
 ## Deployment
