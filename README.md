@@ -212,6 +212,10 @@ Whenever an input is accepted or rejected, a colored message is printed to the t
 
 ![Correct and incorrect inputs (example with nouns)](https://github.com/Agnieszka-21/madlibs/blob/main/assets/screenshots/mad_nouns_correct.png)
 
+Since 2 nouns and 2 adjectives are to be submitted by the user and the game is supposed to encourage the user to be creative with words, the program excludes identical inputs, preventing the user from submitting the same noun or the same adjective twice. Here is an example:
+
+![Prevent repetitions](https://github.com/Agnieszka-21/madlibs/blob/main/assets/screenshots/mad_repetition.png)
+
 If a word is identified as British (the dictionary is favoring US English so entries for words with British spelling provide only limited information), the user gets to see the following message:
 
 ![British spelling](https://github.com/Agnieszka-21/madlibs/blob/main/assets/screenshots/mad_british_to_amer.png)
