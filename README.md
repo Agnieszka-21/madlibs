@@ -352,6 +352,7 @@ The following tutorials, articles, documentation and media were used to create t
 - [This YouTube tutorial](https://www.youtube.com/watch?v=hpc5jyVpUpw) by VideoLab proved extremely helpful in understanding API and how to access and use the online dictionary in my program.
 - [This documentation](https://rich.readthedocs.io/en/stable/index.html) proved indespensible when working with the Rich library (text styling).
 - [The following article by Jake Witcher](https://dev.to/jakewitcher/using-env-files-for-environment-variables-in-python-applications-55a1) helped me understand how to use an .env file to safely store my API key for the online dictionary.
+- [This article](https://www.simplilearn.com/tutorials/python-tutorial/list-to-string-in-python#:~:text=To%20convert%20a%20list%20to%20a%20string%2C%20use%20Python%20List,and%20return%20it%20as%20output) from simplilearn.com helped me with list comprehension needed to validate plural nouns more accurately.
 
 
 ### Content
@@ -363,4 +364,4 @@ The following tutorials, articles, documentation and media were used to create t
 
 ## Acknowledgements
 
-I would like to express my sincere gratitude to my mentor, Matt Bodden, whose suggestions and practical advice helped me ensure that this project not only takes my understanding of Python to a higher level, but also encourages best practices that result in a positive experience for the user of this web application.
+I would like to express my sincere gratitude to my mentor, Matt Bodden, whose suggestions and practical advice helped me ensure that this project not only took my understanding of Python to a higher level, but also encouraged best practices that result in a positive experience for the user of this web application.
