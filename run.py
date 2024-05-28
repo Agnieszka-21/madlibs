@@ -280,7 +280,8 @@ def look_up_word():
                                 f"The noun {dict_word} has "
                                 "been accepted.", style="sea_green1")
                             console.print(valid_noun)
-                            words_accepted.append(dict_word)
+                            current_word.input = dict_word
+                            words_accepted.append(current_word.input)
                         elif "plural noun" in fl_avail:
                             console.print(Text(
                                 f"Your word is a plural noun.", style="orange3"
