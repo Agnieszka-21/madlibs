@@ -122,14 +122,16 @@ def exclude_repetitions():
     Prevents from accepting the same input twice.
     Used for nouns and adjectives
     """
-    if current_word.input == noun1.input:
+    if (current_word.word_type == "noun") and (
+            current_word.input == noun1.input):
         console.print(Text(
-            "You have already used this word. Let's try again..."),
+            "You have already used this word. Please submit a different one."),
             style="orange3")
         get_word_input()
-    elif current_word.input == adj1.input:
+    elif (current_word.word_type == "adjective") and (
+            current_word.input == adj1.input):
         console.print(Text(
-            "You have already used this word. Let's try again..."),
+            "You have already used this word. Please submit a different one."),
             style="orange3")
         get_word_input()
 
