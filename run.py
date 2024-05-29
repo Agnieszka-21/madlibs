@@ -120,9 +120,9 @@ def exclude_repetitions():
     Used for nouns and adjectives
     """
     # current_word == noun2???
-    if ((current_word.type == "noun") and (
+    if ((current_word == noun2) and (
         current_word.input == noun1.input)) or ((
-            current_word.type == "adjective") and (
+            current_word == adj2) and (
                     current_word.input == adj1.input)):
         console.print(Text(
             f"You have already used this {current_word.type}. "
@@ -182,7 +182,7 @@ def request_another_word():
     of the required word type
     """
     current_word.input = input(
-        f"Try again - submit your {current_word.type} "
+        f"Try again - please submit your {current_word.type} "
         f"{current_word.examples} here: ").upper().strip()
     
 
@@ -193,7 +193,7 @@ def get_and_check_another_input():
     """
     request_another_word()
     exclude_numbers()
-    #exclude_repetitions()
+    exclude_repetitions()
     look_up_word()
 
 
@@ -344,19 +344,12 @@ def alternative_spelling(word_checked):
         current_word.input = amer
         look_up_word()
     elif switch_to_amer == 'N':
-        current_word.input = input(
-            "Okay, please try a different word: "
-            ).upper().strip()
-        exclude_numbers()
-        look_up_word()
+        get_and_check_another_input()
     else:
         invalid_input = Text("Your input was invalid...",
                                 style="orange3")
         console.print(invalid_input)
-        current_word.input = input(
-            "Please submit a different word: ").upper().strip()
-        exclude_numbers()
-        look_up_word()
+        get_and_check_another_input()
 
 
 def validate_word(word_checked):
@@ -465,6 +458,23 @@ def look_up_word():
         exclude_numbers()
         look_up_word()
         return
+    
+
+def start_game():
+    """
+    Starts a game by printing the welcome message
+    and asking for and validating word inputs
+    """
+    welcome()
+    # A list of all required word inputs
+    words_needed = (noun1, noun2, noun_pl, adj1, adj2, adv, verb)
+    for word in words_needed:
+        get_word_input()
+        exclude_numbers()
+        look_up_word()
+
+if __name__ == "__main__":
+    start_game()
 
 
 class Story:
@@ -680,23 +690,15 @@ def play_again_or_not():
         how_to_play_again()
 
 
-def start_game():
+def print_story():
     """
-    Starts a game by printing the welcome message
-    and asking for word inputs
+    Prints a mad lib story with user's inputs to the terminal
+    and handles what happens next (end game or play again)
     """
-    welcome()
-    # A list of all required word inputs
-    words_needed = (noun1, noun2, noun_pl, adj1, adj2, adv, verb)
-    for word in words_needed:
-        get_word_input()
-        exclude_numbers()
-        look_up_word()
     sleep(1.5)
     clear_terminal()
     choose_story_randomly(available_titles, available_texts)
     play_again_or_not()
 
-
 if __name__ == "__main__":
-    start_game()
+    print_story()
