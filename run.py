@@ -505,21 +505,6 @@ def look_up_word():
         return
 
 
-def start_game():
-    """
-    Starts a game by printing the welcome message
-    and asking for word inputs
-    """
-    welcome()
-    # A list of all required word inputs
-    words_needed = (noun1, noun2, noun_pl, adj1, adj2, adv, verb)
-    for word in words_needed:
-        get_word_input()
-        exclude_numbers()
-        look_up_word()
-
-
-start_game()
 
 
 class Story:
@@ -743,7 +728,24 @@ def play_again_or_not():
         how_to_play_again()
 
 
-sleep(1.5)
-clear_terminal()
-choose_story_randomly(available_titles, available_texts)
-play_again_or_not()
+def start_game():
+    """
+    Starts a game by printing the welcome message
+    and asking for word inputs
+    """
+    welcome()
+    # A list of all required word inputs
+    words_needed = (noun1, noun2, noun_pl, adj1, adj2, adv, verb)
+    for word in words_needed:
+        get_word_input()
+        exclude_numbers()
+        look_up_word()
+    sleep(1.5)
+    clear_terminal()
+    choose_story_randomly(available_titles, available_texts)
+    play_again_or_not()
+
+
+if __name__ == "__main__":
+    start_game()
+
