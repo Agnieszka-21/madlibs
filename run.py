@@ -52,13 +52,12 @@ def welcome():
     """
     game_title = Text("\nWELCOME TO MAD LIBS GRAMMAR", style="bold sea_green1")
     welcome_text = Text()
-    welcome_text.append("\nHow to play: You will be asked "
-                        "to provide certain words (a noun, adjective "
-                        "etc.) that are then inserted into a randomly "
-                        "selected story. Simply type each word "
-                        "as prompted and press Enter to "
-                        "submit it. Afterwards, read the "
-                        "complete story. Have fun!")
+    welcome_text.append("\nHow to play: You will be asked to provide "
+                        "certain words (a noun, adjective etc.) that "
+                        "are then inserted into a randomly selected story. "
+                        "Simply type each word as prompted and press "
+                        "Enter to submit it. Afterwards, read "
+                        "the complete story. Have fun!")
     console.print(game_title)
     console.print(welcome_text)
 
@@ -136,11 +135,11 @@ def exclude_numbers():
     """
     try:
         int(current_word.input)
-        console.print("Sorry, numbers are not allowed.", style="orange3")
+        console.print(Text(
+            "Sorry, numbers are not allowed.", style="orange3"))
         current_word.input = input(
             f"Please submit a valid {current_word.type} "
             f"{current_word.examples}: ").upper().strip()
-        return
     except ValueError:
         pass
 
@@ -153,15 +152,15 @@ def word_found(dict_word, fl_avail):
     console.print(Text(
         f"Your word has been found under {dict_word} "
         f"and identified as: {fl_avail}"))
-    
+
 
 def word_accepted():
     """
     Informs user that their word input has been accepted
     """
     correct_word_type = Text(
-        f"Great, your {current_word.type} {current_word.input} has "
-        "been accepted.", style="sea_green1")
+        f"Great, your {current_word.type} {current_word.input} "
+        "has been accepted.", style="sea_green1")
     console.print(correct_word_type)
     words_accepted.append(current_word.input)
 
@@ -171,9 +170,10 @@ def incorrect_word_type():
     Informs user that their word has not been accepted
     because of incorrect grammatical type
     """
-    console.print("It looks like your word is not a(n) "
-                  f"{current_word.type}.", style="orange3")
-    
+    console.print(Text(
+        f"It looks like your word is not a(n) {current_word.type}.",
+        style="orange3"))
+
 
 def request_another_word():
     """
@@ -183,7 +183,7 @@ def request_another_word():
     current_word.input = input(
         f"Try again - please submit your {current_word.type} "
         f"{current_word.examples} here: ").upper().strip()
-    
+
 
 def get_and_check_another_input():
     """
@@ -206,18 +206,16 @@ def validate_nouns(fl_avail, dict_word):
         word_accepted()
     elif "noun" in fl_avail and (current_word.input != dict_word):
         console.print(Text(
-            "Your word is a noun but it seems to be "
-            "slightly different from the valid option "
-            f"{dict_word}. Therefore, we adjusted your "
-            "word accordingly."
+            "Your word is a noun but it seems to be slightly "
+            f"different from the valid option {dict_word}. "
+            "Therefore, we adjusted your word accordingly."
         ))
         current_word.input = dict_word
         word_accepted()
     elif "plural noun" in fl_avail:
         console.print(Text(
-            f"Your word is a plural noun. However, "
-            "a singular or uncountable noun is "
-            "required here.", style="orange3"
+            f"Your word is a plural noun. However, a singular or "
+            "uncountable noun is required here.", style="orange3"
         ))
         get_and_check_another_input()
     else:
@@ -242,10 +240,9 @@ def validate_plural_nouns(fl_avail, dict_word, word_checked):
             plural = ''.join([str(item) for item in pl])
             if current_word.input == plural.upper():
                 console.print(Text(
-                    "Your word has been found under "
-                    f"{dict_word} (plural "
-                    f"{plural.upper()}) "
-                    f"and identified as: {fl_avail}"))
+                    f"Your word has been found under {dict_word} "
+                    f"(plural {plural.upper()}) and "
+                    f"identified as: {fl_avail}"))
                 word_accepted()
             else:
                 console.print(
@@ -348,6 +345,10 @@ def valid_words_type(word_checked, fl_avail):
 
 
 def get_fl(word_checked):
+    """
+    Gets all available functional labels for the current
+    word and adds them to the list fl_avail
+    """
     fl_avail = [word_checked[0]['fl']]
 
     # Check for homographs - words with multiple labels
@@ -369,7 +370,11 @@ def get_fl(word_checked):
 
 
 def alternative_spelling(word_checked):
-    fl_avail = []
+    """
+    Handles word inputs with British spelling and offers
+    to swap the word for its American counterpart to enable
+    validation
+    """
     amer = word_checked[0]['cxs'][0]['cxtis'][0]['cxt'].upper()
     error_msg_uk = Text("We weren't able to check your word. "
                         "However...", style="orange3")
@@ -384,8 +389,8 @@ def alternative_spelling(word_checked):
     elif switch_to_amer == 'N':
         get_and_check_another_input()
     else:
-        invalid_input = Text("Your input was invalid...",
-                                style="orange3")
+        invalid_input = Text(
+            "Your input was invalid...", style="orange3")
         console.print(invalid_input)
         get_and_check_another_input()
 
@@ -410,27 +415,28 @@ def validate_word(word_checked):
         # If British spelling rather than American
         elif 'cxs' in word_checked[0] and 'British spelling' \
                 in word_checked[0]['cxs'][0]['cxl']:
+            fl_avail = []
             alternative_spelling(word_checked)
 
         # None of the above requirements was met when checking
         # the word - invalid word
         else:
-            console.print(Text("Oops, something went wrong.",
-                                style="orange3"))
+            console.print(Text(
+                "Oops, something went wrong.", style="orange3"))
             get_and_check_another_input()
 
     # Word not found in the dictionary (misspelled)
     except TypeError:
-        console.print(Text("Please check for typos...",
-                            style="orange3"))
+        console.print(Text(
+            "Please check for typos...", style="orange3"))
         get_and_check_another_input()
 
     # Word could not be validated (none of the required
     # details regarding its 'fl' could be accessed)
     except IndexError:
-        console.print(Text("Unfortunately, your input could not be "
-                            "validated (possibly not a word).",
-                            style="orange3"))
+        console.print(Text(
+            "Unfortunately, your input could not be validated "
+            "(possibly not a word).", style="orange3"))
         get_and_check_another_input()
 
 
@@ -468,7 +474,10 @@ def look_up_word():
                 clear_terminal()
                 restart_program()
             else:
-                print("Invalid input. We'll end the game now.")
+                console.print(Text(
+                    "Invalid input. We'll end the game now. "
+                    "Please come back later or click the orange"
+                    "RUN PROGRAM button above."))
                 console.print(Text(
                     "Thanks for playing MAD LIBS!", style="sea_green1"))
 
@@ -476,7 +485,7 @@ def look_up_word():
     except requests.exceptions.JSONDecodeError:
         console.print(Text("Something went wrong...", style="orange3"))
         get_and_check_another_input()
-    
+
 
 def start_game():
     """
@@ -490,6 +499,7 @@ def start_game():
         get_word_input()
         exclude_numbers()
         look_up_word()
+
 
 if __name__ == "__main__":
     start_game()
@@ -717,6 +727,7 @@ def print_story():
     clear_terminal()
     choose_story_randomly(available_titles, available_texts)
     play_again_or_not()
+
 
 if __name__ == "__main__":
     print_story()
