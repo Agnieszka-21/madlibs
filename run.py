@@ -163,6 +163,11 @@ def word_accepted():
     words_accepted.append(current_word.input)
 
 
+def incorrect_word_type():
+    console.print("It looks like your word is not a(n) "
+                  f"{current_word.word_type}.", style="orange3")
+
+
 def look_up_word():
     """
     Looks up each word input in the dictionary
@@ -229,6 +234,7 @@ def look_up_word():
                             "Okay, please try a different word: "
                             ).upper().strip()
                         exclude_numbers()
+                        exclude_repetitions()
                         look_up_word()
                     else:
                         invalid_input = Text("Your input was invalid...",
@@ -237,6 +243,7 @@ def look_up_word():
                         current_word.input = input(
                             "Please submit a different word: ").upper().strip()
                         exclude_numbers()
+                        exclude_repetitions()
                         look_up_word()
                     return
 
@@ -249,6 +256,7 @@ def look_up_word():
                         f"Please submit a valid {current_word.word_type} "
                         f"{current_word.examples}: ").upper().strip()
                     exclude_numbers()
+                    exclude_repetitions()
                     look_up_word()
                     return
 
@@ -297,12 +305,12 @@ def look_up_word():
                             exclude_numbers()
                             look_up_word()
                         else:
-                            console.print("It looks like your word is not a "
-                                          "noun.", style="orange3")
+                            incorrect_word_type()
                             current_word.input = input(
                                 f"Try again {current_word.examples}: "
                                 ).upper().strip()
                             exclude_numbers()
+                            exclude_repetitions()
                             look_up_word()
                     # Word type: plural noun
                     elif current_word.word_type == "plural noun":
@@ -340,17 +348,14 @@ def look_up_word():
                                 word_found(dict_word, fl_avail)
                                 word_accepted()
                             else:
-                                console.print(
-                                    "It looks like your word is not "
-                                    "a plural noun.", style="orange3")
+                                incorrect_word_type()
                                 current_word.input = input(
                                     f"Try again {current_word.examples}: "
                                 ).upper().strip()
                                 exclude_numbers()
                                 look_up_word()
                         else:
-                            console.print("It looks like your word is not a "
-                                          "plural noun.", style="orange3")
+                            incorrect_word_type()
                             current_word.input = input(
                                 f"Try again {current_word.examples}: "
                             ).upper().strip()
@@ -366,12 +371,12 @@ def look_up_word():
                             word_found(dict_word, fl_avail)
                             word_accepted()
                         else:
-                            console.print("It looks like your word is not an "
-                                          "adjective.", style="orange3")
+                            incorrect_word_type()
                             current_word.input = input(
                                 f"Try again {current_word.examples}: "
                                 ).upper().strip()
                             exclude_numbers()
+                            exclude_repetitions()
                             look_up_word()
                     # Word type: adverb
                     elif current_word.word_type == "adverb":
@@ -387,8 +392,7 @@ def look_up_word():
                                 "turned the adjective into an adverb, so..."))
                             word_accepted()
                         else:
-                            console.print("It looks like your word is not an "
-                                          "adverb.", style="orange3")
+                            incorrect_word_type()
                             current_word.input = input(
                                 f"Try again {current_word.examples}: "
                                 ).upper().strip()
@@ -400,8 +404,7 @@ def look_up_word():
                             word_found(dict_word, fl_avail)
                             word_accepted()
                         else:
-                            console.print("It looks like your word is not a "
-                                          "verb.", style="orange3")
+                            incorrect_word_type()
                             current_word.input = input(
                                 f"Try again {current_word.examples}: "
                                 ).upper().strip()
@@ -418,6 +421,7 @@ def look_up_word():
                     f"Enter your {current_word.word_type} "
                     f"{current_word.examples} here: ").upper().strip()
                 exclude_numbers()
+                exclude_repetitions()
                 look_up_word()
                 return
 
@@ -431,6 +435,7 @@ def look_up_word():
                     f"Please try again - enter your {current_word.word_type} "
                     f"{current_word.examples} here: ").upper().strip()
                 exclude_numbers()
+                exclude_repetitions()
                 look_up_word()
                 return
 
@@ -466,6 +471,7 @@ def look_up_word():
             f"Please submit a(n) {current_word.word_type} "
             f"{current_word.examples}: ").upper().strip()
         exclude_numbers()
+        exclude_repetitions()
         look_up_word()
         return
 
