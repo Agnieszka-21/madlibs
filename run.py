@@ -119,7 +119,6 @@ def exclude_repetitions():
     Prevents from accepting the same input twice.
     Used for nouns and adjectives
     """
-    # current_word == noun2???
     if ((current_word == noun2) and (
         current_word.input == noun1.input)) or ((
             current_word == adj2) and (
@@ -197,6 +196,126 @@ def get_and_check_another_input():
     look_up_word()
 
 
+def validate_nouns(fl_avail, dict_word):
+    """
+    Check whether the word meets specific criteria to be accepted
+    as a noun. If not, request another input
+    """
+    if "noun" in fl_avail and (current_word.input == dict_word):
+        word_found(dict_word, fl_avail)
+        word_accepted()
+    elif "noun" in fl_avail and (current_word.input != dict_word):
+        console.print(Text(
+            "Your word is a noun but it seems to be "
+            "slightly different from the valid option "
+            f"{dict_word}. Therefore, we adjusted your "
+            "word accordingly."
+        ))
+        current_word.input = dict_word
+        word_accepted()
+    elif "plural noun" in fl_avail:
+        console.print(Text(
+            f"Your word is a plural noun. However, "
+            "a singular or uncountable noun is "
+            "required here.", style="orange3"
+        ))
+        get_and_check_another_input()
+    else:
+        incorrect_word_type()
+        get_and_check_another_input()
+
+
+def validate_plural_nouns(fl_avail, dict_word, word_checked):
+    """
+    Check if the word meets specific criteria to be accepted
+    as a plural noun. If not, request another input
+    """
+    if "plural noun" in fl_avail:
+        word_found(dict_word, fl_avail)
+        word_accepted()
+    elif "noun" in fl_avail:
+        # Get index of the "noun" (ni) from fl_avail
+        ni = fl_avail.index("noun")
+        if 'ins' in word_checked[ni]:
+            # Get the value 'if' (inflection = plural)
+            pl = word_checked[ni]['ins'][0]['if'].split('*')
+            plural = ''.join([str(item) for item in pl])
+            if current_word.input == plural.upper():
+                console.print(Text(
+                    "Your word has been found under "
+                    f"{dict_word} (plural "
+                    f"{plural.upper()}) "
+                    f"and identified as: {fl_avail}"))
+                word_accepted()
+            else:
+                console.print(
+                    Text("Your word seems to be a singular noun."),
+                    style="orange3")
+                get_and_check_another_input()
+        elif (current_word.input != dict_word and
+                current_word.input.lower() in
+                word_checked[ni]['meta']['stems']):
+            word_found(dict_word, fl_avail)
+            word_accepted()
+        else:
+            incorrect_word_type()
+            get_and_check_another_input()
+    else:
+        incorrect_word_type()
+        get_and_check_another_input()
+
+
+def validate_adjectives(fl_avail, dict_word):
+    """
+    Check if the word meets specific criteria to be accepted
+    as an adjective. If not, request another input
+    """
+    if ("adjective" in fl_avail and (
+        current_word.input[-2:] != 'LY')) or (
+            "adjective" in fl_avail and (
+                current_word.input[-2:] == 'LY') and (
+                    current_word.input in adj_with_ly())):
+        word_found(dict_word, fl_avail)
+        word_accepted()
+    else:
+        incorrect_word_type()
+        get_and_check_another_input()
+
+
+def validate_adverbs(fl_avail, dict_word):
+    """
+    Check if the word meets specific criteria to be accepted
+    as an adverb. If not, request another input
+    """
+    if "adverb" in fl_avail:
+        word_found(dict_word, fl_avail)
+        word_accepted()
+    elif ("adjective" in fl_avail and (
+        current_word.input[-2:] == 'LY') and (
+            current_word.input not in adj_with_ly())):
+        word_found(dict_word, fl_avail)
+        console.print(Text(
+            "However, by adding the suffix -ly, you "
+            "turned the adjective into an adverb, so..."))
+        word_accepted()
+    else:
+        incorrect_word_type()
+        get_and_check_another_input()
+
+
+def validate_verbs(fl_avail, dict_word):
+    """
+    Check if the word meets specific criteria to be accepted
+    as a verb. If not, request another input
+    """
+    if "verb" in fl_avail:
+        word_found(dict_word, fl_avail)
+        word_accepted()
+    else:
+        incorrect_word_type()
+        get_and_check_another_input()
+
+
 def valid_words_type(word_checked, fl_avail):
     """
     Checks if the valid word has the correct grammatical
@@ -212,101 +331,20 @@ def valid_words_type(word_checked, fl_avail):
 
     # Check whether specific word type criteria have been met
     # Word type: noun
-    global current_word
     if current_word.type == "noun":
-        if "noun" in fl_avail and (current_word.input == dict_word):
-            word_found(dict_word, fl_avail)
-            word_accepted()
-        elif "noun" in fl_avail and (current_word.input != dict_word):
-            console.print(Text(
-                "Your word is a noun but it seems to be "
-                "slightly different from the valid option "
-                f"{dict_word}. Therefore, we adjusted your "
-                "word accordingly."
-            ))
-            current_word.input = dict_word
-            word_accepted()
-        elif "plural noun" in fl_avail:
-            console.print(Text(
-                f"Your word is a plural noun. However, "
-                "a singular or uncountable noun is "
-                "required here.", style="orange3"
-            ))
-            get_and_check_another_input()
-        else:
-            incorrect_word_type()
-            get_and_check_another_input()
+        validate_nouns(fl_avail, dict_word)
     # Word type: plural noun
     elif current_word.type == "plural noun":
-        if "plural noun" in fl_avail:
-            word_found(dict_word, fl_avail)
-            word_accepted()
-        elif "noun" in fl_avail:
-            # Get index of the "noun" (ni) from fl_avail
-            ni = fl_avail.index("noun")
-            if 'ins' in word_checked[ni]:
-                # Get the value 'if' (inflection = plural)
-                pl = word_checked[ni]['ins'][0]['if'].split('*')
-                plural = ''.join([str(item) for item in pl])
-                if current_word.input == plural.upper():
-                    console.print(Text(
-                        "Your word has been found under "
-                        f"{dict_word} (plural "
-                        f"{plural.upper()}) "
-                        f"and identified as: {fl_avail}"))
-                    word_accepted()
-                else:
-                    console.print(
-                        Text("Your word seems to be a singular noun."),
-                        style="orange3")
-                    get_and_check_another_input()
-            elif (current_word.input != dict_word and
-                  current_word.input.lower() in
-                  word_checked[ni]['meta']['stems']):
-                word_found(dict_word, fl_avail)
-                word_accepted()
-            else:
-                incorrect_word_type()
-                get_and_check_another_input()
-        else:
-            incorrect_word_type()
-            get_and_check_another_input()
+        validate_plural_nouns(fl_avail, dict_word, word_checked)
     # Word type: adjective
     elif current_word.type == "adjective":
-        if ("adjective" in fl_avail and (
-            current_word.input[-2:] != 'LY')) or (
-                "adjective" in fl_avail and (
-                    current_word.input[-2:] == 'LY') and (
-                        current_word.input in adj_with_ly())):
-            word_found(dict_word, fl_avail)
-            word_accepted()
-        else:
-            incorrect_word_type()
-            get_and_check_another_input()
+        validate_adjectives(fl_avail, dict_word)
     # Word type: adverb
     elif current_word.type == "adverb":
-        if "adverb" in fl_avail:
-            word_found(dict_word, fl_avail)
-            word_accepted()
-        elif ("adjective" in fl_avail and (
-            current_word.input[-2:] == 'LY') and (
-                current_word.input not in adj_with_ly())):
-            word_found(dict_word, fl_avail)
-            console.print(Text(
-                "However, by adding the suffix -ly, you "
-                "turned the adjective into an adverb, so..."))
-            word_accepted()
-        else:
-            incorrect_word_type()
-            get_and_check_another_input()
+        validate_adverbs(fl_avail, dict_word)
     # Word type: verb
     elif current_word.type == "verb":
-        if "verb" in fl_avail:
-            word_found(dict_word, fl_avail)
-            word_accepted()
-        else:
-            incorrect_word_type()
-            get_and_check_another_input()
+        validate_verbs(fl_avail, dict_word)
 
 
 def get_fl(word_checked):
@@ -379,23 +417,13 @@ def validate_word(word_checked):
         else:
             console.print(Text("Oops, something went wrong.",
                                 style="orange3"))
-            current_word.input = input(
-                f"Please submit a valid {current_word.type} "
-                f"{current_word.examples}: ").upper().strip()
-            exclude_numbers()
-            look_up_word()
-            return
+            get_and_check_another_input()
 
     # Word not found in the dictionary (misspelled)
     except TypeError:
-        console.print(Text("Please check for typos and try again...",
+        console.print(Text("Please check for typos...",
                             style="orange3"))
-        current_word.input = input(
-            f"Enter your {current_word.type} "
-            f"{current_word.examples} here: ").upper().strip()
-        exclude_numbers()
-        look_up_word()
-        return
+        get_and_check_another_input()
 
     # Word could not be validated (none of the required
     # details regarding its 'fl' could be accessed)
@@ -403,12 +431,7 @@ def validate_word(word_checked):
         console.print(Text("Unfortunately, your input could not be "
                             "validated (possibly not a word).",
                             style="orange3"))
-        current_word.input = input(
-            f"Please try again - enter your {current_word.type} "
-            f"{current_word.examples} here: ").upper().strip()
-        exclude_numbers()
-        look_up_word()
-        return
+        get_and_check_another_input()
 
 
 def look_up_word():
@@ -445,19 +468,14 @@ def look_up_word():
                 clear_terminal()
                 restart_program()
             else:
-                print("Invalid input.")
+                print("Invalid input. We'll end the game now.")
                 console.print(Text(
                     "Thanks for playing MAD LIBS!", style="sea_green1"))
 
     # When user presses Enter without submitting any input
     except requests.exceptions.JSONDecodeError:
         console.print(Text("Something went wrong...", style="orange3"))
-        current_word.input = input(
-            f"Please submit a(n) {current_word.type} "
-            f"{current_word.examples}: ").upper().strip()
-        exclude_numbers()
-        look_up_word()
-        return
+        get_and_check_another_input()
     
 
 def start_game():
