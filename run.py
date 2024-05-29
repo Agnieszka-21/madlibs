@@ -145,6 +145,24 @@ def exclude_numbers():
         pass
 
 
+def word_found(dict_word, fl_avail):
+    """
+    Prints a sentence informing user their word has been found
+    and confirms the entry's functional labels
+    """
+    console.print(Text(
+        f"Your word has been found under {dict_word} "
+        f"and identified as: {fl_avail}"))
+    
+
+def word_accepted():
+    correct_word_type = Text(
+        f"Great, your {current_word.word_type} {current_word.input} has "
+        "been accepted.", style="sea_green1")
+    console.print(correct_word_type)
+    words_accepted.append(current_word.input)
+
+
 def look_up_word():
     """
     Looks up each word input in the dictionary
@@ -253,14 +271,8 @@ def look_up_word():
                     if current_word.word_type == "noun":
                         if "noun" in fl_avail and (
                                 current_word.input == dict_word):
-                            console.print(Text(
-                                f"Your word has been found under {dict_word} "
-                                f"and identified as: {fl_avail}"))
-                            valid_noun = Text(
-                                f"Great, your noun {current_word.input} has "
-                                "been accepted.", style="sea_green1")
-                            console.print(valid_noun)
-                            words_accepted.append(current_word.input)
+                            word_found(dict_word, fl_avail)
+                            word_accepted()
                         elif "noun" in fl_avail and (
                                 current_word.input != dict_word):
                             console.print(Text(
@@ -295,14 +307,8 @@ def look_up_word():
                     # Word type: plural noun
                     elif current_word.word_type == "plural noun":
                         if "plural noun" in fl_avail:
-                            console.print(Text(
-                                f"Your word has been found under {dict_word} "
-                                f"and identified as: {fl_avail}"))
-                            valid_noun_pl = Text(
-                                f"Great, your plural noun {current_word.input}"
-                                " has been accepted.", style="sea_green1")
-                            console.print(valid_noun_pl)
-                            words_accepted.append(current_word.input)
+                            word_found(dict_word, fl_avail)
+                            word_accepted()
                         elif "noun" in fl_avail:
                             # Get index of the "noun" (ni) from fl_avail
                             ni = fl_avail.index("noun")
@@ -317,12 +323,7 @@ def look_up_word():
                                         f"{dict_word} (plural "
                                         f"{plural.upper()}) "
                                         f"and identified as: {fl_avail}"))
-                                    valid_noun_pl = Text(
-                                        "Great, your plural noun "
-                                        f"{current_word.input} has been "
-                                        "accepted.", style="sea_green1")
-                                    console.print(valid_noun_pl)
-                                    words_accepted.append(current_word.input)
+                                    word_accepted()
                                 else:
                                     console.print(
                                         Text("Your word seems to be a singular"
@@ -336,16 +337,8 @@ def look_up_word():
                             elif (current_word.input != dict_word and
                                     current_word.input.lower() in
                                     word_checked[ni]['meta']['stems']):
-                                console.print(Text(
-                                    "Your word has been found under "
-                                    f"{dict_word} and identified as: "
-                                    f"{fl_avail}"))
-                                valid_noun_pl = Text(
-                                    "Great, your plural noun "
-                                    f"{current_word.input} has been accepted.",
-                                    style="sea_green1")
-                                console.print(valid_noun_pl)
-                                words_accepted.append(current_word.input)
+                                word_found(dict_word, fl_avail)
+                                word_accepted()
                             else:
                                 console.print(
                                     "It looks like your word is not "
@@ -370,14 +363,8 @@ def look_up_word():
                                 "adjective" in fl_avail and (
                                     current_word.input[-2:] == 'LY') and (
                                         current_word.input in adj_with_ly())):
-                            console.print(Text(
-                                f"Your word has been found under {dict_word} "
-                                f"and identified as: {fl_avail}"))
-                            valid_adj = Text("Great, your adjective "
-                                             f"{current_word.input} has been "
-                                             "accepted.", style="sea_green1")
-                            console.print(valid_adj)
-                            words_accepted.append(current_word.input)
+                            word_found(dict_word, fl_avail)
+                            word_accepted()
                         else:
                             console.print("It looks like your word is not an "
                                           "adjective.", style="orange3")
@@ -389,27 +376,16 @@ def look_up_word():
                     # Word type: adverb
                     elif current_word.word_type == "adverb":
                         if "adverb" in fl_avail:
-                            console.print(Text(
-                                f"Your word has been found under {dict_word} "
-                                f"and identified as: {fl_avail}"))
-                            valid_adverb = Text(
-                                f"Great, your adverb {current_word.input} has "
-                                "been accepted.", style="sea_green1")
-                            console.print(valid_adverb)
-                            words_accepted.append(current_word.input)
+                            word_found(dict_word, fl_avail)
+                            word_accepted()
                         elif ("adjective" in fl_avail and (
                             current_word.input[-2:] == 'LY') and (
                                 current_word.input not in adj_with_ly())):
+                            word_found(dict_word, fl_avail)
                             console.print(Text(
-                                "Your word has been found under "
-                                f"{dict_word} and identified as: {fl_avail}."
                                 " However, by adding the suffix -ly, you "
                                 "turned the adjective into an adverb, so..."))
-                            valid_adverb = Text(
-                                f"Great, your adverb {current_word.input} has "
-                                "been accepted.", style="sea_green1")
-                            console.print(valid_adverb)
-                            words_accepted.append(current_word.input)
+                            word_accepted()
                         else:
                             console.print("It looks like your word is not an "
                                           "adverb.", style="orange3")
@@ -421,15 +397,8 @@ def look_up_word():
                     # Word type: verb
                     elif current_word.word_type == "verb":
                         if "verb" in fl_avail:
-                            console.print(Text(
-                                "Your word has been found under "
-                                f"{dict_word} and identified as: "
-                                f"{fl_avail}"))
-                            valid_verb = Text(
-                                f"Great, your verb {current_word.input} has "
-                                "been accepted.", style="sea_green1")
-                            console.print(valid_verb)
-                            words_accepted.append(current_word.input)
+                            word_found(dict_word, fl_avail)
+                            word_accepted()
                         else:
                             console.print("It looks like your word is not a "
                                           "verb.", style="orange3")
