@@ -183,6 +183,19 @@ def request_another_word():
     current_word.input = input(
         f"Try again - submit your {current_word.word_type} "
         f"{current_word.examples} here: ").upper().strip()
+    
+
+def check_another_input():
+    exclude_numbers()
+    exclude_repetitions()
+    look_up_word()
+
+
+def get_and_check_another_input():
+    request_another_word()
+    exclude_numbers()
+    exclude_repetitions()
+    look_up_word()
 
 
 def look_up_word():
@@ -250,18 +263,14 @@ def look_up_word():
                         current_word.input = input(
                             "Okay, please try a different word: "
                             ).upper().strip()
-                        exclude_numbers()
-                        exclude_repetitions()
-                        look_up_word()
+                        check_another_input()
                     else:
                         invalid_input = Text("Your input was invalid...",
                                              style="orange3")
                         console.print(invalid_input)
                         current_word.input = input(
                             "Please submit a different word: ").upper().strip()
-                        exclude_numbers()
-                        exclude_repetitions()
-                        look_up_word()
+                        check_another_input()
                     return
 
                 # None of the above requirements was met when checking
@@ -313,16 +322,10 @@ def look_up_word():
                                 "a singular or uncountable noun is "
                                 "required here.", style="orange3"
                             ))
-                            request_another_word()
-                            exclude_numbers()
-                            exclude_repetitions()
-                            look_up_word()
+                            get_and_check_another_input()
                         else:
                             incorrect_word_type()
-                            request_another_word()
-                            exclude_numbers()
-                            exclude_repetitions()
-                            look_up_word()
+                            get_and_check_another_input()
                     # Word type: plural noun
                     elif current_word.word_type == "plural noun":
                         if "plural noun" in fl_avail:
@@ -347,9 +350,7 @@ def look_up_word():
                                     console.print(
                                         Text("Your word seems to be a singular"
                                              " noun."), style="orange3")
-                                    request_another_word()
-                                    exclude_numbers()
-                                    look_up_word()
+                                    get_and_check_another_input()
                             elif (current_word.input != dict_word and
                                     current_word.input.lower() in
                                     word_checked[ni]['meta']['stems']):
@@ -357,14 +358,10 @@ def look_up_word():
                                 word_accepted()
                             else:
                                 incorrect_word_type()
-                                request_another_word()
-                                exclude_numbers()
-                                look_up_word()
+                                get_and_check_another_input()
                         else:
                             incorrect_word_type()
-                            request_another_word()
-                            exclude_numbers()
-                            look_up_word()
+                            get_and_check_another_input()
                     # Word type: adjective
                     elif current_word.word_type == "adjective":
                         if ("adjective" in fl_avail and (
@@ -376,10 +373,7 @@ def look_up_word():
                             word_accepted()
                         else:
                             incorrect_word_type()
-                            request_another_word()
-                            exclude_numbers()
-                            exclude_repetitions()
-                            look_up_word()
+                            get_and_check_another_input()
                     # Word type: adverb
                     elif current_word.word_type == "adverb":
                         if "adverb" in fl_avail:
@@ -395,9 +389,7 @@ def look_up_word():
                             word_accepted()
                         else:
                             incorrect_word_type()
-                            request_another_word()
-                            exclude_numbers()
-                            look_up_word()
+                            get_and_check_another_input()
                     # Word type: verb
                     elif current_word.word_type == "verb":
                         if "verb" in fl_avail:
@@ -405,9 +397,7 @@ def look_up_word():
                             word_accepted()
                         else:
                             incorrect_word_type()
-                            request_another_word()
-                            exclude_numbers()
-                            look_up_word()
+                            get_and_check_another_input()
 
                 valid_words_type()
 
