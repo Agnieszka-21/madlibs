@@ -25,9 +25,6 @@ console = Console()
 # A list that grows with each valid word input from user
 words_accepted = []
 
-# Current word input being looked up and validated
-current_word = None
-
 
 # Code based on this article:
 # https://www.geeksforgeeks.org/clear-screen-python/
@@ -677,6 +674,42 @@ def reuse_words():
             console.print(Text(end_game, style="bold sea_green1"))
 
 
+def how_to_play_again():
+    """
+    Works only if the user chooses to play again. Gives the user
+    2 options regarding how to play a new game.
+    """
+    while True:
+        try:
+            new_game_options = ["A", "B"]
+            new_game_input = input(
+                "\nIf you would like to re-use your words with a "
+                "different story, type A and press Enter. If you'd "
+                "like to start a brand new game, type B and press "
+                "Enter: "
+                ).upper().strip()
+            test_new = new_game_input.isalpha()
+            if test_new is False:
+                raise ValueError
+            if new_game_input in new_game_options:
+                break
+            else:
+                console.print(Text("Invalid input. Let's try one more "
+                                    "time..."), style="orange3")
+                how_to_play_again()
+                return
+        except ValueError:
+            console.print(Text("Your input is invalid. Let's try "
+                                "again..."), style="orange3")
+            how_to_play_again()
+            return
+    if new_game_input == "B":
+        clear_terminal()
+        restart_program()
+    else:
+        reuse_words()
+
+
 def play_again_or_not():
     """
     Asks the user whether they would like to play again
@@ -706,44 +739,8 @@ def play_again_or_not():
     if play_again_input == "N":
         end_game = "\nOkay, thanks for playing MAD LIBS!"
         console.print(Text(end_game, style="bold sea_green1"))
-
-    def how_to_play_again():
-        """
-        Works only if the user chooses to play again. Gives the user
-        2 options regarding how to play a new game.
-        """
-        if play_again_input == "Y":
-            while True:
-                try:
-                    new_game_options = ["A", "B"]
-                    new_game_input = input(
-                        "\nIf you would like to re-use your words with a "
-                        "different story, type A and press Enter. If you'd "
-                        "like to start a brand new game, type B and press "
-                        "Enter: "
-                        ).upper().strip()
-                    test_new = new_game_input.isalpha()
-                    if test_new is False:
-                        raise ValueError
-                    if new_game_input in new_game_options:
-                        break
-                    else:
-                        console.print(Text("Invalid input. Let's try one more "
-                                           "time..."), style="orange3")
-                        how_to_play_again()
-                        return
-                except ValueError:
-                    console.print(Text("Your input is invalid. Let's try "
-                                       "again..."), style="orange3")
-                    how_to_play_again()
-                    return
-            if new_game_input == "B":
-                clear_terminal()
-                restart_program()
-            elif new_game_input == "A":
-                reuse_words()
-
-    how_to_play_again()
+    else:
+        how_to_play_again()
 
 
 sleep(1.5)
