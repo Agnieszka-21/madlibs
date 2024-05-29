@@ -68,9 +68,9 @@ class Words:
     Required word inputs from the user, their grammatical types
     and examples
     """
-    def __init__(self, input, word_type, examples):
+    def __init__(self, input, type, examples):
         self.input = input
-        self.word_type = word_type
+        self.type = type
         self.examples = examples
 
 
@@ -119,12 +119,13 @@ def exclude_repetitions():
     Prevents from accepting the same input twice.
     Used for nouns and adjectives
     """
-    if ((current_word.word_type == "noun") and (
+    # current_word == noun2???
+    if ((current_word.type == "noun") and (
         current_word.input == noun1.input)) or ((
-            current_word.word_type == "adjective") and (
+            current_word.type == "adjective") and (
                     current_word.input == adj1.input)):
         console.print(Text(
-            f"You have already used this {current_word.word_type}. "
+            f"You have already used this {current_word.type}. "
             "Please submit a different one."), style="orange3")
         get_word_input()
 
@@ -138,7 +139,7 @@ def exclude_numbers():
         int(current_word.input)
         console.print("Sorry, numbers are not allowed.", style="orange3")
         current_word.input = input(
-            f"Please submit a valid {current_word.word_type} "
+            f"Please submit a valid {current_word.type} "
             f"{current_word.examples}: ").upper().strip()
         return
     except ValueError:
@@ -160,7 +161,7 @@ def word_accepted():
     Informs user that their word input has been accepted
     """
     correct_word_type = Text(
-        f"Great, your {current_word.word_type} {current_word.input} has "
+        f"Great, your {current_word.type} {current_word.input} has "
         "been accepted.", style="sea_green1")
     console.print(correct_word_type)
     words_accepted.append(current_word.input)
@@ -172,7 +173,7 @@ def incorrect_word_type():
     because of incorrect grammatical type
     """
     console.print("It looks like your word is not a(n) "
-                  f"{current_word.word_type}.", style="orange3")
+                  f"{current_word.type}.", style="orange3")
     
 
 def request_another_word():
@@ -181,7 +182,7 @@ def request_another_word():
     of the required word type
     """
     current_word.input = input(
-        f"Try again - submit your {current_word.word_type} "
+        f"Try again - submit your {current_word.type} "
         f"{current_word.examples} here: ").upper().strip()
     
 
@@ -192,7 +193,7 @@ def get_and_check_another_input():
     """
     request_another_word()
     exclude_numbers()
-    exclude_repetitions()
+    #exclude_repetitions()
     look_up_word()
 
 
@@ -212,13 +213,11 @@ def valid_words_type(word_checked, fl_avail):
     # Check whether specific word type criteria have been met
     # Word type: noun
     global current_word
-    if current_word.word_type == "noun":
-        if "noun" in fl_avail and (
-                current_word.input == dict_word):
+    if current_word.type == "noun":
+        if "noun" in fl_avail and (current_word.input == dict_word):
             word_found(dict_word, fl_avail)
             word_accepted()
-        elif "noun" in fl_avail and (
-                current_word.input != dict_word):
+        elif "noun" in fl_avail and (current_word.input != dict_word):
             console.print(Text(
                 "Your word is a noun but it seems to be "
                 "slightly different from the valid option "
@@ -238,7 +237,7 @@ def valid_words_type(word_checked, fl_avail):
             incorrect_word_type()
             get_and_check_another_input()
     # Word type: plural noun
-    elif current_word.word_type == "plural noun":
+    elif current_word.type == "plural noun":
         if "plural noun" in fl_avail:
             word_found(dict_word, fl_avail)
             word_accepted()
@@ -247,8 +246,7 @@ def valid_words_type(word_checked, fl_avail):
             ni = fl_avail.index("noun")
             if 'ins' in word_checked[ni]:
                 # Get the value 'if' (inflection = plural)
-                pl = word_checked[ni]['ins'][0]['if']\
-                    .split('*')
+                pl = word_checked[ni]['ins'][0]['if'].split('*')
                 plural = ''.join([str(item) for item in pl])
                 if current_word.input == plural.upper():
                     console.print(Text(
@@ -259,12 +257,12 @@ def valid_words_type(word_checked, fl_avail):
                     word_accepted()
                 else:
                     console.print(
-                        Text("Your word seems to be a singular"
-                                " noun."), style="orange3")
+                        Text("Your word seems to be a singular noun."),
+                        style="orange3")
                     get_and_check_another_input()
             elif (current_word.input != dict_word and
-                    current_word.input.lower() in
-                    word_checked[ni]['meta']['stems']):
+                  current_word.input.lower() in
+                  word_checked[ni]['meta']['stems']):
                 word_found(dict_word, fl_avail)
                 word_accepted()
             else:
@@ -274,7 +272,7 @@ def valid_words_type(word_checked, fl_avail):
             incorrect_word_type()
             get_and_check_another_input()
     # Word type: adjective
-    elif current_word.word_type == "adjective":
+    elif current_word.type == "adjective":
         if ("adjective" in fl_avail and (
             current_word.input[-2:] != 'LY')) or (
                 "adjective" in fl_avail and (
@@ -286,7 +284,7 @@ def valid_words_type(word_checked, fl_avail):
             incorrect_word_type()
             get_and_check_another_input()
     # Word type: adverb
-    elif current_word.word_type == "adverb":
+    elif current_word.type == "adverb":
         if "adverb" in fl_avail:
             word_found(dict_word, fl_avail)
             word_accepted()
@@ -302,7 +300,7 @@ def valid_words_type(word_checked, fl_avail):
             incorrect_word_type()
             get_and_check_another_input()
     # Word type: verb
-    elif current_word.word_type == "verb":
+    elif current_word.type == "verb":
         if "verb" in fl_avail:
             word_found(dict_word, fl_avail)
             word_accepted()
@@ -389,7 +387,7 @@ def validate_word(word_checked):
             console.print(Text("Oops, something went wrong.",
                                 style="orange3"))
             current_word.input = input(
-                f"Please submit a valid {current_word.word_type} "
+                f"Please submit a valid {current_word.type} "
                 f"{current_word.examples}: ").upper().strip()
             exclude_numbers()
             look_up_word()
@@ -400,7 +398,7 @@ def validate_word(word_checked):
         console.print(Text("Please check for typos and try again...",
                             style="orange3"))
         current_word.input = input(
-            f"Enter your {current_word.word_type} "
+            f"Enter your {current_word.type} "
             f"{current_word.examples} here: ").upper().strip()
         exclude_numbers()
         look_up_word()
@@ -413,7 +411,7 @@ def validate_word(word_checked):
                             "validated (possibly not a word).",
                             style="orange3"))
         current_word.input = input(
-            f"Please try again - enter your {current_word.word_type} "
+            f"Please try again - enter your {current_word.type} "
             f"{current_word.examples} here: ").upper().strip()
         exclude_numbers()
         look_up_word()
@@ -462,7 +460,7 @@ def look_up_word():
     except requests.exceptions.JSONDecodeError:
         console.print(Text("Something went wrong...", style="orange3"))
         current_word.input = input(
-            f"Please submit a(n) {current_word.word_type} "
+            f"Please submit a(n) {current_word.type} "
             f"{current_word.examples}: ").upper().strip()
         exclude_numbers()
         look_up_word()
