@@ -119,17 +119,13 @@ def exclude_repetitions():
     Prevents from accepting the same input twice.
     Used for nouns and adjectives
     """
-    if (current_word.word_type == "noun") and (
-            current_word.input == noun1.input):
+    if ((current_word.word_type == "noun") and (
+        current_word.input == noun1.input)) or ((
+            current_word.word_type == "adjective") and (
+                    current_word.input == adj1.input)):
         console.print(Text(
-            "You have already used this word. Please submit a different one."),
-            style="orange3")
-        get_word_input()
-    elif (current_word.word_type == "adjective") and (
-            current_word.input == adj1.input):
-        console.print(Text(
-            "You have already used this word. Please submit a different one."),
-            style="orange3")
+            f"You have already used this {current_word.word_type}. "
+            "Please submit a different one."), style="orange3")
         get_word_input()
 
 
@@ -678,10 +674,10 @@ def how_to_play_again():
                 break
             else:
                 console.print(Text("Invalid input. Let's try one more "
-                                    "time..."), style="orange3")
+                                   "time..."), style="orange3")
         except ValueError:
             console.print(Text("Your input is invalid. Let's try "
-                                "again..."), style="orange3")
+                               "again..."), style="orange3")
     if new_game_input == "B":
         clear_terminal()
         restart_program()
@@ -738,4 +734,3 @@ def start_game():
 
 if __name__ == "__main__":
     start_game()
-
