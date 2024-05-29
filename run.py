@@ -185,15 +185,6 @@ def request_another_word():
         f"{current_word.examples} here: ").upper().strip()
     
 
-def check_another_input():
-    """
-    Runs 3 functions that validate word input
-    """
-    exclude_numbers()
-    exclude_repetitions()
-    look_up_word()
-
-
 def get_and_check_another_input():
     """
     Runs 4 functions that request and validate a new word input
@@ -320,6 +311,56 @@ def valid_words_type(word_checked, fl_avail):
             get_and_check_another_input()
 
 
+def get_fl(word_checked):
+    fl_avail = [word_checked[0]['fl']]
+
+    # Check for homographs - words with multiple labels
+    if len(word_checked) > 1 and (
+        'hom' in word_checked[1]) and (
+            'fl' in word_checked[1]):
+        fl_avail.append(word_checked[1]['fl'])
+
+        if len(word_checked) > 2 and (
+            'hom' in word_checked[2]) and (
+                'fl' in word_checked[2]):
+            fl_avail.append(word_checked[2]['fl'])
+
+            if len(word_checked) > 3 and (
+                'hom' in word_checked[3]) and (
+                    'fl' in word_checked[3]):
+                fl_avail.append(word_checked[3]['fl'])
+    valid_words_type(word_checked, fl_avail)
+
+
+def alternative_spelling(word_checked):
+    fl_avail = []
+    amer = word_checked[0]['cxs'][0]['cxtis'][0]['cxt'].upper()
+    error_msg_uk = Text("We weren't able to check your word. "
+                        "However...", style="orange3")
+    console.print(error_msg_uk)
+    switch_to_amer = input(
+        "There seems to be a similar word with US spelling. "
+        f"\nWould you like to try {amer} instead? "
+        "(Y/N) ").upper().strip()
+    if switch_to_amer == 'Y':
+        current_word.input = amer
+        look_up_word()
+    elif switch_to_amer == 'N':
+        current_word.input = input(
+            "Okay, please try a different word: "
+            ).upper().strip()
+        exclude_numbers()
+        look_up_word()
+    else:
+        invalid_input = Text("Your input was invalid...",
+                                style="orange3")
+        console.print(invalid_input)
+        current_word.input = input(
+            "Please submit a different word: ").upper().strip()
+        exclude_numbers()
+        look_up_word()
+
+
 def validate_word(word_checked):
     """
     Makes sure that user input is a valid word and adds
@@ -329,24 +370,7 @@ def validate_word(word_checked):
     try:
         # Aiming to access 'fl' of the given word (e.g. noun, verb)
         if 'fl' in word_checked[0]:
-            fl_avail = [word_checked[0]['fl']]
-
-            # Check for homographs - words with multiple labels
-            if len(word_checked) > 1 and (
-                'hom' in word_checked[1]) and (
-                    'fl' in word_checked[1]):
-                fl_avail.append(word_checked[1]['fl'])
-
-                if len(word_checked) > 2 and (
-                    'hom' in word_checked[2]) and (
-                        'fl' in word_checked[2]):
-                    fl_avail.append(word_checked[2]['fl'])
-
-                    if len(word_checked) > 3 and (
-                        'hom' in word_checked[3]) and (
-                            'fl' in word_checked[3]):
-                        fl_avail.append(word_checked[3]['fl'])
-            valid_words_type(word_checked, fl_avail)
+            get_fl(word_checked)
 
         # If such a label is not found (usually for plural nouns)
         elif 'cxs' in word_checked[0] and \
@@ -357,33 +381,7 @@ def validate_word(word_checked):
         # If British spelling rather than American
         elif 'cxs' in word_checked[0] and 'British spelling' \
                 in word_checked[0]['cxs'][0]['cxl']:
-            fl_avail = []
-            amer = word_checked[0]['cxs'][0]['cxtis'][0]['cxt'].upper()
-            error_msg_uk = Text("We weren't able to check your word. "
-                                "However...", style="orange3")
-            console.print(error_msg_uk)
-            switch_to_amer = input(
-                "There seems to be a similar word with US spelling. "
-                f"\nWould you like to try {amer} instead? "
-                "(Y/N) ").upper().strip()
-            if switch_to_amer == 'Y':
-                current_word.input = amer
-                look_up_word()
-                valid_words_type(word_checked, fl_avail)
-            elif switch_to_amer == 'N':
-                current_word.input = input(
-                    "Okay, please try a different word: "
-                    ).upper().strip()
-                check_another_input()
-                valid_words_type(word_checked, fl_avail)
-            else:
-                invalid_input = Text("Your input was invalid...",
-                                        style="orange3")
-                console.print(invalid_input)
-                current_word.input = input(
-                    "Please submit a different word: ").upper().strip()
-                check_another_input()
-            return
+            alternative_spelling(word_checked)
 
         # None of the above requirements was met when checking
         # the word - invalid word
