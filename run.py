@@ -156,6 +156,9 @@ def word_found(dict_word, fl_avail):
     
 
 def word_accepted():
+    """
+    Informs user that their word input has been accepted
+    """
     correct_word_type = Text(
         f"Great, your {current_word.word_type} {current_word.input} has "
         "been accepted.", style="sea_green1")
@@ -164,8 +167,22 @@ def word_accepted():
 
 
 def incorrect_word_type():
+    """
+    Informs user that their word has not been accepted
+    because of incorrect grammatical type
+    """
     console.print("It looks like your word is not a(n) "
                   f"{current_word.word_type}.", style="orange3")
+    
+
+def request_another_word():
+    """
+    Asks user to submit another word input. Gives examples
+    of the required word type
+    """
+    current_word.input = input(
+        f"Try again - submit your {current_word.word_type} "
+        f"{current_word.examples} here: ").upper().strip()
 
 
 def look_up_word():
@@ -256,7 +273,6 @@ def look_up_word():
                         f"Please submit a valid {current_word.word_type} "
                         f"{current_word.examples}: ").upper().strip()
                     exclude_numbers()
-                    exclude_repetitions()
                     look_up_word()
                     return
 
@@ -289,26 +305,21 @@ def look_up_word():
                                 f"{dict_word}. Therefore, we adjusted your "
                                 "word accordingly."
                             ))
-                            valid_noun = Text(
-                                f"The noun {dict_word} has "
-                                "been accepted.", style="sea_green1")
-                            console.print(valid_noun)
                             current_word.input = dict_word
-                            words_accepted.append(current_word.input)
+                            word_accepted()
                         elif "plural noun" in fl_avail:
                             console.print(Text(
-                                f"Your word is a plural noun.", style="orange3"
+                                f"Your word is a plural noun. However, "
+                                "a singular or uncountable noun is "
+                                "required here.", style="orange3"
                             ))
-                            current_word.input = input(
-                                "Please submit a singular noun instead "
-                                f"{current_word.examples}: ").upper().strip()
+                            request_another_word()
                             exclude_numbers()
+                            exclude_repetitions()
                             look_up_word()
                         else:
                             incorrect_word_type()
-                            current_word.input = input(
-                                f"Try again {current_word.examples}: "
-                                ).upper().strip()
+                            request_another_word()
                             exclude_numbers()
                             exclude_repetitions()
                             look_up_word()
@@ -336,10 +347,7 @@ def look_up_word():
                                     console.print(
                                         Text("Your word seems to be a singular"
                                              " noun."), style="orange3")
-                                    current_word.input = input(
-                                        "Please submit a plural noun "
-                                        f"{current_word.examples}: "
-                                        ).upper().strip()
+                                    request_another_word()
                                     exclude_numbers()
                                     look_up_word()
                             elif (current_word.input != dict_word and
@@ -349,16 +357,12 @@ def look_up_word():
                                 word_accepted()
                             else:
                                 incorrect_word_type()
-                                current_word.input = input(
-                                    f"Try again {current_word.examples}: "
-                                ).upper().strip()
+                                request_another_word()
                                 exclude_numbers()
                                 look_up_word()
                         else:
                             incorrect_word_type()
-                            current_word.input = input(
-                                f"Try again {current_word.examples}: "
-                            ).upper().strip()
+                            request_another_word()
                             exclude_numbers()
                             look_up_word()
                     # Word type: adjective
@@ -372,9 +376,7 @@ def look_up_word():
                             word_accepted()
                         else:
                             incorrect_word_type()
-                            current_word.input = input(
-                                f"Try again {current_word.examples}: "
-                                ).upper().strip()
+                            request_another_word()
                             exclude_numbers()
                             exclude_repetitions()
                             look_up_word()
@@ -393,9 +395,7 @@ def look_up_word():
                             word_accepted()
                         else:
                             incorrect_word_type()
-                            current_word.input = input(
-                                f"Try again {current_word.examples}: "
-                                ).upper().strip()
+                            request_another_word()
                             exclude_numbers()
                             look_up_word()
                     # Word type: verb
@@ -405,9 +405,7 @@ def look_up_word():
                             word_accepted()
                         else:
                             incorrect_word_type()
-                            current_word.input = input(
-                                f"Try again {current_word.examples}: "
-                                ).upper().strip()
+                            request_another_word()
                             exclude_numbers()
                             look_up_word()
 
@@ -421,7 +419,6 @@ def look_up_word():
                     f"Enter your {current_word.word_type} "
                     f"{current_word.examples} here: ").upper().strip()
                 exclude_numbers()
-                exclude_repetitions()
                 look_up_word()
                 return
 
@@ -435,7 +432,6 @@ def look_up_word():
                     f"Please try again - enter your {current_word.word_type} "
                     f"{current_word.examples} here: ").upper().strip()
                 exclude_numbers()
-                exclude_repetitions()
                 look_up_word()
                 return
 
@@ -471,7 +467,6 @@ def look_up_word():
             f"Please submit a(n) {current_word.word_type} "
             f"{current_word.examples}: ").upper().strip()
         exclude_numbers()
-        exclude_repetitions()
         look_up_word()
         return
 
