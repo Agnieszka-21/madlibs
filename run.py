@@ -505,8 +505,6 @@ def look_up_word():
         return
 
 
-
-
 class Story:
     """
     A mad lib story with blanks
@@ -681,13 +679,9 @@ def how_to_play_again():
             else:
                 console.print(Text("Invalid input. Let's try one more "
                                     "time..."), style="orange3")
-                how_to_play_again()
-                return
         except ValueError:
             console.print(Text("Your input is invalid. Let's try "
                                 "again..."), style="orange3")
-            how_to_play_again()
-            return
     if new_game_input == "B":
         clear_terminal()
         restart_program()
@@ -714,13 +708,9 @@ def play_again_or_not():
                 console.print(Text(
                     "Invalid input. Let's try one more time..."),
                     style="orange3")
-                play_again_or_not()
-                return
         except ValueError:
             console.print(Text("Your input is invalid. Let's try "
                                "again..."), style="orange3")
-            play_again_or_not()
-            return
     if play_again_input == "N":
         end_game = "\nOkay, thanks for playing MAD LIBS!"
         console.print(Text(end_game, style="bold sea_green1"))
