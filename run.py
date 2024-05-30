@@ -327,19 +327,14 @@ def valid_words_type(word_checked, fl_avail):
         dict_word = word_checked[0]['meta']['id'].upper()
 
     # Check whether specific word type criteria have been met
-    # Word type: noun
     if current_word.type == "noun":
         validate_nouns(fl_avail, dict_word)
-    # Word type: plural noun
     elif current_word.type == "plural noun":
         validate_plural_nouns(fl_avail, dict_word, word_checked)
-    # Word type: adjective
     elif current_word.type == "adjective":
         validate_adjectives(fl_avail, dict_word)
-    # Word type: adverb
     elif current_word.type == "adverb":
         validate_adverbs(fl_avail, dict_word)
-    # Word type: verb
     elif current_word.type == "verb":
         validate_verbs(fl_avail, dict_word)
 
@@ -477,7 +472,7 @@ def look_up_word():
                 console.print(Text(
                     "Invalid input. We'll end the game now. "
                     "Please come back later or click the orange"
-                    "RUN PROGRAM button above."))
+                    "RUN PROGRAM button above to try again."))
                 console.print(Text(
                     "Thanks for playing MAD LIBS!", style="sea_green1"))
 

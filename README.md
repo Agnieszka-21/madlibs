@@ -45,6 +45,7 @@ The game utilizes the Code Institute's template that generates a "terminal" onto
   - [Future Enhancements](#future-enhancements)
   - [Testing](#testing)
     - [Testing Overview](#testing-overview)
+    - [Manual Testing](#manual-testing)
     - [Validator Testing](#validator-testing)
     - [Notable Bugs](#notable-bugs)
   - [Libraries Utilized](#libraries-utilized)
@@ -56,6 +57,7 @@ The game utilizes the Code Institute's template that generates a "terminal" onto
       - [dotenv](#dotenv)
       - [Rich](#rich)
   - [Deployment](#deployment)
+  - [Cloning and forking the repository](#cloning-and-forking-the-repository)
   - [Credits](#credits)
     - [Code](#code)
     - [Content](#content)
@@ -140,21 +142,21 @@ Since getting 7 valid word inputs from the user (2 nouns, 1 plural noun, 2 adjec
 - Request a word input from the user, specifying which grammatical type is needed (e.g. a noun).
 - When getting input for noun2 or adj2, make sure the user is submitting a new word (noun2 cannot be the same as noun1, and adj2 cannot be the same as adj1). If the user tries to submit the same noun or adjective twice, inform them that they have already used that word and request a different input (function exclude_repetitions).
 - Make sure the input is not a number (integer) using the function exclude_numbers.
- - If the input is a number: inform the user that numbers are not allowed and request another input instead, adding examples of the required word type for clarity. Restart the valiation process.
- - If the input is not a number, simply move on to the next step.
+   - If the input is a number: inform the user that numbers are not allowed and request another input instead, adding examples of the required word type for clarity. Restart the validation process.
+   - If the input is not a number, simply move on to the next step.
 - Via API, try to establish a connection with the online dictionary (Merriam-Webster Collegiate Dictionary), and look up the word submitted by the user (function look_up_word).
  - Possible errors and how to handle them:
    - __ConnectionError:__ the online dictionary could not be accessed. Apologize for the issue and ask the user if they would like to restart the game. Ask for input (R) - if R is submitted, clear the terminal and restart the program. If the user submits anything else, inform them that their input is invalid and ask more last time if they would like to restart the game, requesting input (R). If the input is invalid again, simply print the thank you message and end the game. Otherwise, clear the terminal and restart the program.
    - __requests.exceptions.JSONDecodeError:__ the user pressed Enter without submitting anything. Inform them that something went wrong and request input once again, this time adding examples of the required word type for more clarity. Restart the validation process.
- - If there are no errors, move on to part 2 of word validation inside the nested function validate_word.
+ - If there are no errors, move on to part 2 of word validation (function validate_word).
 
 ![Flowchart - validation part 1](https://github.com/Agnieszka-21/madlibs/blob/main/assets/flowcharts/flow_validation1.png)
 
 #### Word input validation - part 2
 
-- Try to access specific details in the dictionary within the entry for the word that is being validated (nested function validate_word, inside the function look_up_word).
+- Try to access specific details in the dictionary within the entry for the word that is being validated (function validate_word).
 - These specific details include:
-  - A key called 'fl' (functional label). Its value defines the grammatical function of the word (e.g. "noun"). In case the word is a homograph and therefore has multiple meanings and functions (like "extract", for example, which is both a verb and a noun), check its further 'fl' keys (up to 2 more, if available) for a more accurate validation. If at least one 'fl' was found, add its value to the list called fl_avail, which gathers available functional labels of the current word. This prepares us for part 3 of word validation.
+  - A key called 'fl' (functional label). Its value defines the grammatical function of the word (e.g. "noun"). In case the word is a homograph and therefore has multiple meanings and functions (like "extract", for example, which is both a verb and a noun), check its further 'fl' keys (up to 4 in total, if available) for a more accurate validation. If at least one 'fl' was found, add its value to the list called fl_avail, which gathers available functional labels of the current word. This prepares us for part 3 of word validation.
   - If the 'fl' key has not been found, look for another key called 'cxs', and if it is present, check whether it contains under 'cxl' (a nested key) the value "plural of". Irregular plural forms of nouns (such as "mice" or "men") can be identified this way. Add "plural noun" to the list called fl_avail and move on to part 3 of the validation process.
   - If "plural of" has not been found inside the 'cxl' key, check whether the 'cxs' key is present and whether the nested key 'cxl' contains the phrase "British spelling". This is the case for words that are spelled differently in US English and British English. Since the online dictionary prioritizes US spelling, the British version - while it still has its own entry - does not contain any of the information needed to identify the word type. Therefore, inform the user that their word could not be validated but there is a similar word with US spelling, and ask them if they would like to submit that word instead. If they agree, find the word's 'fl' by going back to look_up_word in order to restart the validation process (since the input is clearly not a number, we can skip the part of excluding numbers). If the user refuses to use the suggested word (input N) or submits an invalid input, request another word input from them, adding examples of the expected word type for more clarity, and restart the validation process.
   - If none of these details could be accessed (for example, the user submitted a bunch of random letters that are not even similar to any actual word), inform the user that something went wrong and request another input, specifying the expected word type and adding examples. Restart the validation process.
@@ -166,7 +168,7 @@ Since getting 7 valid word inputs from the user (2 nouns, 1 plural noun, 2 adjec
 
 #### Word input validation - part 3
 
-- This is the last part of the word validation process, and it is being taken care of by the function valid_words_type, nested inside validate_word, which is nested inside the look_up_word function. 
+- This is the last part of the word validation process, and it is being taken care of by the function valid_words_type and any  functions called within valid_words_type.
 - Once the list fl_avail contains a value or multiple values (like "noun", "adjective" etc.) after going through the validate_word function, check whether the 'fl' value for the current word is correct for the expected word type. If needed, other criteria might need to be met, too. Each word type has its own set of criteria.
 - __Nouns__ need the value "noun" in fl_avail in order to be accepted, paired with the fact the the user's input is identical with the dictionary entry being looked up. This ensures that no plural nouns with regular plural form (e.g. "dog" - "dogs") get accepted instead of their singular form. If this last condition is not met (e.g. the user submitted the word "cats"), the user is notified in the terminal that their word is slightly different from a specific valid option, and their input is automatically replaced by that valid word (e.g. "cat"). If the value "noun" is not present, the user is informed that their word is not a noun, and a new input is requested. The message includes examples of the expected word type. Once a new input is obtained, the entire validation process is restarted for the new word input.
 - __Plural nouns__ are accepted if the value "plural noun" is found within fl_avail, which works well for nouns with irregular plural form. Another acceptable option is if the value "noun" is present within fl_avail and the entry's key 'ins' (inflections) can be accessed (not all noun entries have that key), and the word input is identical with the value related to the nested key 'if' (for words with more than one syllable, asterisks * are present inside that value to mark the division into syllables, so these had to be removed first). Should that last criterium not be met, the user is informed that their word seems to be a singular rather than plural form of a noun and is asked for another input. One last acceptable option is if the value "noun" is found in fl_avail and the submitted word was found under the key 'stems' in the dictionary (which lists all the entry's headwords, variants, inflections... including its plural form). If neither of these options applies, the user is informed that their word is not a plural noun, and is requested to submit another word input.
@@ -176,7 +178,7 @@ Since getting 7 valid word inputs from the user (2 nouns, 1 plural noun, 2 adjec
 
 ![Flowchart - validation part 3](https://github.com/Agnieszka-21/madlibs/blob/main/assets/flowcharts/flow_validation3.png)
 
-This 3-part validation process runs in a loop until each of the 7 required word inputs is obained. Once all inputs are validated and accepted, one of the available mad lib stories is chosen randomly and printed to the terminal with the user's inputs in specified places. The user can then read the entire story and enjoy the unexpected twists and turns. 
+This 3-part validation process runs in a loop until each of the 7 required word inputs is obained. Once all inputs are validated and accepted, one of the available mad lib stories is chosen randomly and printed to the terminal with the user's inputs in specified places. The user can then read the entire story and enjoy the unexpected twists and turns of their mad lib. 
 
 #### End of game
   
@@ -190,10 +192,10 @@ Whenever the user decides to end the game, a thank you message is printed to the
 #### The use of classes
   
 In order to not only deepen my understanding of Python classes, but also to keep the number of variables with global scope to a minimum, I decided to create two classes for this program. 
-  - __Class Words__ is initiated with 3 instance variables: input, word_type, and examples. There are 7 instances of that class, one for each required word input. While the value of the variable "input" will be replaced by user's word input, the other two variables stay unchanged and are used during the word validation process (e.g. in printed statements, to signal to the user which word type is expected and to give examples of that word type).
-  - __Class Story__ is initiated with 2 instance variables: title and text. There are 8 instances of that class, one for each mad lib. A mad lib is chosen randomly each time the user submits 7 acceptable word inputs.  
+  - __Class Words__ is initiated with 3 instance variables: input, type, and examples. There are 7 instances of that class, one for each required word input. While the value of the variable "input" will be replaced by user's word input, the other two variables stay unchanged and are used during the word validation process (e.g. in printed statements, to signal to the user which word type is expected and to give examples of that word type).
+  - __Class Story__ is initiated with 2 instance variables: title and text. There are 8 instances of that class, one for each mad lib. A mad lib is chosen randomly each time the user submits 7 acceptable word inputs (first a title is randomly chosen, then a matching text - and both are printed to the terminal). 
 
-The use of these two classes allows for adding further word inputs and stories in a simple way and makes the code easily readable. It also contributes to the ease of passing around the data from each class, encouraging further development of this application. 
+The use of these two classes allows for adding further word inputs and stories in a simple way and makes the code easily readable. It also contributes to the ease of passing around data from each class, encouraging further development of this application. 
 
 
 ### The Surface Plane
@@ -268,7 +270,7 @@ Whenever the user chooses to end the game, a thank you message is printed to the
 ![Thanks for playing](https://github.com/Agnieszka-21/madlibs/blob/main/assets/screenshots/mad_thanks_for_playing.png)
 
 #### Styling
-Since the application runs in a terminal and the Code Institute's template clearly asks not to change any files other than run.py, styling has been applied only within the terminal. The Rich library has been used here to print colored statements to the console for added visual interest and clarity. All messages signalling an error or issue of some kind are printed in orange to quickly catch the user's attention and encourage them to take action. All messages confirming that the user's word input has been accepted are printed in sea green. Since I wanted to keep the number of colors to the minimum and was happy to make sea green the "theme color" of the game, the main title ("Welcome to MAD LIBS"), the thank you message at the end ("Thanks for playing MAD LIBS!"), and the stories are also printed in this shade. Additionally, both the welcome and the thank you message are printed in bold to make them stand out. By using Text from the Rich library, I also ensured that any printed statements are automatically justified to the left, which prevents any longer text from awkward splits in the middle of a word when the terminal's modest size leads to the text being divided into multiple lines.
+Since the application runs in a terminal and the Code Institute's template clearly asks not to change any files other than run.py, styling has been applied only within the terminal. The Rich library has been used here to print colored statements to the console for added visual interest and clarity. All messages signalling an error or issue of some kind are printed in orange to quickly catch the user's attention and encourage them to take action. All messages confirming that the user's word input has been accepted are printed in sea green. Since I wanted to keep the number of colors to the minimum and was happy to make sea green the "theme color" of the game, the main title ("Welcome to MAD LIBS GRAMMAR"), the thank you message at the end ("Thanks for playing MAD LIBS!"), and the stories are also printed in this shade. Additionally, both the welcome and the thank you message are printed in bold to make them stand out. By using Text from the Rich library, I also ensured that any printed statements are automatically justified to the left, which prevents any longer text from awkward splits in the middle of a word when the terminal's modest size leads to the text being divided into multiple lines.
 
 
 ## Future Enhancements
@@ -281,17 +283,53 @@ Since the application runs in a terminal and the Code Institute's template clear
 
 ### Testing Overview
 
-Continuous testing was an integral part of the development process. I used numerous print statements, which were removed as specific features reached their desired shape and functionality. The statements helped me understand which exact details were accessed via API in the online dictionary, how my functions influenced one another, and what information I had to gather in order to print clear messages for the user. Testing multiple word inputs, as well as the behavior of the application in response to them was an important step in the development of a refined and reliable input validation process. While there is still potential for further improvements, I ensured to handle any and all errors that I encountered, and took great care to handle various word inputs in a way that prevents mistakes as much as possible, at the same time allowing for a lot of variety without restricting the user in their choice of word inputs. Tests were conducted mainly in my development environment, and once results were positive, they were re-checked within the live application after it was deployed to Heroku.
+Continuous testing was an integral part of the development process. I used numerous print statements, which were removed as specific features reached their desired shape and functionality. The statements helped me understand which exact details were accessed via API in the online dictionary, how my functions influenced one another, and what information I had to gather in order to print clear messages for the user. Testing multiple word inputs, as well as the behavior of the application in response to them was an important step in the development of a refined and reliable input validation process. While there is still potential for further refinement of the word input validation process, I ensured to handle any and all errors that I encountered, and took great care to handle various word inputs in a way that prevents mistakes as much as possible, at the same time allowing for a lot of variety without restricting the user in their choice of word inputs. Tests were conducted mainly in my development environment, and once results were positive, they were re-checked within the live application after it was deployed to Heroku.
+
+### Manual Testing
+
+While testing every single functionality as I was creating and refining it was essential to progressing with this project, I also applied a more structured approach to testing once everything seemed to work correctly in order to double-check the code's behavior and ensure that I handled any possible scenarios to avoid any issues. The table below documents this more structured approach, where I tested any and all possible functionalities as well as likely user inputs in [the live version of the app](https://mad-libs-grammar-324ea3a36fdb.herokuapp.com/).
+
+
+| Functionality being tested | Expected Outcome | Actual Outcome | Result (pass/fail) |
+| :------------------- | :--------------- | :------------- | :-------------------- |
+| Welcome message, how to play, and first word input | printed to the terminal as the user opens the app or clicks the "Run program" button | as expected | pass |
+| Subsequent word input requests (7 in total) | printed one by one, right after each input has been validated and accepted | as expected | pass |
+| Word input scenario 1: user presses Enter without submitting anything | user is notified that something went wrong and asked for another input (current word type and examples are given) | as expected | pass |
+| Word input scenario 2: user submits random letters | user is notified that something went wrong and asked for another input (current word type and examples are given) | as expected | pass |
+| Word input scenario 3: user submits a number (integer) | user is notified that numbers are not accepted and asked for another input (current word type and examples are given) | as expected | pass |
+| Word input scenario 4: user submits an input with special characters | user is notified that their input could not be validated (possibly not a word) and asked for another input (current word type and examples are given) | as expected | pass |
+| Word input scenario 5: user submits a valid word that meets the criteria for its type | user is notified that their word has been found in the dictionary (+ under which entry + its grammarical type or types) and that it has been accepted; the next input is from the list of words_needed is requested | as expected | pass |
+| Word input scenario 6: user submits a valid word that does not meet the criteria for its type | user is informed their word is not the correct type and asked for another input (wort type and examples given for clarification and to help the user succeed) | as expected | pass |
+| Word input scenario 7: user's second noun input is the same as the first | user is notified that this word has already been used and asked for another input (word type and examples given) | as expected | pass |
+| Word input scenario 8: user's second adjective input is the same as the first | user is notified that this word has already been used and asked for another input (word type and examples given) | as expected | pass |
+| Word input scenario 8: user submits a word with British spelling | user is notified that their word could not be validated but that a smiliar word with US spelling has been found; user is asked whether they would like to use that word instead (Y/N) | as expected | pass |
+| British to US spelling: user input "Y" | the word with US spelling is validated, and if it meets the word type criteria, it is accepted | as expected | pass |
+| British to US spelling: user input "N" | the user is asked for another input (word type and examples are given) | as expected | pass |
+| British to US spelling: any other user input | "Invalid input". User is asked to submit another word (word type and examples are given) | as expected | pass |
+| Word input scenario 9: user submits a word with a typo | User is asked to check for typos and submit another word (word type and examples are given) | as expected | pass |
+| Word input scenario 10: user submits a word but the dictionary cannot be accessed (ConnectionError) | user is informed that there was a connection issue and asked to submit "R" if they would like to restart the game. If the user submits "R" , the terminal is cleared and the program is restarted. Any other input leads to a request for input "R" if they would like to start again. If the user chooses again any other input, they are notified that their input was invalid and the game will be ended, as well as invited to come back later or use the "Run rpogram" button to try again. A thank you message is printed. | as expected | pass |
+| "Would you like to play again?" - input required (Y/N) | printed with the story, underneath | as expected | pass |
+| Any input other than "Y" or "N" | "Invalid input" message. User is asked again to submit "Y" or "N" (while loop - works until a valid input is received) | as expected | pass |
+| User input "N" | prints a thank you message to the terminal | as expected | pass |
+| User input "Y" | leads to the next question (input required) being printed | as expected | pass |
+| How to play again with 2 options | printed after the user indicated they would like to play again, explains option A and option B | as expected | pass |
+| User input "A" | clears the terminal, another randomly chosen story (and the play again question) is printed with the same word inputs as earlier + the question whether they would like to play again | as expected | pass |
+| User chooses option "A" repeatedly | as long as stories are available, one of them is printed to the terminal with the re-used word inputs; once all stories have been printed one by one, the user is notified that there are no other stories left and asked if they would like to restart the game (input Y - any other input will end the game) | as expected | pass |
+| User input "Y" after all stories have been used | clears the terminal and restarts the program (welcome, how to play, 1st input printed to the terminal) | as expected | pass |
+| Any other input after all stories have been used| ends the game - a thank you message is printed to the terminal | as expected | pass |
+| User input "B" | clears the terminal and restarts the program (welcome, how to play, 1st input printed to the terminal) | as expected | pass |
+| Any other user input | "Invalid input". User is asked once again to submit A or B (while loop that runs until a valid input is obtained) | as expected | pass |
+
 
 ### Validator Testing
 
 I utilized the Code Institute's [Python Linter](https://pep8ci.herokuapp.com/) in order to check my Python files. No errors were reported - screenshots are linked here:
-- [run.py](https://github.com/Agnieszka-21/madlibs/blob/main/assets/screenshots/mad_run.py_validator.png)
+- [run.py](https://github.com/Agnieszka-21/madlibs/blob/main/assets/screenshots/mad_runpy_validator.png)
 - [adj_list_ly_ending.py](https://github.com/Agnieszka-21/madlibs/blob/main/assets/screenshots/mad_adj_with_ly_validator.png)
 
 ### Notable Bugs
 
-There are no notable bugs within the project. While I did encounter a few stubborn issues, especially when it comes to the word validation process (which turned out to be significantly more complex than I expected initially) and the local scope of variables in Python (that led me toward utilizing classes and nested functions), I overcame the challenges and found solutions or workarounds that make this program fully functional. 
+There are no notable bugs within the project. While I did encounter a few stubborn issues, especially when it comes to the word validation process - which turned out to be significantly more complex than I expected initially - and the local scope of variables in Python that led me toward utilizing classes as well as passing arguments to functions, I overcame the challenges and found solutions or workarounds that make this program fully functional. 
 
 
 ## Libraries Utilized
@@ -299,7 +337,7 @@ There are no notable bugs within the project. While I did encounter a few stubbo
 Several built-in Python libraries have been used in this project.
 
 #### os
-This library allowed me to clear the terminal (os.system and os.name) as well as restart the program (os.execl). Thanks to these functionalities the application is clearer and visually more pleasing to the user, and the game can be restarted from scratch without the user having to click the "Run program" button again.
+This library allowed me to clear the terminal (os.system and os.name) as well as restart the program (os.execl). Thanks to these functionalities the application is clearer and visually more pleasing to the user, and the game can be restarted from scratch without the user having to click the "Run program" button again, which makes it easier to operate.
 
 #### sys
 This module was needed for the restart_program function (sys.executable) that allows the user to play the game multiple times with new inputs, without having to select the "Run program" button, thus being more user-friendly and supporting easeful interaction with the program.
@@ -308,17 +346,17 @@ This module was needed for the restart_program function (sys.executable) that al
 This library was imported to utilize the time.sleep functionality needed after receiving the last valid word input, so that the user can see that the last word they submitted (verb) has been accepted. After this delay of 1.5 seconds the terminal is cleared and a story with the user's inputs is printed to the terminal. This reduces the need for unnecessary interactions or additional inputs from the user and therefore makes the game run more smoothly, providing optimal user experience.
 
 #### random
-This library allows for a random choice of a mad lib title and a matching text from the available ones, listed under available_titles and available_texts, adding to the element of surprise to the game. If the user decides to play again while re-using their word inputs, these two variables (available_titles and available_texts) get updated in order to avoid repetition, and another story can be chosen randomly from the updated range. Therefore, this library contributes in a significant way to supporting the fun/entertainment aspect of the application.
+This library allows for a random choice of a mad lib title and a matching text from the available ones, listed under available_titles and available_texts, adding the element of surprise to the game and making it more entertaining for the user. If the user decides to play again while re-using their word inputs, these two variables (available_titles and available_texts) get updated in order to avoid repetition, and another story is chosen randomly from the updated range. Therefore, this library contributes in a significant way to the fun/entertainment aspect of the application.
 
 #### requests
-This module (specifically the requests.get functionality) makes it possible to work with the dictionary API in the word input validation process by allowing to send HTTP requests to a specified URL. The dictionary API plays a vital role when checking the grammatical type of each submitted word, contributing to the educational aspect of the game.
+This module (specifically the requests.get functionality) makes it possible to work with the dictionary API in the word input validation process by allowing to send HTTP requests to a specified URL. The dictionary API plays a vital role when checking the grammatical type of each submitted word, contributing to the educational aspect of the game and providing additional value to the user.
 
 #### dotenv
-This library was used to load one specific environment variable - the dictionary API key - from the .env file, making it easy and convenient to manage and protect this sensitive information, therefore protecting the integrity and security of the entire program. 
+This library was used to load one specific environment variable - the dictionary API key - from the .env file, making it easy and convenient to manage and protect this sensitive information, therefore protecting the integrity and security of the entire program for optimal user experience. 
 
 An additional library was used for styling the text in the terminal.
 #### Rich
-This library allowed me to print rich text to the terminal, adding automatic justification to the left that prevents the occurrence of awkward word splits in longer texts. It also gave me the option of using colors in order to keep the terminal visually interesting, and to send clear signals to the user (contrasting colors to signify that an input has been accepted - sea green - or rejected - orange).
+This library allowed me to print rich text to the terminal, adding automatic justification to the left that prevents the occurrence of awkward word splits in longer texts. It also gave me the option of using colors in order to keep the terminal visually interesting, and to send clear signals to the user (contrasting colors to signify that an input has been accepted - sea green - or rejected - orange). Therefore, this library has provided immense value to the user, making the application not only more pleasing visually, but also much clearer in terms of user interaction with the program.
 
 
 ## Deployment
@@ -343,6 +381,16 @@ In order to deploy the application to Heroku I followed the following steps:
 -  Confirm that the correct branch of the repo is selected in the drop-down box, and select "Enable Automatic Deploys". Whenever you change something in the repo and push the changes to GitHub, Heroku will rebuild the app.
 -  Alternatively, you can use the option "Manual deploys" (for this projects, I used the "automatic deploys" option that allowed me to see changes I made to the app as I developed it).
 -  Heroku will now build the app for you. Once the process is completed, you will see the message "Your app was successfully deployed", and a link to the app where you can visit the live site.
+  
+
+## Cloning and forking the repository
+
+In order to clone the GitHub repository use the following link:
+- [https://github.com/Agnieszka-21/madlibs.git](https://github.com/Agnieszka-21/madlibs.git)
+
+In order to fork the GitHub repository:
+- Go to [https://github.com/Agnieszka-21/madlibs](https://github.com/Agnieszka-21/madlibs)
+- In the top menu choose the option "Fork"
 
 
 ## Credits
