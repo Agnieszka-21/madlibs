@@ -315,8 +315,8 @@ def validate_verbs(fl_avail, dict_word):
 
 def valid_words_type(word_checked, fl_avail):
     """
-    Checks if the valid word has the correct grammatical
-    type (function label)
+    Checks if the valid word has the correct grammatical type
+    (part 3/3 of the word input validation process)
     """
     # Variable dict_word will be used to show which exact word
     # has been found and checked in the dictionary to validate
@@ -395,6 +395,7 @@ def validate_word(word_checked):
     Makes sure that user input is a valid word and adds
     the word's 'fl' (functional label like "noun" or "verb") to the
     list of available labels called fl_avail
+    (part 2/3 of the word input validation process)
     """
     try:
         # Aiming to access 'fl' of the given word (e.g. noun, verb)
@@ -438,6 +439,7 @@ def validate_word(word_checked):
 def look_up_word():
     """
     Looks up each word input in the dictionary
+    (part 1/3 of the word input validation process)
     """
     # Access the dictionary API key
     load_dotenv()
@@ -472,7 +474,7 @@ def look_up_word():
                 console.print(Text(
                     "Invalid input. We'll end the game now. "
                     "Please come back later or click the orange"
-                    "RUN PROGRAM button above to try again."))
+                    "RUN PROGRAM button above to play again."))
                 console.print(Text(
                     "Thanks for playing MAD LIBS!", style="sea_green1"))
 
